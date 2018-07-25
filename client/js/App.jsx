@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
+import MainArea from './components/MainArea/MainArea.jsx';
+import AdminArea from './components/AdminArea/AdminArea.jsx';
 
 import '../scss/application.scss';
 
-export default function App() {
-  return (
-    <div>
-      <div className="tagline">
-        <span className="black">Bundled</span> <span className="light">with</span>
-      </div>
-      <a href="https://webpack.js.org/"><img className="logo" src="/images/webpack.svg" /></a>
-    </div>
-  )
-}
+export default class App extends Component {
+  render() {
+    return (
+      <Router>
+        <div>
+          <Route exact path='/' component={MainArea} />
+          <Route exact path='/admin' component={AdminArea} />
+        </div>
+      </Router>
+    );
+  }
+};
