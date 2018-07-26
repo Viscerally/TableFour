@@ -1,70 +1,42 @@
 import React, { Component } from 'react';
 
-const navbarBrand = () => {
+const NavbarBrand = () => {
   return (
-    <div className='navbar-brand-wrapper'>
-      <a className="navbar-brand" href="#">Navbar</a>
-      <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span className="navbar-toggler-icon"></span>
-      </button>
+    <div className='navbar-brand'>
+      <a className='navbar-item' href='/'>
+        <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" />
+      </a>
+    </div>
+  );
+};
+const NavbarMenu = () => {
+  return (
+    <div className='navbar-menu'>
+      <div className='navbar-end'>
+        <div className='navbar-item'>
+          <div className='field is-grouped'>
+            <p className='control'>
+              <a className='button is-danger' href='/admin'>
+                <span className='icon'>
+                  <i className="fas fa-user" aria-hidden="true"></i>
+                </span>
+                <span>Admin</span>
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-const navbarItems = () => {
+export default function Navbar() {
   return (
-    <ul className="navbar-nav mr-auto">
-      <li className="nav-item active">
-        <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
-      </li>
-      <li className="nav-item">
-        <a className="nav-link" href="#">Link</a>
-      </li>
-      <li className="nav-item dropdown">
-        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a className="dropdown-item" href="#">Action</a>
-          <a className="dropdown-item" href="#">Another action</a>
-          <div className="dropdown-divider"></div>
-          <a className="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <li className="nav-item">
-        <a className="nav-link disabled" href="#">Disabled</a>
-      </li>
-    </ul>
-  );
-};
-
-const navbarForm = () => {
-  return (
-    <form className="form-inline my-2 my-lg-0">
-      <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-      <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-  );
-};
-
-const navbarMenu = () => {
-  return (
-    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-      {navbarItems()}
-      {navbarForm()}
-    </div>
-  );
-};
-
-export default class Navbar extends Component {
-  render() {
-    return (
-      <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-        <div className='container'>
-          {navbarBrand()}
-          {navbarMenu()}
-        </div>
+    <header>
+      <nav className='navbar' role='navigation' aria-label='main navigation'>
+        <NavbarBrand />
+        <NavbarMenu />
       </nav>
-    );
-  }
+    </header>
+  );
 }
