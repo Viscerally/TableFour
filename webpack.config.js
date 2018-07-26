@@ -86,6 +86,8 @@ module.exports = {
     proxy: {
       "/api": "http://localhost:3001"
     },
+    // set historyApiFallback to true so that the app is served for any URL not just for /
+    historyApiFallback: true,
     contentBase: paths.build,
     watchOptions: {
       aggregateTimeout: 300,
