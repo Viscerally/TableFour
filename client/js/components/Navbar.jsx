@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 const NavbarBrand = () => {
   return (
@@ -12,6 +12,13 @@ const NavbarBrand = () => {
 const NavbarMenu = () => {
   return (
     <div className='navbar-menu'>
+      <div className='navbar-start'>
+        <div className='navbar-item'>
+          <p className='control'>
+            <span>Welcome to "Restaurant Name"!</span>
+          </p>
+        </div>
+      </div>
       <div className='navbar-end'>
         <div className='navbar-item'>
           <div className='field is-grouped'>
@@ -32,11 +39,11 @@ const NavbarMenu = () => {
 
 export default function Navbar() {
   return (
-    <header>
+    <Fragment>
       <nav className='navbar' role='navigation' aria-label='main navigation'>
         <NavbarBrand />
         <NavbarMenu />
       </nav>
-    </header>
+    </Fragment>
   );
 }
