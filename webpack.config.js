@@ -81,10 +81,10 @@ module.exports = {
     host: '0.0.0.0',
     port: 3000,
     // the dev server is on port 3000 while express server is on port 3001
-    // set up a proxy so that you have access to express server (port: 3001)
-    // from dev server
+    // express routes are specifically for api calls
+    // set up a proxy so that you have access to express server (port: 3001) from dev server
     proxy: {
-      "/": "http://localhost:3001"
+      "/api": "http://localhost:3001"
     },
     contentBase: paths.build,
     watchOptions: {
