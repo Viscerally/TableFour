@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 
 import MainArea from './components/MainArea/MainArea.jsx';
 import AdminArea from './components/AdminArea/AdminArea.jsx';
@@ -11,8 +11,8 @@ export default class App extends Component {
     return (
       <Router>
         <div>
-          <Route exact path='/' component={MainArea} />
-          <Route exact path='/admin' component={AdminArea} />
+          <Route path="/" component={MainArea} />
+          <Route path="/admin" component={AdminArea} />
         </div>
       </Router>
     );
