@@ -24,35 +24,6 @@ app.use(express.static(__dirname + '/build'));
 // set up /api path for all api routes
 app.use('/api', apiRoutes);
 
-app.get('/login', (req, res) => {
-  res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id,
-      scope: 'user-read-private user-read-email',
-      redirect_uri
-    }))
-})
-
-app.get('/callback', (req, res) => {
-  let code = req.query.code || null
-  let authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    form: { code, redirect_uri, grant_type: 'authorization_code' },
-    headers: {
-      'Authorization': 'Basic ' + (
-        new Buffer(`${client_id}:${client_secret}`).toString('base64')
-      )
-    },
-    json: true
-  }
-  request.post(authOptions, function (error, response, body) {
-    var access_token = body.access_token
-    let uri = process.env.FRONTEND_URI || `http://localhost:3000`
-    res.redirect(uri + '?access_token=' + access_token)
-  })
-})
-
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT} in ${ENV} mode.`);
 });
