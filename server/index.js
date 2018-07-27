@@ -31,14 +31,14 @@ massive(connectionString)
     const db = app.get('db');
 
     // massive js example
-    var newUser = {
-      email: "test@test.com",
-      first: "Joe",
-      last: "Test"
-    };
-    db.users.save(newUser, function (err, result) {
-      console.log(result);
-    });
+    // var newUser = {
+    //   email: "test@test.com",
+    //   first: "Joe",
+    //   last: "Test"
+    // };
+    // db.users.save(newUser, function (err, result) {
+    //   console.log(result);
+    // });
 
 
     app.listen(PORT, () => {
