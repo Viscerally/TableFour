@@ -79,10 +79,10 @@ module.exports = {
     // set up host and port of the dev server
     // allow any external connection
     host: '0.0.0.0',
-    port: 3000,
-    // the dev server is on port 3000 while express server is on port 3001
+    port: 3002,
+    // the dev server is on port 3000 while express server is on port 3002
     // express routes are specifically for api calls
-    // set up a proxy so that you have access to express server (port: 3001) from dev server
+    // set up a proxy so that you have access to express server (port: 3002) from dev server
     proxy: {
       "/api": "http://localhost:3001"
     },
