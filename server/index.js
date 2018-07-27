@@ -19,25 +19,18 @@ const connectionString = process.env.DATABASE_URL;
 app.use(express.static(__dirname + '/build'));
 app.use('/api', apiRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT} in ${ENV} mode.`);
-});
-/*massive(connectionString)
+massive(connectionString)
   .then(massiveInstance => {
     console.log('Connection to PSQL established.')
-
     // set up middleware
     // all static files are in /bundle
-
+    app.listen(PORT, () => {
+      console.log(`Server listening on port ${PORT} in ${ENV} mode.`);
+    });
     // set up /api path for all api routes
-
-
     app.set('db', massiveInstance);
     const db = app.get('db');
-
-
-
   })
   .catch(err => {
     console.log(err.stack);
-  })*/
+  })
