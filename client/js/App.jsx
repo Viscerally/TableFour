@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 
 import MainArea from './components/MainArea/MainArea.jsx';
-import AdminArea from './components/AdminArea/AdminArea.jsx';
+import HostArea from './components/HostArea/HostArea.jsx';
 
 import '../scss/application.scss';
 
@@ -12,7 +12,7 @@ export default class App extends Component {
       <Router>
         <div>
           <Route path="/" component={MainArea} />
-          <Route path="/admin" component={AdminArea} />
+          <Route path="/host" component={HostArea} />
         </div>
       </Router>
     );
