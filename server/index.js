@@ -18,7 +18,7 @@ app.get('/', function (req, res) {
 
 io.on('connection', function(socket){
   socket.emit('news', {hello: 'world'});
-  
+
 })
 
 // require massive js
@@ -33,15 +33,15 @@ const ENV = process.env.NODE_ENV || 'development';
 
 const connectionString = process.env.DATABASE_URL;
 app.use(express.static(__dirname + '/build'));
-app.use('/api', apiRoutes);
 
 massive(connectionString)
   .then(massiveInstance => {
     console.log('Connection to PSQL established.')
+
     // set up middleware
     // all static files are in /bundle
-  
     app.use(express.static(__dirname + '/build'));
+
     // set up /api path for all api routes
     app.use('/api', apiRoutes);
 
@@ -51,9 +51,7 @@ massive(connectionString)
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT} in ${ENV} mode.`);
     });
-    // set up /api path for all api routes
-    app.set('db', massiveInstance);
-    const db = app.get('db');
+
   })
   .catch(err => {
     console.log(err.stack);
