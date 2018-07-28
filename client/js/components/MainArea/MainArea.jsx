@@ -6,10 +6,6 @@ import BookingForm from './BookingForm.jsx';
 import Menu from './Menu.jsx';
 
 export default class MainArea extends Component {
-  constructor(props){
-    super(props);
-
-  }
 
   render() {
     return (
@@ -24,7 +20,9 @@ export default class MainArea extends Component {
               <article className='tile is-child box'>
                 <div className='content'>
                   <h3 className='title is-3'>BOOK YOUR TABLE</h3>
-                  <BookingForm />
+                  <BookingForm
+                    handleResoFormSubmit={this.props.handleResoFormSubmit}
+                  />
                 </div>
               </article>
             </div>
