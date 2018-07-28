@@ -20,25 +20,25 @@ const TableBody = () => {
         <td>1</td>
         <td>3</td>
         <td>Peterson</td>
-        <td>1</th>
+        <td>1</td>
       </tr>
       <tr>
         <td>2</td>
         <td>2</td>
         <td>Chan</td>
-        <td>0</th>
+        <td>0</td>
       </tr>
       <tr>
         <td>3</td>
         <td>5</td>
         <td>Ivanovic</td>
-        <td>0</th>
+        <td>0</td>
       </tr>
       <tr>
         <td>4</td>
         <td>2</td>
         <td>Byeong</td>
-        <td>0</th>
+        <td>0</td>
       </tr>
     </tbody>
   );

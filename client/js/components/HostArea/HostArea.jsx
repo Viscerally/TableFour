@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import fetch from 'cross-fetch';
+import Navbar from '../Navbar.jsx';
+import AdminReservationDashboard from './AdminReservationDashboard.jsx';
 
 export default class AdminArea extends Component {
   render() {
@@ -15,7 +17,7 @@ export default class AdminArea extends Component {
               <article className='tile is-child box'>
                 <div className='content'>
                   <h3 className='title is-3'>CURRENT RESERVATIONS</h3>
-                  <ReservationDashboard />
+                  <AdminReservationDashboard />
                 </div>
               </article>
             </div>
