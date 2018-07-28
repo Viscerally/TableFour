@@ -26,6 +26,7 @@ client.messages.create({
 
 
 
+//Socket Server connection to webpack server
 server.listen(3001);
 
 app.get('/', function (req, res) {
