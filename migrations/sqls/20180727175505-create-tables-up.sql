@@ -25,7 +25,7 @@ CREATE TABLE "reservations" (
 );
 CREATE TABLE "menu_items" (
   "id" SERIAL NOT NULL PRIMARY KEY,
-  "name" VARCHAR(20) NOT NULL,
+  "name" VARCHAR(50) NOT NULL,
   "description" TEXT,
   "price" INTEGER NOT NULL DEFAULT 0,
   "img_url" TEXT,
