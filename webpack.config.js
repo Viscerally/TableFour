@@ -1,5 +1,5 @@
 const path = require('path');
-
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 // copies individual files or entire directories to the build directory
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 // simplifies creation of HTML files to serve the webpack bundles
@@ -49,7 +49,12 @@ module.exports = {
       },
       {
         // use the following loaders for all scss files
-        test: /\.scss$/,
+        test: /\.css$/,
+        loader: 'style-loader!css-loader'
+      },
+      {
+        // use the following loaders for all scss files
+        test: /\.scss|.sass$/,
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
@@ -79,7 +84,7 @@ module.exports = {
     // set up host and port of the dev server
     // allow any external connection
     host: '0.0.0.0',
-    port: 3003,
+    port: 3002,
     // the dev server is on port 3000 while express server is on port 3002
     // express routes are specifically for api calls
     // set up a proxy so that you have access to express server (port: 3002) from dev server
