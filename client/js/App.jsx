@@ -14,7 +14,7 @@ export default class App extends Component {
   componentDidMount () {
     const socket = io('http://localhost:3001');
     socket.on('connect', () => {
-      
+      console.log('sup guy');
     });
 
   }
@@ -22,8 +22,8 @@ export default class App extends Component {
     return (
       <Router>
         <div>
-          <Route path="/" component={MainArea} />
-          <Route path="/host" component={HostArea} />
+          <Route path="/admin" component={HostArea} />
+          <Route path="/home" component={MainArea} />
         </div>
       </Router>
     );
