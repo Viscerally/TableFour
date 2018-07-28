@@ -35,7 +35,7 @@ export default class MainArea extends Component {
             </article>
           </div>
         </div>
-          <div className='tile'>
+          <div className='tile menu-tile is-4'>
             <Menu />
           </div>
         </main>

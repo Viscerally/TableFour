@@ -1,3 +1,12 @@
+@import './partials/_carousel.sass';
+@import 'node_modules/bulma/bulma.sass';
+@import 'node_modules/bulma-carousel/dist/css/bulma-carousel.sass';
 @import './partials/_var.scss';
 @import './partials/_layout.scss';
 @import './partials/_reservation-dashboard.scss';
+
+.menu-tile{
+  justify-content: center;
+  width: 33%;
+  margin-left: 33%;
+}

@@ -48,22 +48,20 @@ module.exports = {
         }
       },
       {
-        // use the following loaders for all scss files
-        test: /\.css$/,
-        loader: 'style-loader!css-loader'
-      },
-      {
-        // use the following loaders for all scss files
+        // use the following loaders for all scss and sass files
         test: /\.scss|.sass$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader'
-        ]
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            'css-loader',
+            'sass-loader'
+          ]
+        })
       }
     ]
   },
   plugins: [
+    new ExtractTextPlugin('css/mystyles.css'),
     // compile client side images to build
     new CopyWebpackPlugin([
       { from: 'client/images', to: path.join(__dirname, 'build/images') }
