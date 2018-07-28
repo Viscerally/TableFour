@@ -6,6 +6,11 @@ import BookingForm from './BookingForm.jsx';
 import Menu from './Menu.jsx';
 
 export default class MainArea extends Component {
+  constructor(props){
+    super(props);
+
+  }
+
   render() {
     return (
       <div className='container is-desktop'>
