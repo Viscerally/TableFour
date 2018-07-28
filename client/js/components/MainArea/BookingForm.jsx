@@ -27,10 +27,8 @@ export default class BookingForm extends Component {
     // NOTE: specify the content type to application/json
 
     makeReservation(body)
-      .then(response => {
-        console.log(response);
-      })
-      .catch(err => { console.log(err) });
+      .then(response => { console.log(response); })
+      .catch(err => { console.log(err); });
   }
 
   handleChange({ target: { name, value } }) {
