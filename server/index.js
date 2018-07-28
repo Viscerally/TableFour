@@ -9,6 +9,7 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const path = require('path')
 
+//Socket Server connection to webpack server
 server.listen(3001);
 
 app.get('/', function (req, res) {
