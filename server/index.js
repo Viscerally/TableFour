@@ -11,15 +11,22 @@ const path = require('path')
 
 server.listen(3001);
 
-app.get('/', function (req, res) {
-  console.log('getting hit in index.js');
-  res.sendFile(path.join(__dirname, '../client/index.html'));
-});
+const handleDisconnection = () => {
+  console.log('CLIENT DISCONNECTED');
+}
 
-io.on('connection', function(socket){
-  socket.emit('news', {hello: 'world'});
+io.on('connection', client => {
+  client.on('disconnect', handleDisconnection);
 
+
+  console.log(io.engine.clientsCount);
+  // socket.emit('news', { hello: 'world' });
 })
+// app.get('/', function (req, res) {
+//   console.log('getting hit in index.js');
+//   res.sendFile(path.join(__dirname, '../client/index.html'));
+// });
+
 
 // require massive js
 const massive = require('massive');
