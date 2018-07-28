@@ -14,7 +14,7 @@ export default class App extends Component {
   componentDidMount () {
     const socket = io('http://localhost:3001');
     socket.on('connect', () => {
-      
+      console.log('sup guy');
     });
 
   }

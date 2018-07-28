@@ -18,7 +18,7 @@ export default class MainArea extends Component {
             <div className='tile is-7 is-parent'>
               <article className='tile is-child box'>
                 <div className='content'>
-                  <h3 className='title is-3'>BOOKE YOUR TABLE</h3>
+                  <h3 className='title is-3'>BOOK YOUR TABLE</h3>
                   <BookingForm />
                 </div>
               </article>
