@@ -4,6 +4,22 @@ require('dotenv').config();
 // require express and app
 const express = require('express');
 const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+const path = require('path')
+
+
+server.listen(3001);
+
+app.get('/', function (req, res) {
+  console.log('getting hit in index.js');
+  res.sendFile(path.join(__dirname, '../client/index.html'));
+});
+
+io.on('connection', function(socket){
+  socket.emit('news', {hello: 'world'});
+  
+})
 
 // require massive js
 const massive = require('massive');
@@ -12,7 +28,7 @@ const massive = require('massive');
 const apiRoutes = require('../routes/api');
 
 // constants
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 const ENV = process.env.NODE_ENV || 'development';
 
 const connectionString = process.env.DATABASE_URL;
@@ -29,17 +45,6 @@ massive(connectionString)
 
     app.set('db', massiveInstance);
     const db = app.get('db');
-
-    // massive js example
-    var newUser = {
-      email: "test@test.com",
-      first: "Joe",
-      last: "Test"
-    };
-    db.users.save(newUser, function (err, result) {
-      console.log(result);
-    });
-
 
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT} in ${ENV} mode.`);
