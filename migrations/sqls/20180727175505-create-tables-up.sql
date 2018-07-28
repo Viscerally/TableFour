@@ -2,7 +2,7 @@ CREATE TABLE "customers" (
   "id" SERIAL NOT NULL PRIMARY KEY,
   "name" VARCHAR(20) NOT NULL,
   "phone" BIGINT NOT NULL,
-  "email" VARCHAR(50)
+  "email" VARCHAR(50) 
 );
 CREATE TABLE "orders" (
   "id" SERIAL NOT NULL PRIMARY KEY,
