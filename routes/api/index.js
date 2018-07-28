@@ -1,5 +1,6 @@
 const express = require('express');
 const apiRouter = express.Router();
+const msg = require("./sms.js");
 
 module.exports = function (db) {
   apiRouter.get('/reservations', (req, res) => {
@@ -73,6 +74,12 @@ module.exports = function (db) {
   })
   apiRouter.get('/categories/:cat_id/menu_items', (req, res) => {
     res.send('Return a list of all menu items associated with a category');
+  })
+
+///////////Test route for sms functionality/////////
+
+  apiRouter.post('/sms', (req, res) => {
+    console.log('sent text message'); 
   })
 
 
