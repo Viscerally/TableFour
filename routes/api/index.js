@@ -3,7 +3,18 @@ const apiRouter = express.Router();
 
 module.exports = function (db) {
   apiRouter.get('/reservations', (req, res) => {
-    res.send('Return all reservations');
+    // create a query string
+    const q = "SELECT * FROM reservations JOIN customers ON customer_id = customers.id" +
+    " WHERE placement_time >=NOW()::DATE + INTERVAL '1h' ORDER BY placement_time desc";
+
+    db.query(q)
+      .then(result => {
+        res.status(200).send(result);
+      })
+      .then(err => {
+        res.status(500).send({ error: 'Error while retrieving all reservation data' });
+        console.log(err.stack);
+      })
   })
   apiRouter.post('/reservations', (req, res) => {
     // get the form data
@@ -18,7 +29,7 @@ module.exports = function (db) {
       phone,
       email
     };
-
+    console.log(customerData);
     // save customerData into customers tb
     db.customers.save(customerData)
       .then(customer => {
@@ -37,13 +48,13 @@ module.exports = function (db) {
             res.status(200).json({ customer, reservation });
           })
           .catch(err => {
-            res.status(500).send('Internal error');
+            res.status(500).send({ error: 'Error while retrieving reservation data' });
             console.log(err.stack);
           })
 
       })
       .catch(err => {
-        res.status(500).send('Internal error');
+        res.status(500).send({ error: 'Error while retrieving customer data' });
         console.log(err.stack);
       });
 

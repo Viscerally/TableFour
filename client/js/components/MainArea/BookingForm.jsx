@@ -5,39 +5,15 @@ export default class BookingForm extends Component {
     super(props);
     this.state = { name: '', phone: '', group_size: '', email: '' };
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange({ target: { name, value } }) {
     this.setState({ [name]: value });
   }
 
-
-  handleSubmit(event) {
-    // prevent default GET request
-    event.preventDefault();
-    // take out obj keys from event.target
-    const { name, phone, group_size, email } = event.target;
-    // create JSON with name, phone, and email
-    const body = JSON.stringify({
-      name: name.value,
-      phone: phone.value,
-      group_size: group_size.value,
-      email: email.value
-    });
-
-    // make a POST request to /api/reservations
-    // NOTE: specify the content type to application/json
-    fetch('/api/reservations', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body
-    });
-  }
-
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.props.handleResoFormSubmit}>
         <div className='field'>
           <label className='label is-medium'>Name</label>
           <div className='control has-icons-left has-icons-right'>
