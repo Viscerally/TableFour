@@ -10,10 +10,10 @@ export default class ReservationDashboard extends Component {
       reservations: [],
       res_code: ''
     };
-    this.Table = this.Table.bind(this);
+    this.makeTable = this.makeTable.bind(this);
   }
 
-  Table() {
+  makeTable() {
     // set sizeSum to 0 before calculating how many people are ahead of the current customer
     let sizeSum = 0;
     // if reservation_id is not given,
@@ -118,8 +118,13 @@ export default class ReservationDashboard extends Component {
 
     // RESERVATION ID
     // if res_id's passed as a URL param, save it in the state
-    const { res_id } = this.props.urlParams;
-    if (res_id) { this.setState({ res_code: res_id }); }
+    this.setState(oldState => {
+      const { res_id } = this.props.urlParams;
+      oldState.res_code = res_id;
+      // pass res_id to the parent component
+      this.props.getResCode(res_id);
+      return oldState;
+    });
 
     // INITIAL RESERVATION DATA
     // get all reservations
@@ -127,7 +132,6 @@ export default class ReservationDashboard extends Component {
       .then(reservations => {
         // save all reso data to state
         this.setState({ reservations });
-        console.log(reservations);
       })
       .catch(err => { console.log(err) });
 
@@ -147,16 +151,23 @@ export default class ReservationDashboard extends Component {
           const reservations = [...oldState.reservations, newReservation];
           oldState.reservations = reservations;
           oldState.res_code = res_code;
+          // pass res_id to the parent component
+          this.props.getResCode(res_id);
           return oldState;
         });
       });
     });
+
+    // RES_CODE
+    // send res_code to MainArea
+    console.log(this.state);
+
   }
 
   render() {
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-        <this.Table />
+        {this.makeTable()}
       </table>
     );
   }
