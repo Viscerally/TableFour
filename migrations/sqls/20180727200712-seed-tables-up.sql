@@ -159,7 +159,7 @@ INSERT INTO menu_items_orders (menu_item_id, order_id) VALUES
 
 
 INSERT INTO reservations (placement_time, group_size, status, order_id, customer_id) VALUES
-('2018-07-07 18:00:00', 2, 'ordered',1 , 1);
+('2018-07-07 18:00:00', 2, 'waiting',1 , 1);
 
 INSERT INTO reservations (placement_time, group_size, status, order_id, customer_id) VALUES
 ('2018-07-07 18:30:00', 3, 'waiting',2 , 2);
