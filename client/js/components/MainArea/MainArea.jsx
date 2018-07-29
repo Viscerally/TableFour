@@ -6,6 +6,28 @@ import BookingForm from './BookingForm.jsx';
 import Menu from './Menu.jsx';
 
 export default class MainArea extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { res_code: '' };
+
+    this.getResCode = this.getResCode.bind(this);
+    this.showRefId = this.showRefId.bind(this);
+  }
+
+  getResCode(resCode) {
+    this.setState({ res_code: resCode })
+  }
+
+  showRefId() {
+    if (this.state.res_code) {
+      return (
+        <span className='subtitle is-5'>
+          <em> - Reference ID: {this.state.res_code}</em>
+        </span>
+      );
+    }
+  };
+
   render() {
     return (
       <div className='container is-desktop'>
@@ -18,7 +40,8 @@ export default class MainArea extends Component {
             <div className='tile is-5 is-parent'>
               <article className='tile is-child box'>
                 <div className='content'>
-                  <h3 className='title is-4'>BOOK YOUR TABLE</h3>
+                  <span className='title is-3'>BOOK YOUR TABLE</span>
+                  {this.showRefId()}
                   <BookingForm />
                 </div>
               </article>
@@ -26,8 +49,11 @@ export default class MainArea extends Component {
             <div className='tile is-parent'>
               <article className='tile is-child box'>
                 <div className='content'>
-                  <h3 className='title is-4'>RESERVATION STATUS</h3>
-                  <ReservationDashboard urlParams={this.props.match.params} />
+                  <p className='title is-3'>RESERVATION STATUS</p>
+                  <ReservationDashboard
+                    urlParams={this.props.match.params}
+                    getResCode={this.getResCode}
+                  />
                 </div>
               </article>
             </div>
