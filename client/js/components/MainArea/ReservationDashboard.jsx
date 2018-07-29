@@ -10,10 +10,10 @@ export default class ReservationDashboard extends Component {
       reservations: [],
       res_code: ''
     };
-    this.Table = this.Table.bind(this);
+    this.makeTable = this.makeTable.bind(this);
   }
 
-  Table() {
+  makeTable() {
     // set sizeSum to 0 before calculating how many people are ahead of the current customer
     let sizeSum = 0;
     // if reservation_id is not given,
@@ -117,9 +117,17 @@ export default class ReservationDashboard extends Component {
     this.setState({ socket });
 
     // RESERVATION ID
-    // if res_id's passed as a URL param, save it in the state
-    const { res_id } = this.props.urlParams;
-    if (res_id) { this.setState({ res_code: res_id }); }
+    // check if res_code's passed as a URL param
+    // if it exists, save it in the state. if not, save it as null
+    this.setState(oldState => {
+      let { res_code } = this.props.urlParams;
+      res_code = (this.props.urlParams.res_code) || null;
+
+      oldState.res_code = res_code;
+      // pass res_code to the parent component
+      this.props.getResCode(res_code);
+      return oldState;
+    });
 
     // INITIAL RESERVATION DATA
     // get all reservations
@@ -127,7 +135,6 @@ export default class ReservationDashboard extends Component {
       .then(reservations => {
         // save all reso data to state
         this.setState({ reservations });
-        console.log(reservations);
       })
       .catch(err => { console.log(err) });
 
@@ -142,11 +149,13 @@ export default class ReservationDashboard extends Component {
         } = newRecord;
 
         const newReservation = { email, name, phone, res_code, group_size, order_id, id, placement_time, status }
-
+        
         this.setState(oldState => {
           const reservations = [...oldState.reservations, newReservation];
           oldState.reservations = reservations;
           oldState.res_code = res_code;
+          // pass res_code to the parent component
+          this.props.getResCode(res_code);
           return oldState;
         });
       });
@@ -156,7 +165,7 @@ export default class ReservationDashboard extends Component {
   render() {
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-        <this.Table />
+        {this.makeTable()}
       </table>
     );
   }

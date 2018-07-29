@@ -22,7 +22,8 @@ export default class BookingForm extends Component {
       name: name.value.trim(),
       phone: phone.value.replace(/\D/g, ''),
       group_size: group_size.value,
-      email: email.value
+      email: email.value,
+      res_code: this.props.res_code
     });
 
     // make a POST request to /api/reservations
@@ -37,6 +38,7 @@ export default class BookingForm extends Component {
   }
 
   render() {
+
     return (
       <form onSubmit={this.handleFormSubmission}>
         <div className='field'>

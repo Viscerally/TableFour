@@ -7,10 +7,10 @@ export default class AdminReservationDashboard extends Component {
     super(props);
     this.state = { socket: '', reservations: [] };
 
-    this.Table = this.Table.bind(this);
+    this.makeTable = this.makeTable.bind(this);
   }
 
-  Table() {
+  makeTable() {
     let sizeSum = 0;
     const tHeader = (
       <tr>
@@ -28,7 +28,6 @@ export default class AdminReservationDashboard extends Component {
       sizeSum += reservation.group_size;
 
       const { id, group_size, name, order_id, status } = reservation;
-      console.log(reservation);
       return (
         <tr key={id}>
           <td>{index + 1}</td>
@@ -68,7 +67,6 @@ export default class AdminReservationDashboard extends Component {
       .then(reservations => {
         // save all reso data to state
         this.setState({ reservations });
-        console.log(this.state);
       })
       .catch(err => { console.log(err) });
 
@@ -97,7 +95,7 @@ export default class AdminReservationDashboard extends Component {
   render() {
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-        <this.Table />
+        {this.makeTable()}
       </table>
     );
   }
