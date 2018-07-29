@@ -117,12 +117,15 @@ export default class ReservationDashboard extends Component {
     this.setState({ socket });
 
     // RESERVATION ID
-    // if res_id's passed as a URL param, save it in the state
+    // check if res_code's passed as a URL param
+    // if it exists, save it in the state. if not, save it as null
     this.setState(oldState => {
-      const { res_id } = this.props.urlParams;
-      oldState.res_code = res_id;
-      // pass res_id to the parent component
-      this.props.getResCode(res_id);
+      let { res_code } = this.props.urlParams;
+      res_code = (this.props.urlParams.res_code) || null;
+
+      oldState.res_code = res_code;
+      // pass res_code to the parent component
+      this.props.getResCode(res_code);
       return oldState;
     });
 
@@ -146,22 +149,17 @@ export default class ReservationDashboard extends Component {
         } = newRecord;
 
         const newReservation = { email, name, phone, res_code, group_size, order_id, id, placement_time, status }
-
+        
         this.setState(oldState => {
           const reservations = [...oldState.reservations, newReservation];
           oldState.reservations = reservations;
           oldState.res_code = res_code;
-          // pass res_id to the parent component
-          this.props.getResCode(res_id);
+          // pass res_code to the parent component
+          this.props.getResCode(res_code);
           return oldState;
         });
       });
     });
-
-    // RES_CODE
-    // send res_code to MainArea
-    console.log(this.state);
-
   }
 
   render() {
