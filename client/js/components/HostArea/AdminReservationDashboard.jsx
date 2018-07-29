@@ -68,7 +68,6 @@ export default class AdminReservationDashboard extends Component {
       .then(reservations => {
         // save all reso data to state
         this.setState({ reservations });
-        console.log(this.state);
       })
       .catch(err => { console.log(err) });
 
