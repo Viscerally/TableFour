@@ -28,7 +28,6 @@ export default class AdminReservationDashboard extends Component {
       sizeSum += reservation.group_size;
 
       const { id, group_size, name, order_id, status } = reservation;
-      console.log(reservation);
       return (
         <tr key={id}>
           <td>{index + 1}</td>
