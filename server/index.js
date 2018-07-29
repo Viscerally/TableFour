@@ -3,7 +3,7 @@ require('dotenv').config();
 
 
 // constants
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 8080;
 const ENV = process.env.NODE_ENV || 'development';
 const connectionString = process.env.DATABASE_URL;
 
