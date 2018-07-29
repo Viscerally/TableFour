@@ -1,10 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { getAllReservations } from '../../../libs/reservation-func.js';
 import io from 'socket.io-client';
 
-const TableHead = () => {
-  return (
-    <thead>
+export default class AdminReservationDashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { socket: '', reservations: [] };
+
+    this.Table = this.Table.bind(this);
+  }
+
+  Table() {
+    let sizeSum = 0;
+    const tHeader = (
       <tr>
         <th>#</th>
         <th>SIZE</th>
@@ -12,21 +20,13 @@ const TableHead = () => {
         <th>ORDERED?</th>
         <th>STATUS</th>
       </tr>
-    </thead>
-  );
-}
+    );
 
-export default class AdminReservationDashboard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { socket: '', reservations: [] };
-
-    this.TableBody = this.TableBody.bind(this);
-  }
-
-  TableBody() {
     // loop through table rows
     const cells = this.state.reservations.map((reservation, index) => {
+      // add the group size
+      sizeSum += reservation.group_size;
+
       const { id, group_size, name, order_id, status } = reservation;
       console.log(reservation);
       return (
@@ -34,12 +34,26 @@ export default class AdminReservationDashboard extends Component {
           <td>{index + 1}</td>
           <td>{group_size}</td>
           <td>{name}</td>
-          <td>{order_id}</td>
+          <td>{(order_id) ? 'Y' : 'N'}</td>
           <td>{status}</td>
         </tr>
       )
     });
-    return <tbody>{cells}</tbody>;
+
+    let stats = (
+      <tr>
+        <th colSpan='5'>
+          {this.state.reservations.length} groups ({sizeSum} people) waiting..
+        </th>
+      </tr>
+    );
+
+    return (
+      <Fragment>
+        <thead>{stats}{tHeader}</thead>
+        <tbody>{cells}</tbody>
+      </Fragment>
+    );
   };
 
   componentDidMount() {
@@ -83,8 +97,7 @@ export default class AdminReservationDashboard extends Component {
   render() {
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-        <TableHead />
-        <this.TableBody />
+        <this.Table />
       </table>
     );
   }
