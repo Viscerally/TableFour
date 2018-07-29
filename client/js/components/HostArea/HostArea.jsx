@@ -15,7 +15,7 @@ export default class AdminArea extends Component {
             <div className='tile is-parent'>
               <article className='tile is-child box'>
                 <div className='content'>
-                  <h3 className='title is-3'>CURRENT RESERVATIONS</h3>
+                  <h3 className='title is-4'>RESERVATION STATUS</h3>
                   <AdminReservationDashboard />
                 </div>
               </article>
