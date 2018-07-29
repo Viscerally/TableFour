@@ -11,7 +11,8 @@ export default class App extends Component {
       <Router>
         <div>
           <Route path="/admin" component={HostArea} />
-          <Route path="/home" component={MainArea} />
+          <Route exact path="/home" component={MainArea} />
+          <Route path="/home/reservations/:res_id" component={MainArea} />
         </div>
       </Router>
     );

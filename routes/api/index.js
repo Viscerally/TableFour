@@ -6,7 +6,7 @@ module.exports = function (db, io) {
   // initial loading of all reservation records
   apiRouter.get('/reservations', (req, res) => {
     // query string
-    const q = "SELECT * FROM reservations JOIN customers ON customer_id = customers.id ORDER BY placement_time DESC";
+    const q = "SELECT * FROM reservations JOIN customers ON customer_id = customers.id ORDER BY placement_time ASC";
 
     db.query(q)
       .then(result => {
