@@ -84,7 +84,7 @@ module.exports = {
     // express routes are specifically for api calls
     // set up a proxy so that you have access to express server (port: 3002) from dev server
     proxy: {
-      "/api": "http://localhost:3001"
+      "/api": "http://localhost:3002"
     },
     // set historyApiFallback to true so that the app is served for any URL not just for /
     historyApiFallback: true,
