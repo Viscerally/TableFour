@@ -1,10 +1,34 @@
 import React, { Component } from 'react';
+import { getAllReservations, makeReservation } from '../../../libs/reservation-func.js';
 
 export default class BookingForm extends Component {
   constructor(props) {
     super(props);
     this.state = { name: '', phone: '', group_size: '', email: '' };
+
+    this.handleFormSubmission = this.handleFormSubmission.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  // make a POST request with form data
+  handleFormSubmission(event) {
+    // prevent default GET request
+    event.preventDefault();
+    // take out obj keys from event.target
+    const { name, phone, group_size, email } = event.target;
+    // create JSON with name, phone, and email
+    const body = JSON.stringify({
+      name: name.value,
+      phone: phone.value,
+      group_size: group_size.value,
+      email: email.value
+    });
+    // make a POST request to /api/reservations
+    // NOTE: specify the content type to application/json
+
+    makeReservation(body)
+      .then(response => { console.log(response); })
+      .catch(err => { console.log(err); });
   }
 
   handleChange({ target: { name, value } }) {
@@ -13,7 +37,7 @@ export default class BookingForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.props.handleResoFormSubmit}>
+      <form onSubmit={this.handleFormSubmission}>
         <div className='field'>
           <label className='label is-medium'>Name</label>
           <div className='control has-icons-left has-icons-right'>

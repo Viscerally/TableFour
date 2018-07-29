@@ -14,7 +14,7 @@ module.exports = {
         headers: { 'Content-Type': 'application/json' },
         body: data
       })
-        .then(() => { resolve(); })
+        .then(() => { resolve({ response: "Booking successful" }); })
         .catch(err => { reject(err.stack) });
     });
   }

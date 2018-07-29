@@ -15,16 +15,23 @@ export default class MainArea extends Component {
         </header>
         <br />
         <main>
-        <div className='tile is-ancestor top-tile'>
-          <div className='tile is-7 is-parent'>
-            <article className='tile is-child box'>
-              <div className='content'>
-                <h3 className='title is-3'>BOOK YOUR TABLE</h3>
-                <BookingForm
-                  handleResoFormSubmit={this.props.handleResoFormSubmit}
-                />
-              </div>
-            </article>
+          <div className='tile is-ancestor top-tile'>
+            <div className='tile is-7 is-parent'>
+              <article className='tile is-child box'>
+                <div className='content'>
+                  <h3 className='title is-3'>BOOK YOUR TABLE</h3>
+                  <BookingForm />
+                </div>
+              </article>
+            </div>
+            <div className='tile is-parent'>
+              <article className='tile is-child box'>
+                <div className='content'>
+                  <h3 className='title is-3'>CURRENT RESERVATIONS</h3>
+                  <ReservationDashboard />
+                </div>
+              </article>
+            </div>
           </div>
           <div className='tile is-parent'>
             <article className='tile is-child box'>

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { getAllReservations } from '../../libs/reservation-func.js';
+import io from 'socket.io-client';
 
 const TableHead = () => {
   return (
     <thead>
       <tr>
         <th>#</th>
+        <th>NAME</th>
         <th>GROUP SIZE</th>
         <th>
           <a className='button is-link is-rounded'>
@@ -23,15 +25,21 @@ const TableHead = () => {
 export default class ReservationDashboard extends Component {
   constructor(props) {
     super(props);
-    this.state = { reservations: [] };
+    this.state = {
+      socket: '',
+      reservations: []
+    };
 
     this.TableBody = this.TableBody.bind(this);
   }
+
+
 
   TableBody() {
     const cells = this.state.reservations.map((reservation, index) =>
       <tr key={reservation.id}>
         <td>{index + 1}</td>
+        <td>{reservation.name}</td>
         <td>{reservation.group_size}</td>
         <td></td>
       </tr>
@@ -77,12 +85,33 @@ export default class ReservationDashboard extends Component {
 
 
   componentDidMount() {
+    // initial loading of all reservations
     getAllReservations()
       .then(reservations => {
         // save all reso data to state
         this.setState({ reservations })
+        console.log(reservations);
       })
       .catch(err => { console.log(err) });
+
+
+    // after all components are mounted, socket disappears
+    // this needs to be placed in state
+    const socket = io('http://localhost:3001');
+    this.setState({ socket });
+    socket.on('connect', () => {
+      socket.on('news', newRecord => {
+        // customer_id, email, group_size, id, name. order_id, phone, placement_time, status
+        const {
+          customer: { customer_id, email, name, phone },
+          reservation: { group_size, id, order_id, placement_time, status }
+        } = newRecord;
+
+        const newReservation = { customer_id, email, group_size, id, name, order_id, phone, placement_time, status }
+        this.setState({ reservations: [...this.state.reservations, newReservation] });
+        window.location = `/home/users/${id}`;
+      });
+    });
   }
 
   render() {
