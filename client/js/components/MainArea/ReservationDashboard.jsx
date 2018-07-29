@@ -15,10 +15,19 @@ export default class ReservationDashboard extends Component {
   }
 
   Table() {
-    let sizeSum = 0; // set sizeSum to 0 before calculating how many people are ahead of the current customer
-    let stats = ''; // statistics table header
-    // default <th></th>
-    const tTitle = (
+    // set sizeSum to 0 before calculating how many people are ahead of the current customer
+    let sizeSum = 0;
+    // if reservation_id is not given,
+    // display the total number of groups and people instead
+    let stats = (this.state.res_id === '') && (
+      <tr>
+        <th colSpan='4'>
+          {this.state.reservations.length} groups ({sizeSum} people) waiting..
+        </th>
+      </tr>
+    );
+    // default table header
+    const tHeader = (
       <tr>
         <th>#</th>
         <th>NAME</th>
@@ -26,59 +35,65 @@ export default class ReservationDashboard extends Component {
         <th></th>
       </tr>
     );
+    let options = '';
 
     // loop through table rows
     const cells = this.state.reservations.map((reservation, index) => {
-      let { name, group_size } = reservation;
-
       // add the group size
       sizeSum += reservation.group_size;
 
-      // if user's has a correct reservation id, make the corresponding row unique so that
-      // user knows the row shows their reservation
-      let position = '';
-      let options = '';
+      // if correct reservation id is given, make the corresponding
+      // row unique so that user knows the row shows their reservation
       if (this.state.res_id == reservation.id) {
         // create stats for the current customer
         stats = (
           <tr>
-            <th colSpan='2'>Position: {index + 1}</th>
-            <th colSpan='2'>{sizeSum - reservation.group_size} people ahead of you</th>
+            <th colSpan='4'>
+              Your position: {index + 1} ({sizeSum - reservation.group_size} people ahead)
+            </th>
           </tr>
         );
-
-        // each row position & option
-        position = <span className='tag is-medium is-info'>{index + 1}</span>;
+        // option for the selected reservation
         options = (
-          <a className='button is-link is-rounded'>
+          <a className='button is-link is-rounded is-small'>
             <span>Place Order</span>
-            <span className='icon is-small'><i className="fas fa-cart-arrow-down"></i></span>
+            <span className='icon is-small'>
+              <i className="fas fa-cart-arrow-down"></i>
+            </span>
           </a>
         );
       } else {
-        position = index + 1;
         // hide customer name other than the current customer's name
-        name = '...';
         options = '';
       }
 
       // we don't need to show all table rows
       // show the first 3 rows and then skip to the current user
       const visibleRowCut = 3;
-      if (index < visibleRowCut || this.state.res_id == reservation.id) {
+      if (index < visibleRowCut) {
+        // first 3 rows
         return (
           <tr key={reservation.id}>
-            <td>{position}</td>
-            <td>{name}</td>
-            <td>{group_size}</td>
+            <td>{index + 1}</td>
+            <td>...</td>
+            <td>{reservation.group_size}</td>
+            <td>{options}</td>
+          </tr>
+        );
+      } else if (this.state.res_id == reservation.id) {
+        // current customer's reservation row
+        return (
+          <tr key={reservation.id} className='is-selected'>
+            <td>{index + 1}</td>
+            <td>{reservation.name}</td>
+            <td>{reservation.group_size}</td>
             <td>{options}</td>
           </tr>
         )
       } else if (index == visibleRowCut) {
         return (
           <tr key='empty_row'>
-            <td>{position}</td>
-            <td colSpan='3'>...</td>
+            <td colSpan='4'>...</td>
           </tr>
         );
       }
@@ -86,7 +101,7 @@ export default class ReservationDashboard extends Component {
 
     return (
       <Fragment>
-        <thead>{stats}{tTitle}</thead>
+        <thead>{stats}{tHeader}</thead>
         <tbody>{cells}</tbody>
       </Fragment>
     );
