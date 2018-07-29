@@ -20,9 +20,7 @@ export default class MainArea extends Component {
               <article className='tile is-child box'>
                 <div className='content'>
                   <h3 className='title is-3'>BOOK YOUR TABLE</h3>
-                  <BookingForm
-                    handleResoFormSubmit={this.props.handleResoFormSubmit}
-                  />
+                  <BookingForm />
                 </div>
               </article>
             </div>
