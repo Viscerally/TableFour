@@ -1,19 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { getAllReservations } from '../../../libs/reservation-func.js';
 import io from 'socket.io-client';
-
-const TableHead = () => {
-  return (
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>NAME</th>
-        <th>SIZE</th>
-        <th></th>
-      </tr>
-    </thead>
-  );
-}
 
 export default class ReservationDashboard extends Component {
   constructor(props) {
@@ -21,21 +8,46 @@ export default class ReservationDashboard extends Component {
     this.state = {
       socket: '',
       reservations: [],
-      res_id: ''
+      res_id: '',
+      position: ''
     };
-
-    this.TableBody = this.TableBody.bind(this);
+    this.Table = this.Table.bind(this);
   }
 
-  TableBody() {
+  Table() {
+    let sizeSum = 0; // set sizeSum to 0 before calculating how many people are ahead of the current customer
+    let stats = ''; // statistics table header
+    // default <th></th>
+    const tTitle = (
+      <tr>
+        <th>#</th>
+        <th>NAME</th>
+        <th>SIZE</th>
+        <th></th>
+      </tr>
+    );
+
     // loop through table rows
     const cells = this.state.reservations.map((reservation, index) => {
       let { name, group_size } = reservation;
+
+      // add the group size
+      sizeSum += reservation.group_size;
+
       // if user's has a correct reservation id, make the corresponding row unique so that
       // user knows the row shows their reservation
       let position = '';
       let options = '';
       if (this.state.res_id == reservation.id) {
+        // create stats for the current customer
+        stats = (
+          <tr>
+            <th colSpan='2'>Position: {index + 1}</th>
+            <th colSpan='2'>{sizeSum - reservation.group_size} people ahead of you</th>
+          </tr>
+        );
+
+        // each row position & option
         position = <span className='tag is-medium is-info'>{index + 1}</span>;
         options = (
           <a className='button is-link is-rounded'>
@@ -45,6 +57,7 @@ export default class ReservationDashboard extends Component {
         );
       } else {
         position = index + 1;
+        // hide customer name other than the current customer's name
         name = '...';
         options = '';
       }
@@ -71,7 +84,13 @@ export default class ReservationDashboard extends Component {
         );
       }
     });
-    return <tbody>{cells}</tbody>;
+
+    return (
+      <Fragment>
+        <thead>{stats}{tTitle}</thead>
+        <tbody>{cells}</tbody>
+      </Fragment>
+    );
   };
 
   componentDidMount() {
@@ -120,8 +139,7 @@ export default class ReservationDashboard extends Component {
   render() {
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-        <TableHead />
-        <this.TableBody />
+        <this.Table />
       </table>
     );
   }
