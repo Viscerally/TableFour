@@ -7,10 +7,10 @@ export default class AdminReservationDashboard extends Component {
     super(props);
     this.state = { socket: '', reservations: [] };
 
-    this.Table = this.Table.bind(this);
+    this.makeTable = this.makeTable.bind(this);
   }
 
-  Table() {
+  makeTable() {
     let sizeSum = 0;
     const tHeader = (
       <tr>
@@ -97,7 +97,7 @@ export default class AdminReservationDashboard extends Component {
   render() {
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-        <this.Table />
+        {this.makeTable()}
       </table>
     );
   }
