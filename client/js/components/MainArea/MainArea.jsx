@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 
 import Navbar from '../Navbar.jsx';
-import ReservationDashboard from '../ReservationDashboard.jsx';
+import ReservationDashboard from './ReservationDashboard.jsx';
 import BookingForm from './BookingForm.jsx';
 import Menu from './Menu.jsx';
 
 export default class MainArea extends Component {
-
   render() {
     return (
       <div className='container is-desktop'>
@@ -28,7 +27,7 @@ export default class MainArea extends Component {
               <article className='tile is-child box'>
                 <div className='content'>
                   <h3 className='title is-3'>CURRENT RESERVATIONS</h3>
-                  <ReservationDashboard />
+                  <ReservationDashboard urlParams={this.props.match.params} />
                 </div>
               </article>
             </div>
