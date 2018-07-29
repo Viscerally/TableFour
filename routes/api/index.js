@@ -1,11 +1,12 @@
 const express = require('express');
 const apiRouter = express.Router();
 
-module.exports = function (db) {
+module.exports = function (db, io) {
+
+  // initial loading of all reservation records
   apiRouter.get('/reservations', (req, res) => {
-    // create a query string
-    const q = "SELECT * FROM reservations JOIN customers ON customer_id = customers.id" +
-      " WHERE placement_time >=NOW()::DATE + INTERVAL '1h' ORDER BY placement_time desc";
+    // query string
+    const q = "SELECT * FROM reservations JOIN customers ON customer_id = customers.id ORDER BY placement_time DESC";
 
     db.query(q)
       .then(result => {
@@ -16,9 +17,8 @@ module.exports = function (db) {
         // console.log(err.stack);
       })
   })
+
   apiRouter.post('/reservations', (req, res) => {
-    // get the form data
-    const formData = req.body;
     // deconstruct req.body object
     const { name, phone, group_size, email } = req.body;
 
@@ -32,7 +32,6 @@ module.exports = function (db) {
     // save customerData into customers tb
     db.customers.save(customerData)
       .then(customer => {
-
         // create an object representing reservation data
         const resoData = {
           placement_time: new Date(),
@@ -43,14 +42,12 @@ module.exports = function (db) {
         // save reservation data
         db.reservations.save(resoData)
           .then(reservation => {
-            // return customer and reservation json
-            res.status(200).json({ customer, reservation });
+            io.emit('news', { customer, reservation });
           })
           .catch(err => {
             // res.status(500).send({ error: 'Error while retrieving reservation data' });
             // console.log(err.stack);
           })
-
       })
       .catch(err => {
         // res.status(500).send({ error: 'Error while retrieving customer data' });
@@ -74,8 +71,6 @@ module.exports = function (db) {
     res.send('Return a list of all menu items associated with a category');
   })
 
-
-  // get the massiveJS instance saved in app object
-  // console.log(db);
   return apiRouter;
+
 }
