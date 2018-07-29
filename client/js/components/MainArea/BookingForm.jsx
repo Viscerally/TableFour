@@ -94,6 +94,7 @@ export default class BookingForm extends Component {
               name='group_size'
               type='number'
               min='1'
+              max='10'
               placeholder='e.g. 2'
               required
             />
