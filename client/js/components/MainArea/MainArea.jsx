@@ -4,6 +4,7 @@ import Navbar from '../Navbar.jsx';
 import ReservationDashboard from './ReservationDashboard.jsx';
 import BookingForm from './BookingForm.jsx';
 import Menu from './Menu.jsx';
+import Order from  './Order.jsx'
 
 export default class MainArea extends Component {
   render() {
@@ -34,6 +35,9 @@ export default class MainArea extends Component {
           </div>
           <div className='tile menu-tile is-4'>
             <Menu />
+          </div>
+          <div className='tile order-tile is-4'>
+            <Order />
           </div>
         </main>
         <footer></footer>
