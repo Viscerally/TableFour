@@ -8,8 +8,7 @@ export default class ReservationDashboard extends Component {
     this.state = {
       socket: '',
       reservations: [],
-      res_id: '',
-      position: ''
+      res_code: ''
     };
     this.Table = this.Table.bind(this);
   }
@@ -19,7 +18,7 @@ export default class ReservationDashboard extends Component {
     let sizeSum = 0;
     // if reservation_id is not given,
     // display the total number of groups and people instead
-    let stats = (this.state.res_id === '') && (
+    let stats = (this.state.res_code === '') && (
       <tr>
         <th colSpan='4'>
           {this.state.reservations.length} groups ({sizeSum} people) waiting..
@@ -42,9 +41,9 @@ export default class ReservationDashboard extends Component {
       // add the group size
       sizeSum += reservation.group_size;
 
-      // if correct reservation id is given, make the corresponding
+      // if correct reservation code is given, make the corresponding
       // row unique so that user knows the row shows their reservation
-      if (this.state.res_id == reservation.id) {
+      if (this.state.res_code == reservation.res_code) {
         // create stats for the current customer
         stats = (
           <tr>
@@ -70,23 +69,27 @@ export default class ReservationDashboard extends Component {
       // we don't need to show all table rows
       // show the first 3 rows and then skip to the current user
       const visibleRowCut = 3;
+      let { name, group_size } = reservation;
+      const klassName = (this.state.res_code == reservation.res_code) ? 'is-selected' : '';
+      name = (this.state.res_code == reservation.res_code) ? name : '...';
+
       if (index < visibleRowCut) {
         // first 3 rows
         return (
-          <tr key={reservation.id}>
+          <tr key={reservation.id} className={klassName}>
             <td>{index + 1}</td>
-            <td>...</td>
-            <td>{reservation.group_size}</td>
+            <td>{name}</td>
+            <td>{group_size}</td>
             <td>{options}</td>
           </tr>
         );
-      } else if (this.state.res_id == reservation.id) {
+      } else if (this.state.res_code == reservation.res_code) {
         // current customer's reservation row
         return (
-          <tr key={reservation.id} className='is-selected'>
+          <tr key={reservation.id} className={klassName}>
             <td>{index + 1}</td>
-            <td>{reservation.name}</td>
-            <td>{reservation.group_size}</td>
+            <td>{name}</td>
+            <td>{group_size}</td>
             <td>{options}</td>
           </tr>
         )
@@ -116,7 +119,7 @@ export default class ReservationDashboard extends Component {
     // RESERVATION ID
     // if res_id's passed as a URL param, save it in the state
     const { res_id } = this.props.urlParams;
-    if (res_id) { this.setState({ res_id }); }
+    if (res_id) { this.setState({ res_code: res_id }); }
 
     // INITIAL RESERVATION DATA
     // get all reservations
@@ -124,6 +127,7 @@ export default class ReservationDashboard extends Component {
       .then(reservations => {
         // save all reso data to state
         this.setState({ reservations });
+        console.log(reservations);
       })
       .catch(err => { console.log(err) });
 
@@ -134,15 +138,15 @@ export default class ReservationDashboard extends Component {
       socket.on('news', newRecord => {
         const {
           customer: { email, name, phone },
-          reservation: { customer_id, group_size, id, order_id, placement_time, status }
+          reservation: { res_code, order_id, group_size, id, placement_time, status }
         } = newRecord;
 
-        const newReservation = { customer_id, id, placement_time, group_size, status, order_id, email, id, name, phone }
+        const newReservation = { email, name, phone, res_code, group_size, order_id, id, placement_time, status }
 
         this.setState(oldState => {
           const reservations = [...oldState.reservations, newReservation];
           oldState.reservations = reservations;
-          oldState.res_id = id;
+          oldState.res_code = res_code;
           return oldState;
         });
       });

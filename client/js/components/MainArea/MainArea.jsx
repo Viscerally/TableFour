@@ -15,7 +15,7 @@ export default class MainArea extends Component {
         <br />
         <main>
           <div className='tile is-ancestor top-tile'>
-            <div className='tile is-7 is-parent'>
+            <div className='tile is-5 is-parent'>
               <article className='tile is-child box'>
                 <div className='content'>
                   <h3 className='title is-4'>BOOK YOUR TABLE</h3>

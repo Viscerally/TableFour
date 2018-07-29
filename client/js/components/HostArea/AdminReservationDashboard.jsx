@@ -65,16 +65,15 @@ export default class AdminReservationDashboard extends Component {
       socket.on('news', newRecord => {
         const {
           customer: { email, name, phone },
-          reservation: { customer_id, group_size, id, order_id, placement_time, status }
+          reservation: { res_code, order_id, group_size, id, placement_time, status }
         } = newRecord;
 
-        const newReservation = { customer_id, id, placement_time, group_size, status, order_id, email, id, name, phone }
+        const newReservation = { email, name, phone, res_code, group_size, order_id, id, placement_time, status }
 
         this.setState(oldState => {
           const reservations = [...oldState.reservations, newReservation];
           oldState.reservations = reservations;
-          oldState.res_id = id;
-          console.log(oldState);
+          oldState.res_code = res_code;
           return oldState;
         });
       });
