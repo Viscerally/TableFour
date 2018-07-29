@@ -1,12 +1,14 @@
 const express = require('express');
 const apiRouter = express.Router();
+const rs = require('random-strings');
 
 module.exports = function (db, io) {
 
   // initial loading of all reservation records
   apiRouter.get('/reservations', (req, res) => {
     // query string
-    const q = "SELECT * FROM reservations JOIN customers ON customer_id = customers.id ORDER BY placement_time ASC";
+    const qItems = 'reservations.id, email, group_size, name, phone, placement_time, res_code, order_id, status';
+    const q = `SELECT ${qItems} FROM reservations JOIN customers ON customer_id = customers.id ORDER BY placement_time ASC`;
 
     db.query(q)
       .then(result => {
@@ -37,6 +39,7 @@ module.exports = function (db, io) {
           placement_time: new Date(),
           status: 'waiting',
           customer_id: customer.id,
+          res_code: rs.alphaNumUpper(6),
           group_size
         };
         // save reservation data
