@@ -40,16 +40,16 @@ export default class MainArea extends Component {
             <div className='tile is-5 is-parent'>
               <article className='tile is-child box'>
                 <div className='content'>
-                  <span className='title is-3'>BOOK YOUR TABLE</span>
+                  <span className='title is-4'>BOOK YOUR TABLE</span>
                   {this.showRefId()}
-                  <BookingForm />
+                  <BookingForm res_code={this.state.res_code} />
                 </div>
               </article>
             </div>
             <div className='tile is-parent'>
               <article className='tile is-child box'>
                 <div className='content'>
-                  <p className='title is-3'>RESERVATION STATUS</p>
+                  <p className='title is-4'>RESERVATION STATUS</p>
                   <ReservationDashboard
                     urlParams={this.props.match.params}
                     getResCode={this.getResCode}
