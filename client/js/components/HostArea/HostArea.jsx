@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import fetch from 'cross-fetch';
 import Navbar from '../Navbar.jsx';
 import AdminReservationDashboard from './AdminReservationDashboard.jsx';
 
