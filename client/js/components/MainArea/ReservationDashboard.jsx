@@ -65,7 +65,6 @@ export default class ReservationDashboard extends Component {
       // we don't need to show all table rows
       // show the first 3 rows and then skip to the current user
       const visibleRowCut = 3;
-      console.log(index == visibleRowCut + 1);
       if (index < visibleRowCut || this.state.res_id == reservation.id) {
         return (
           <tr key={reservation.id}>
@@ -110,7 +109,6 @@ export default class ReservationDashboard extends Component {
       .then(reservations => {
         // save all reso data to state
         this.setState({ reservations });
-        console.log(this.state);
       })
       .catch(err => { console.log(err) });
 
