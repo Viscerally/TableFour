@@ -1,5 +1,5 @@
 const path = require('path');
-
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 // copies individual files or entire directories to the build directory
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 // simplifies creation of HTML files to serve the webpack bundles
@@ -48,17 +48,20 @@ module.exports = {
         }
       },
       {
-        // use the following loaders for all scss files
-        test: /\.scss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader'
-        ]
+        // use the following loaders for all scss and sass files
+        test: /\.scss|.sass$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            'css-loader',
+            'sass-loader'
+          ]
+        })
       }
     ]
   },
   plugins: [
+    new ExtractTextPlugin('css/mystyles.css'),
     // compile client side images to build
     new CopyWebpackPlugin([
       { from: 'client/images', to: path.join(__dirname, 'build/images') }

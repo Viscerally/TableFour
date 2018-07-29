@@ -19,7 +19,6 @@ const massive = require('massive');
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
-
 // set up middleware
 // all static files are in /bundle
 app.use(express.static(__dirname + '/build'));
