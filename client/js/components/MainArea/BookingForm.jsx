@@ -42,7 +42,7 @@ export default class BookingForm extends Component {
           <label className='label is-medium'>Name</label>
           <div className='control has-icons-left has-icons-right'>
             <input
-              className='input is-large'
+              className='input is-medium'
               value={this.state.value}
               onChange={this.handleChange}
               name='name'
@@ -62,7 +62,7 @@ export default class BookingForm extends Component {
           <label className='label is-medium'>Phone</label>
           <div className='control has-icons-left has-icons-right'>
             <input
-              className='input is-large'
+              className='input is-medium'
               value={this.state.phone}
               onChange={this.handleChange}
               name='phone'
@@ -84,7 +84,7 @@ export default class BookingForm extends Component {
           <label className='label is-medium'>Group Size</label>
           <div className='control has-icons-left has-icons-right'>
             <input
-              className='input is-large'
+              className='input is-medium'
               value={this.state.value}
               onChange={this.handleChange}
               name='group_size'
@@ -105,7 +105,7 @@ export default class BookingForm extends Component {
           <label className='label is-medium'>Email</label>
           <div className='control has-icons-left has-icons-right'>
             <input
-              className='input is-large'
+              className='input is-medium'
               value={this.state.email}
               onChange={this.handleChange}
               name='email'
