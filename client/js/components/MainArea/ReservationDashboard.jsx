@@ -8,7 +8,7 @@ const TableHead = () => {
       <tr>
         <th>#</th>
         <th>NAME</th>
-        <th>GROUP SIZE</th>
+        <th>SIZE</th>
         <th></th>
       </tr>
     </thead>
@@ -30,11 +30,11 @@ export default class ReservationDashboard extends Component {
   TableBody() {
     // loop through table rows
     const cells = this.state.reservations.map((reservation, index) => {
-      let position = '';
-      let options = '';
       let { name, group_size } = reservation;
       // if user's has a correct reservation id, make the corresponding row unique so that
       // user knows the row shows their reservation
+      let position = '';
+      let options = '';
       if (this.state.res_id == reservation.id) {
         position = <span className='tag is-medium is-info'>{index + 1}</span>;
         options = (
@@ -48,14 +48,28 @@ export default class ReservationDashboard extends Component {
         name = '...';
         options = '';
       }
-      return (
-        <tr key={reservation.id}>
-          <td>{position}</td>
-          <td>{name}</td>
-          <td>{group_size}</td>
-          <td>{options}</td>
-        </tr>
-      )
+
+      // we don't need to show all table rows
+      // show the first 3 rows and then skip to the current user
+      const visibleRowCut = 3;
+      console.log(index == visibleRowCut + 1);
+      if (index < visibleRowCut || this.state.res_id == reservation.id) {
+        return (
+          <tr key={reservation.id}>
+            <td>{position}</td>
+            <td>{name}</td>
+            <td>{group_size}</td>
+            <td>{options}</td>
+          </tr>
+        )
+      } else if (index == visibleRowCut) {
+        return (
+          <tr key='empty_row'>
+            <td>{position}</td>
+            <td colSpan='3'>...</td>
+          </tr>
+        );
+      }
     });
     return <tbody>{cells}</tbody>;
   };
