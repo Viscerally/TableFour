@@ -32,6 +32,7 @@ export default class ReservationDashboard extends Component {
     const cells = this.state.reservations.map((reservation, index) => {
       let position = '';
       let options = '';
+      let { name, group_size } = reservation;
       // if user's has a correct reservation id, make the corresponding row unique so that
       // user knows the row shows their reservation
       if (this.state.res_id == reservation.id) {
@@ -44,13 +45,14 @@ export default class ReservationDashboard extends Component {
         );
       } else {
         position = index + 1;
+        name = '...';
         options = '';
       }
       return (
         <tr key={reservation.id}>
           <td>{position}</td>
-          <td>{reservation.name}</td>
-          <td>{reservation.group_size}</td>
+          <td>{name}</td>
+          <td>{group_size}</td>
           <td>{options}</td>
         </tr>
       )
