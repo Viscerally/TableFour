@@ -70,6 +70,12 @@ module.exports = function (db, io) {
   apiRouter.get('/categories/:cat_id/menu_items', (req, res) => {
     res.send('Return a list of all menu items associated with a category');
   })
+  apiRouter.get('/menu_items', (req, res) => {
+    db.menu_items.find()
+      .then((menu_items) => {
+        res.status(200).json(menu_items);
+      })
+  })
 
   return apiRouter;
 

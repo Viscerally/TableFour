@@ -1,17 +1,13 @@
-// dotenv package
 require('dotenv').config();
-
 
 // constants
 const PORT = process.env.PORT || 3002;
 const ENV = process.env.NODE_ENV || 'development';
 const connectionString = process.env.DATABASE_URL;
 
-// require express and app
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-// require massive JS
 const massive = require('massive');
 // set up socket server
 // reference:
@@ -19,10 +15,7 @@ const massive = require('massive');
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
-// set up middleware
-// all static files are in /bundle
 app.use(express.static(__dirname + '/build'));
-// enable body parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -42,7 +35,6 @@ app.listen(PORT, () => {
 server.listen(3001, () => {
   console.log('HTTP server running on 3001');
 });
-
 
 // connect to PSQL using massive js
 massive(connectionString)

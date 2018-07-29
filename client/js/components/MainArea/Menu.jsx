@@ -2,11 +2,24 @@ import React, { Component } from 'react';
 import bulmaCarousel from 'bulma-carousel/dist/js/bulma-carousel.js';
 
 export default class Menu extends Component {
+  constructor(props){
+    super();
+
+    fetch('/api/menu_items')
+      .then(function(response) { return response.json(); })
+      .then(data => {
+        console.log(data);
+      })
+      .catch(err => {
+        reject(err.stack);
+      })
+  }
+
   componentDidMount(){
     const carousels = bulmaCarousel.attach();
     console.log('Carousels: ', carousels);
   }
-  render() {    
+  render() {
     return (
         <div className='carousel carousel-animated carousel-animate-slide'>
           <div className='carousel-container'>
