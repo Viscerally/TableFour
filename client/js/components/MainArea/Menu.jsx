@@ -22,6 +22,18 @@ export default class Menu extends Component {
       })
   }
 
+  addToOrder(menuItem) {
+    fetch('/api/orders/order_id', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: menuItem
+    })
+    .then(() => { resolve({ response: "Added succcesfully to the order" }); })
+    .catch(err => { reject(err.stack) });
+
+
+  } 
+
   render() {
 
     let menuItems;
@@ -41,7 +53,10 @@ export default class Menu extends Component {
                 />
             </figure>
 
-            <div className="title">{menuItem.name}</div>
+            <div className="title">{menuItem.name}
+              <div className="price">{menuItem.price}</div>
+              <button onClick={addToOrder} className="button is-danger">Add to your order</button>
+              </div>
           </div>
         )
       })

@@ -6,34 +6,37 @@ export default class BookingForm extends Component {
   constructor(props) {
     super(props);
     this.state = { name: '', phone: '', group_size: '', email: '' };
-
-    this.handleFormSubmission = this.handleFormSubmission.bind(this);
-    this.handleChange = this.handleChange.bind(this);
   }
 
   // make a POST request with form data
-  handleFormSubmission(event) {
+  handleFormSubmission = event => {
     // prevent default GET request
     event.preventDefault();
-    // take out obj keys from event.target
+    // deconstruct event.target
     const { name, phone, group_size, email } = event.target;
-    // create JSON with name, phone, and email
-    const body = JSON.stringify({
+
+    // send form data to websocket
+    const { socket } = this.props;
+    const formData = {
       name: name.value.trim(),
       phone: phone.value.replace(/\D/g, ''),
       group_size: group_size.value,
       email: email.value,
       res_code: this.props.res_code
-    });
+    };
 
-    // make a POST request to /api/reservations
-    // NOTE: specify the content type to application/json
-    makeReservation(body)
-      .then(response => { console.log(response); })
-      .catch(err => { console.log(err); });
+    if (this.props.res_code) {
+      // CASE 2: update existing reservation
+      // res_code !== null
+      socket.emit('updateReservation', formData);
+    } else {
+      // CASE 1: send new reservation
+      // res_code === null
+      socket.emit('addReservation', formData);
+    }
   }
 
-  handleChange({ target: { name, value } }) {
+  handleChange = ({ target: { name, value } }) => {
     this.setState({ [name]: value });
   }
 

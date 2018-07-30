@@ -1,23 +1,18 @@
 import React, { Component, Fragment } from 'react';
 import { getAllReservations } from '../../../libs/reservation-func.js';
-import io from 'socket.io-client';
 
 export default class ReservationDashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      socket: '',
       reservations: [],
       res_code: ''
     };
-    this.makeTable = this.makeTable.bind(this);
   }
 
-  makeTable() {
+  makeTable = () => {
     // set sizeSum to 0 before calculating how many people are ahead of the current customer
     let sizeSum = 0;
-    // if reservation_id is not given,
-    // display the total number of groups and people instead
     let stats = (this.state.res_code === '') && (
       <tr>
         <th colSpan='4'>
@@ -41,10 +36,7 @@ export default class ReservationDashboard extends Component {
       // add the group size
       sizeSum += reservation.group_size;
 
-      // if correct reservation code is given, make the corresponding
-      // row unique so that user knows the row shows their reservation
       if (this.state.res_code == reservation.res_code) {
-        // create stats for the current customer
         stats = (
           <tr>
             <th colSpan='4'>
@@ -111,11 +103,6 @@ export default class ReservationDashboard extends Component {
   };
 
   componentDidMount() {
-    // WEBSOCKET
-    // initiate socket and save it in the state
-    const socket = io('http://localhost:3001');
-    this.setState({ socket });
-
     // RESERVATION ID
     // check if res_code's passed as a URL param
     // if it exists, save it in the state. if not, save it as null
@@ -141,7 +128,9 @@ export default class ReservationDashboard extends Component {
     // SOCKET CONNECTION
     // as customer submits the form, the form data's broadcast back here
     // add the new reservation data into the existing state
+    const { socket } = this.props;
     socket.on('connect', () => {
+      console.log('Connected to websocket');
       socket.on('news', newRecord => {
         const {
           customer: { email, name, phone },
@@ -149,14 +138,12 @@ export default class ReservationDashboard extends Component {
         } = newRecord;
 
         const newReservation = { email, name, phone, res_code, group_size, order_id, id, placement_time, status }
-        
+
         this.setState(oldState => {
-          const reservations = [...oldState.reservations, newReservation];
-          oldState.reservations = reservations;
-          oldState.res_code = res_code;
           // pass res_code to the parent component
           this.props.getResCode(res_code);
-          return oldState;
+          const reservations = [...oldState.reservations, newReservation];
+          return { ...oldState, res_code, reservations };
         });
       });
     });
