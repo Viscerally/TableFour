@@ -41,7 +41,10 @@ export default class Menu extends Component {
                 />
             </figure>
 
-            <div className="title">{menuItem.name}</div>
+            <div className="title">{menuItem.name}
+              <div className="price">{menuItem.price}</div>
+              <button className="button is-danger">Add to your order</button>
+              </div>
           </div>
         )
       })
