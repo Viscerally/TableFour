@@ -150,12 +150,10 @@ export default class ReservationDashboard extends Component {
         const newReservation = { email, name, phone, res_code, group_size, order_id, id, placement_time, status }
 
         this.setState(oldState => {
-          const reservations = [...oldState.reservations, newReservation];
-          oldState.reservations = reservations;
-          oldState.res_code = res_code;
           // pass res_code to the parent component
           this.props.getResCode(res_code);
-          return oldState;
+          const reservations = [...oldState.reservations, newReservation];
+          return { ...oldState, res_code, reservations };
         });
       });
     });
