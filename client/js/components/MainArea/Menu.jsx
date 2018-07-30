@@ -31,7 +31,7 @@ export default class Menu extends Component {
       menuItems = this.state.menu_items.map((menuItem) => {
         return (
           <div key={menuItem.id} className='carousel-item has-background'>
-            <figure class="image is-1by1">
+            <figure className="image is-1by1">
               <img
                 className="is-background"
                 src={menuItem.img_url}
