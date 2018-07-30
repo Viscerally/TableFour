@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 
 export default class Order extends Component {
 
-
+   
  
 
   render() {
@@ -19,9 +19,8 @@ export default class Order extends Component {
         <div className="OrderDisplay">
         <h3>Order List</h3>
         <ol>
-          <li>{this.props.title}</li>
-          <li>Menu item 2</li>
-          <li>Menu Item 3</li>
+          <li>{this.props.menuItem}</li>
+        
           total
         </ol>
         <button className="button is-link">Pay for your order</button>
