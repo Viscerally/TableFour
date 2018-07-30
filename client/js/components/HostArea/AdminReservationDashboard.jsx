@@ -6,11 +6,9 @@ export default class AdminReservationDashboard extends Component {
   constructor(props) {
     super(props);
     this.state = { socket: '', reservations: [] };
-
-    this.makeTable = this.makeTable.bind(this);
   }
 
-  makeTable() {
+  makeTable = () => {
     let sizeSum = 0;
     const tHeader = (
       <tr>

@@ -10,10 +10,9 @@ export default class ReservationDashboard extends Component {
       reservations: [],
       res_code: ''
     };
-    this.makeTable = this.makeTable.bind(this);
   }
 
-  makeTable() {
+  makeTable = () => {
     // set sizeSum to 0 before calculating how many people are ahead of the current customer
     let sizeSum = 0;
     // if reservation_id is not given,
@@ -149,7 +148,7 @@ export default class ReservationDashboard extends Component {
         } = newRecord;
 
         const newReservation = { email, name, phone, res_code, group_size, order_id, id, placement_time, status }
-        
+
         this.setState(oldState => {
           const reservations = [...oldState.reservations, newReservation];
           oldState.reservations = reservations;
