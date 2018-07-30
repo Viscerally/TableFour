@@ -12,13 +12,38 @@ export default class MainArea extends Component {
     super(props);
     this.state = {
       socket: io('http://localhost:3001'),
-      res_code: ''
+      res_code: '',
+      orderItems: []
     };
   }
 
   getResCode = (resCode) => {
     this.setState({ res_code: resCode })
   }
+
+
+  addToOrder = (menuItem) => {    
+    fetch('/api/orders/1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(menuItem)
+    })
+    .then(response => {
+      return response.json();
+    })
+    .then((newOrderItem) => {        
+      this.setState((prevState, props) => {        
+        let newItems = prevState.orderItems;   
+        newItems.push(newOrderItem);             
+        return {orderItems: newItems}
+      });          
+    })
+    .catch(err => { 
+      console.log(err) 
+    }); 
+  }
+
+
 
   showRefId = () => {
     if (this.state.res_code) {
@@ -65,7 +90,9 @@ export default class MainArea extends Component {
             </div>
           </div>
           <div className='tile menu-tile is-4'>
-            <Menu />
+            <Menu 
+            addToOrder={this.addToOrder}
+             />
           </div>
           <div className='tile order-tile is-4'>
             <Order />

@@ -103,7 +103,6 @@ module.exports = function (db, io) {
       order_id: req.params.order_id
     })
       .then((menuItemOrder) => {
-        console.log(menuItemOrder);
         res.json(menuItemOrder);
       })
   });
