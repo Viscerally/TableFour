@@ -6,13 +6,10 @@ export default class BookingForm extends Component {
   constructor(props) {
     super(props);
     this.state = { name: '', phone: '', group_size: '', email: '' };
-
-    this.handleFormSubmission = this.handleFormSubmission.bind(this);
-    this.handleChange = this.handleChange.bind(this);
   }
 
   // make a POST request with form data
-  handleFormSubmission(event) {
+  handleFormSubmission = event => {
     // prevent default GET request
     event.preventDefault();
     // take out obj keys from event.target
@@ -33,7 +30,7 @@ export default class BookingForm extends Component {
       .catch(err => { console.log(err); });
   }
 
-  handleChange({ target: { name, value } }) {
+  handleChange = ({ target: { name, value } }) => {
     this.setState({ [name]: value });
   }
 

@@ -9,16 +9,13 @@ export default class MainArea extends Component {
   constructor(props) {
     super(props);
     this.state = { res_code: '' };
-
-    this.getResCode = this.getResCode.bind(this);
-    this.showRefId = this.showRefId.bind(this);
   }
 
-  getResCode(resCode) {
+  getResCode = (resCode) => {
     this.setState({ res_code: resCode })
   }
 
-  showRefId() {
+  showRefId = () => {
     if (this.state.res_code) {
       return (
         <span className='subtitle is-5'>
