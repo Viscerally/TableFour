@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { getAllReservations } from '../../../libs/reservation-func.js';
 import io from 'socket.io-client';
+import { getAllReservations } from '../../../libs/reservation-func.js';
 
 export default class AdminReservationDashboard extends Component {
   constructor(props) {
@@ -72,20 +72,14 @@ export default class AdminReservationDashboard extends Component {
     // as customer submits the form, the form data's broadcast back here
     // add the new reservation data into the existing state
     socket.on('connect', () => {
-      socket.on('news', newRecord => {
-        const {
-          customer: { email, name, phone },
-          reservation: { res_code, order_id, group_size, id, placement_time, status }
-        } = newRecord;
-
-        const newReservation = { email, name, phone, res_code, group_size, order_id, id, placement_time, status }
-
-        this.setState(oldState => {
-          const reservations = [...oldState.reservations, newReservation];
-          oldState.reservations = reservations;
-          oldState.res_code = res_code;
-          return oldState;
-        });
+      console.log('Connected to websocket');
+      socket.on('news', () => {
+        getAllReservations()
+          .then(reservations => {
+            // save all reso data to state
+            this.setState({ reservations });
+          })
+          .catch(err => { console.log(err) });
       });
     });
   }

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { getAllReservations } from '../../../libs/reservation-func.js';
+import { getAllReservations, returnResoArray } from '../../../libs/reservation-func.js';
 
 export default class ReservationDashboard extends Component {
   constructor(props) {
@@ -132,17 +132,15 @@ export default class ReservationDashboard extends Component {
     socket.on('connect', () => {
       console.log('Connected to websocket');
       socket.on('news', newRecord => {
-        const {
-          customer: { email, name, phone },
-          reservation: { res_code, order_id, group_size, id, placement_time, status }
-        } = newRecord;
-
-        const newReservation = { email, name, phone, res_code, group_size, order_id, id, placement_time, status }
+        const newReservation = { ...newRecord.customer, ...newRecord.reservation }
 
         this.setState(oldState => {
+          const { res_code } = newReservation;
+
           // pass res_code to the parent component
           this.props.getResCode(res_code);
-          const reservations = [...oldState.reservations, newReservation];
+
+          const reservations = returnResoArray(oldState.reservations, newReservation);
           return { ...oldState, res_code, reservations };
         });
       });
