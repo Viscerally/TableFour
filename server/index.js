@@ -36,4 +36,6 @@ massive(connectionString)
     console.log(err.stack);
   });
 
-server.listen(3001);
+server.listen(PORT, () => {
+  console.log(`Express server listening on port ${PORT} in ${ENV} mode.`);
+});
