@@ -9,12 +9,11 @@ const client = require("twilio")(accountSid, authToken);
 
 module.exports = {
 
-  resoTextMsg: function (cust) {
-  
+  resoTextMsg: function (phone, reso_id) {
     return client.messages.create({
-      to: process.cust.phone,
+      to: phone,
       from: process.env.FROM_NUMBER,
-      body: "Thank you! You have been added to the waitlist and we will notify you when your table is ready!"
+      body: `Thank you! Your reservation code is ${reso_id} You have been added to the waitlist and we will notify you when your table is ready!`
     })
       .then((message) => console.log("sending sms to" + process.TO_NUMBER, message.sid))
       .catch(err => { console.log(err) });
@@ -22,11 +21,11 @@ module.exports = {
 
   tableReadyMsg:  function () {
     return client.messages.create({
-      to: process.env.TO_NUMBER,
+      to: phone,
       from: process.env.FROM_NUMBER,
       body: "Thank you for waiting! Your table is ready!"
     })
-      .then((message) => console.log("sending sms to" + process.env.TO_NUMBER, message.sid))
+      .then((message) => console.log("sending sms to" + phone, message.sid))
       .catch(err => { console.log(err) });
   },
 }

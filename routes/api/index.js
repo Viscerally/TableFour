@@ -61,7 +61,7 @@ module.exports = function (db) {
     })
   })
 
-  console.log('test');
+  // console.log('test');
 
   // get the massiveJS instance saved in app object
   // console.log(db);
