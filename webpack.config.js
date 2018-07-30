@@ -1,14 +1,9 @@
 const path = require('path');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-// copies individual files or entire directories to the build directory
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-// simplifies creation of HTML files to serve the webpack bundles
-// auto compiles HTML file
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// extract CSS into separate files
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-// paths for client-side js and scss, compiled results in build and template
 const paths = {
     app: path.resolve(__dirname, 'client/js/'),
     styles: path.resolve(__dirname, 'client/scss/'),
@@ -16,10 +11,10 @@ const paths = {
     template: path.resolve(__dirname, 'client/index.html')
 };
 
-// unless NODE_ENV env exists, env is development
 const env = process.env.NODE_ENV || 'development';
 
 module.exports = {
+<<<<<<< HEAD
     mode: env,
     // named single entry point
     entry: {
@@ -98,5 +93,67 @@ module.exports = {
             poll: 1000,
             ignored: /node_modules/
         }
+=======
+  mode: env,
+  entry: {
+    app: path.join(paths.app, '/index.js')
+  },
+  output: {
+    filename: 'js/[name]-generated.js',
+    path: paths.build,
+    publicPath: '/'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.jsx?/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['env', 'react']
+          }
+        }
+      },
+      {
+        test: /\.scss|.sass$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            'css-loader',
+            'sass-loader'
+          ]
+        })
+      }
+    ]
+  },
+  plugins: [
+    new ExtractTextPlugin('css/[name]-generated.css'),
+    new CopyWebpackPlugin([
+      { from: 'client/images', to: path.join(__dirname, 'build/images') }
+    ]),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: paths.template,
+      inject: true
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'css/[name]-generated.css'
+    })
+  ],
+  devtool: env === 'production' ? 'cheap-source-map' : 'eval-source-map',
+  devServer: {
+    host: '0.0.0.0',
+    port: 3002,
+    proxy: {
+      "/api": "http://localhost:3001"
+    },
+    historyApiFallback: true,
+    contentBase: paths.build,
+    watchOptions: {
+      aggregateTimeout: 300,
+      poll: 1000,
+      ignored: /node_modules/
+>>>>>>> testing/ports
     }
 };
