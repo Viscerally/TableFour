@@ -78,6 +78,7 @@ const updateFormData = async (db, io, formData) => {
   const customer = await saveCustomer(db, customerData);
   const reservationData = { id, group_size };
   const reservation = await saveReservation(db, reservationData);
+
   io.emit('news', { customer, reservation });
 }
 

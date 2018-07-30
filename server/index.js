@@ -31,8 +31,6 @@ massive(connectionString)
     const apiRoutes = require('../routes/api/index')(db);
     app.use('/api', apiRoutes);
 
-
-
     io.on('connection', socket => {
       console.log(`${countClients(io)} CLIENT(S) CONNECTED`);
       socket.on('disconnect', () => {
@@ -51,10 +49,6 @@ massive(connectionString)
         }); 
       })
     });
-
-
-
-
   })
   .catch(err => {
     console.log(err.stack);
