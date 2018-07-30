@@ -12,11 +12,13 @@ export default class ReservationDashboard extends Component {
     };
   }
 
+<<<<<<< HEAD
   makeTable = () => {
     // set sizeSum to 0 before calculating how many people are ahead of the current customer
+=======
+  makeTable() {
+>>>>>>> testing/ports
     let sizeSum = 0;
-    // if reservation_id is not given,
-    // display the total number of groups and people instead
     let stats = (this.state.res_code === '') && (
       <tr>
         <th colSpan='4'>
@@ -40,10 +42,7 @@ export default class ReservationDashboard extends Component {
       // add the group size
       sizeSum += reservation.group_size;
 
-      // if correct reservation code is given, make the corresponding
-      // row unique so that user knows the row shows their reservation
       if (this.state.res_code == reservation.res_code) {
-        // create stats for the current customer
         stats = (
           <tr>
             <th colSpan='4'>
@@ -141,6 +140,7 @@ export default class ReservationDashboard extends Component {
     // as customer submits the form, the form data's broadcast back here
     // add the new reservation data into the existing state
     socket.on('connect', () => {
+      console.log('Connected to websocket');
       socket.on('news', newRecord => {
         const {
           customer: { email, name, phone },
