@@ -12,12 +12,8 @@ export default class ReservationDashboard extends Component {
     };
   }
 
-<<<<<<< HEAD
   makeTable = () => {
     // set sizeSum to 0 before calculating how many people are ahead of the current customer
-=======
-  makeTable() {
->>>>>>> testing/ports
     let sizeSum = 0;
     let stats = (this.state.res_code === '') && (
       <tr>
