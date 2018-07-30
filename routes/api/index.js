@@ -1,63 +1,89 @@
 const express = require('express');
 const apiRouter = express.Router();
+<<<<<<< HEAD
 const msg = require("./sms.js");
+=======
+const rs = require('random-strings');
+>>>>>>> 83a8e52346b21a3f0dcb13fe7e2ca141f195680c
 
-module.exports = function (db) {
+module.exports = function (db, io) {
+
+  // initial loading of all reservation records
   apiRouter.get('/reservations', (req, res) => {
-    // create a query string
-    const q = "SELECT * FROM reservations JOIN customers ON customer_id = customers.id" +
-    " WHERE placement_time >=NOW()::DATE + INTERVAL '1h' ORDER BY placement_time desc";
+    // query string
+    const qItems = 'reservations.id, email, group_size, name, phone, placement_time, res_code, order_id, status';
+    const q = `SELECT ${qItems} FROM reservations JOIN customers ON customer_id = customers.id ORDER BY placement_time ASC`;
 
     db.query(q)
       .then(result => {
-        res.status(200).send(result);
+        res.status(200).json(result);
       })
       .then(err => {
-        res.status(500).send({ error: 'Error while retrieving all reservation data' });
-        console.log(err.stack);
+        // res.status(500).send({ error: 'Error while retrieving all reservation data' });
+        // console.log(err.stack);
       })
   })
+
   apiRouter.post('/reservations', (req, res) => {
-    // get the form data
-    const formData = req.body;
     // deconstruct req.body object
-    const { name, phone, group_size, email } = req.body;
+    const { name, phone, group_size, email, res_code } = req.body;
 
-    // compile all customer data
-    const customerData = {
-      // capitalise the first letter of name
-      name: name.replace(/^\w/, chr => chr.toUpperCase()),
-      phone,
-      email
-    };
-    console.log(customerData);
-    // save customerData into customers tb
-    db.customers.save(customerData)
-      .then(customer => {
+    if (res_code) {
+      // CASE 1: reservation exists. update existing customer info
+      // res_code !== null
+      db.reservations.find({ res_code }).then(reservation => {
+        const { id, customer_id } = reservation[0];
 
-        // create an object representing reservation data
-        const resoData = {
-          placement_time: new Date(),
-          status: 'waiting',
-          customer_id: customer.id,
-          group_size
-        };
-        // save reservation data
-        db.reservations.save(resoData)
-          .then(reservation => {
-            // return customer and reservation json
-            res.status(200).json({ customer, reservation });
+        // update the customer info
+        db.customers.save({ id: customer_id, name, phone, email })
+          .then(customer => {
+            // update the group_size in reservations table
+            db.reservations.save({ id, group_size })
+              .then(reservation => {
+                io.emit('news', { customer, reservation });
+              })
+              .catch(err => { console.log(err) });
           })
-          .catch(err => {
-            res.status(500).send({ error: 'Error while retrieving reservation data' });
-            console.log(err.stack);
-          })
-
+          .catch(err => { console.log(err); });
       })
-      .catch(err => {
-        res.status(500).send({ error: 'Error while retrieving customer data' });
-        console.log(err.stack);
-      });
+    } else {
+      // CASE 2: new reservation.
+      // res_code === null
+      // compile all customer data
+      const customerData = {
+        // capitalise the first letter of name
+        name: name.replace(/^\w/, chr => chr.toUpperCase()),
+        phone,
+        email
+      };
+      // save customerData into customers tb
+      db.customers.save(customerData)
+        .then(customer => {
+          // create an object representing reservation data
+          const resoData = {
+            placement_time: new Date(),
+            status: 'waiting',
+            customer_id: customer.id,
+            res_code: rs.alphaNumUpper(6),
+            group_size
+          };
+          // save reservation data
+          db.reservations.save(resoData)
+            .then(reservation => {
+              io.emit('news', { customer, reservation });
+            })
+            .catch(err => {
+              // res.status(500).send({ error: 'Error while retrieving reservation data' });
+              // console.log(err.stack);
+            })
+        })
+        .catch(err => {
+          // res.status(500).send({ error: 'Error while retrieving customer data' });
+          // console.log(err.stack);
+        });
+    }
+
+
 
   })
   apiRouter.post('/reservations/:res_id', (req, res) => {
@@ -75,7 +101,14 @@ module.exports = function (db) {
   apiRouter.get('/categories/:cat_id/menu_items', (req, res) => {
     res.send('Return a list of all menu items associated with a category');
   })
+  apiRouter.get('/menu_items', (req, res) => {
+    db.menu_items.find()
+      .then((menu_items) => {
+        res.status(200).json(menu_items);
+      })
+  })
 
+<<<<<<< HEAD
 ///////////Test route for sms functionality/////////
 
   apiRouter.post('/sms', (req, res) => {
@@ -85,5 +118,8 @@ module.exports = function (db) {
 
   // get the massiveJS instance saved in app object
   // console.log(db);
+=======
+>>>>>>> 83a8e52346b21a3f0dcb13fe7e2ca141f195680c
   return apiRouter;
+
 }
