@@ -27,8 +27,6 @@ massive(connectionString)
     const apiRoutes = require('../routes/api/index')(db);
     app.use('/api', apiRoutes);
 
-
-
     io.on('connection', socket => {
       console.log(`${countClients(io)} CLIENT(S) CONNECTED`);
       socket.on('disconnect', () => {
@@ -41,15 +39,8 @@ massive(connectionString)
 
       socket.on('addReservation', formReservation => {
         submitNewFormData(db, io, formReservation);
-
-
-
       })
     });
-
-
-
-
   })
   .catch(err => {
     console.log(err.stack);
