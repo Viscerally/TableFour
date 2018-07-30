@@ -1,11 +1,7 @@
 const express = require('express');
 const apiRouter = express.Router();
-<<<<<<< HEAD
 const msg = require("./sms.js");
-=======
 const rs = require('random-strings');
->>>>>>> 83a8e52346b21a3f0dcb13fe7e2ca141f195680c
-
 module.exports = function (db, io) {
 
   // initial loading of all reservation records
