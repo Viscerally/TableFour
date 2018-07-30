@@ -9,11 +9,8 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const path = require('path')
 const twilio = require('twilio');
-
 const accountSid = 'ACab21b463584e0d1a9af1c53bf426d50d'; // Your Account SID from www.twilio.com/console
 const authToken = 'your_auth_token';   // Your Auth Token from www.twilio.com/console
-
-const twilio = require('twilio');
 const client = new twilio(accountSid, authToken);
 
 client.messages.create({
@@ -26,7 +23,6 @@ client.messages.create({
 
 
 
-//Socket Server connection to webpack server
 server.listen(3001);
 
 app.get('/', function (req, res) {
