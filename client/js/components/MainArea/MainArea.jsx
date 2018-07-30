@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
+import io from 'socket.io-client';
 
 import Navbar from '../Navbar.jsx';
 import ReservationDashboard from './ReservationDashboard.jsx';
 import BookingForm from './BookingForm.jsx';
 import Menu from './Menu.jsx';
-import Order from  './Order.jsx'
+import Order from './Order.jsx'
 
 export default class MainArea extends Component {
   constructor(props) {
     super(props);
-    this.state = { res_code: '' };
+    this.state = {
+      socket: io('http://localhost:3001'),
+      res_code: ''
+    };
   }
 
   getResCode = (resCode) => {
@@ -40,7 +44,10 @@ export default class MainArea extends Component {
                 <div className='content'>
                   <span className='title is-4'>BOOK YOUR TABLE</span>
                   {this.showRefId()}
-                  <BookingForm res_code={this.state.res_code} />
+                  <BookingForm
+                    res_code={this.state.res_code}
+                    socket={this.state.socket}
+                  />
                 </div>
               </article>
             </div>
@@ -51,6 +58,7 @@ export default class MainArea extends Component {
                   <ReservationDashboard
                     urlParams={this.props.match.params}
                     getResCode={this.getResCode}
+                    socket={this.state.socket}
                   />
                 </div>
               </article>

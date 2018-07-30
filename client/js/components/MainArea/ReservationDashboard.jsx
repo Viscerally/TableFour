@@ -1,12 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { getAllReservations } from '../../../libs/reservation-func.js';
-import io from 'socket.io-client';
 
 export default class ReservationDashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      socket: '',
       reservations: [],
       res_code: ''
     };
@@ -105,11 +103,6 @@ export default class ReservationDashboard extends Component {
   };
 
   componentDidMount() {
-    // WEBSOCKET
-    // initiate socket and save it in the state
-    const socket = io('http://localhost:3001');
-    this.setState({ socket });
-
     // RESERVATION ID
     // check if res_code's passed as a URL param
     // if it exists, save it in the state. if not, save it as null
@@ -135,6 +128,7 @@ export default class ReservationDashboard extends Component {
     // SOCKET CONNECTION
     // as customer submits the form, the form data's broadcast back here
     // add the new reservation data into the existing state
+    const { socket } = this.props;
     socket.on('connect', () => {
       console.log('Connected to websocket');
       socket.on('news', newRecord => {
