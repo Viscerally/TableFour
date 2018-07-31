@@ -21,7 +21,8 @@ export default class BookingForm extends Component {
       phone: phone.value.replace(/\D/g, ''),
       group_size: group_size.value,
       email: email.value,
-      res_code: this.props.res_code
+      res_code: this.props.res_code,
+      host: process.env.HOST || window.location.host
     };
 
     if (this.props.res_code) {
