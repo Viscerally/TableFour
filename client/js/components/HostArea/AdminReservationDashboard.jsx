@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import io from 'socket.io-client';
+import StatusButton from './StatusButton.jsx';
 import { getAllReservations } from '../../../libs/reservation-func.js';
 
 export default class AdminReservationDashboard extends Component {
@@ -11,7 +12,7 @@ export default class AdminReservationDashboard extends Component {
     };
   }
 
-  selectSeated = (event, status) => {
+  selectBtn = (event, status) => {
     // get value of 'data-key' which is === primary key of reservation
     const id = event.target.getAttribute('data-key');
     // send the object to web socket
@@ -35,9 +36,6 @@ export default class AdminReservationDashboard extends Component {
       // add the group size
       sizeSum += reservation.group_size;
       const { id, group_size, name, order_id, status } = reservation;
-      const waitingBtnClass = (status === 'waiting') ? 'button is-warning is-selected' : 'button';
-      const seatedBtnClass = (status === 'seated') ? 'button is-success is-selected' : 'button';
-      const cancelledBtnClass = (status === 'cancelled') ? 'button is-danger is-selected' : 'button';
 
       const orderStatus = (order_id) ? (
         <span className="icon has-text-success">
@@ -56,22 +54,7 @@ export default class AdminReservationDashboard extends Component {
           <td>{name}</td>
           <td>{orderStatus}</td>
           <td>
-            <div className="buttons has-addons is-centered">
-              <span data-key={id}
-                onClick={event => this.selectSeated(event, 'waiting')}
-                className={waitingBtnClass}
-              >WAITING</span>
-              <span
-                data-key={id}
-                onClick={event => this.selectSeated(event, 'seated')}
-                className={seatedBtnClass}
-              >SEATED</span>
-              <span
-                data-key={id}
-                onClick={event => this.selectSeated(event, 'cancelled')}
-                className={cancelledBtnClass}
-              >CANCELED</span>
-            </div>
+            <StatusButton id={id} status={status} selectBtn={this.selectBtn} />
           </td>
         </tr>
       )
