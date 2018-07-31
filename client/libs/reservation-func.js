@@ -14,10 +14,9 @@ const returnResoArray = (reservations, newReservation) => {
     // CASE 1: updating existing data
     return reservations.map(reservation => {
       if (reservation.res_code === res_code) {
-        return newReservation;
-      } else {
-        return reservation;
+        reservation = newReservation;
       }
+      return reservation;
     });
   } else {
     // CASE 2: adding new reservation data
