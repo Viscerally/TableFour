@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { makeReservation } from '../../../libs/reservation-func.js';
 import NumberFormat from 'react-number-format';
 
 export default class BookingForm extends Component {
