@@ -12,12 +12,58 @@ export default class MainArea extends Component {
     super(props);
     this.state = {
       socket: io('http://localhost:3001'),
-      res_code: ''
+      res_code: '',
+      order_id: 2,
+      orderItems: []
     };
   }
 
   getResCode = (resCode) => {
     this.setState({ res_code: resCode })
+  }
+
+  addToOrder = (menuItem) => {        
+    fetch(`/api/orders/${this.state.order_id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(menuItem)
+    })
+    .then(response => {
+      console.log('insert', response)
+      return response.json();
+    })
+    .then(newMenuItem => {
+      console.log('NEWMENUITEM', newMenuItem)
+      this.setState((prevState, props) => {  
+        console.log('neworderitem', newMenuItem)      
+        let newItems = prevState.orderItems;
+        console.log(newItems)           
+        newItems.push(newMenuItem);        
+        return {orderItems: newItems}
+      }, () => console.log(this.state.orderItems));
+    })
+    .catch(err => { 
+      console.log(err) 
+    }); 
+  }
+  
+  componentDidUpdate(prevProps, prevState, snapshot){
+    console.log('MainPrevState: ', prevState);
+    console.log('MainState: ', this.state);
+
+  }
+
+  componentDidMount = () => {
+    fetch(`/api/orders/${this.state.order_id}/menu_items`)
+      .then(response => {
+        return response.json();
+      })
+      .then(menuItems => {
+        this.setState({
+          orderItems: menuItems
+        })
+      })
+
   }
 
   showRefId = () => {
@@ -31,6 +77,7 @@ export default class MainArea extends Component {
   };
 
   render() {
+    console.log('Main Area is rendering');
     return (
       <div className='container is-desktop'>
         <header>
@@ -65,10 +112,15 @@ export default class MainArea extends Component {
             </div>
           </div>
           <div className='tile menu-tile is-4'>
-            <Menu />
+            <Menu 
+            addToOrder={this.addToOrder}
+             />
           </div>
           <div className='tile order-tile is-4'>
-            <Order />
+            <Order
+            orderId={this.state.order_id} 
+            orderItems={this.state.orderItems}
+            />
           </div>
         </main>
         <footer></footer>
