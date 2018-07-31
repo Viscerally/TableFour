@@ -1,3 +1,5 @@
+const twilio = require('twilio');
+const smsMsg = require('../routes/api/sms.js');
 const rs = require('random-strings');
 
 // save customer data
@@ -60,6 +62,10 @@ const submitNewFormData = async (db, io, formData) => {
     group_size
   }
   const reservation = await saveReservation(db, reservationData);
+
+  console.log('res code is this: ', reservation.res_code);
+  smsMsg.resoTextMsg(phone, reservation.res_code);
+
   io.emit('news', { customer, reservation });
 };
 

@@ -1,5 +1,6 @@
 const express = require('express');
 const apiRouter = express.Router();
+// const msg = require("./sms.js");
 const rs = require('random-strings');
 
 module.exports = function (db) {
@@ -52,6 +53,18 @@ module.exports = function (db) {
       })
   })
 
+  ///////////route for sms functionality/////////
+  apiRouter.get('/customers/:cust_id', (req, res) => {
+    db.customers.find(req.params.cust_id)
+    .then((cust) => {
+      res.status(200).json(cust);
+    })
+  })
+
+  // console.log('test');
+
+  // get the massiveJS instance saved in app object
+  // console.log(db);
   return apiRouter;
 
 };
