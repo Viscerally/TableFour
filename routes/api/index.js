@@ -102,7 +102,7 @@ module.exports = function (db, io) {
       `SELECT menu_items_orders.id, img_url, menu_item_id, order_id, name, description, price, category_id 
       FROM menu_items_orders 
       INNER JOIN menu_items 
-      ON menu_items_orders.menu_item_id = menu_items.id WHERE order_id = 1`;
+      ON menu_items_orders.menu_item_id = menu_items.id WHERE order_id = 2`;
     
     db.query(qStr)
     .then(result => {
@@ -115,15 +115,22 @@ module.exports = function (db, io) {
     })
   })
   
+  // NOTE: should be extracted into separate route
   apiRouter.post('/orders/:order_id', (req, res) => {
-    console.log(req.body);
     db.menu_items_orders.insert({
       menu_item_id: req.body.id,
       order_id: req.params.order_id
     })
-      .then((menuItemOrder) => {
-        res.json(menuItemOrder);
-      })
+     // .then((menuItemOrder) => {
+        //res.json(menuItemOrder);
+      //})
+    .then((newReference) => {
+      return db.menu_items.findOne(newReference.menu_item_id);
+    })
+    .then((menu_item) => {
+      // returns the new menu item
+      res.status(200).json(menu_item);
+    });
   });
   
   apiRouter.get('/orders/:order_id/menu_items_orders', (req, res) => {
@@ -146,7 +153,7 @@ module.exports = function (db, io) {
     db.menu_items.findOne(req.params.item_id)
       .then((menu_item) => {
         res.status(200).json(menu_item);
-      })
+      });
   })
 
   return apiRouter;

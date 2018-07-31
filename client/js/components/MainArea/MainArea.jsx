@@ -13,7 +13,7 @@ export default class MainArea extends Component {
     this.state = {
       socket: io('http://localhost:3001'),
       res_code: '',
-      order_id: 1,
+      order_id: 2,
       orderItems: []
     };
   }
@@ -29,14 +29,18 @@ export default class MainArea extends Component {
       body: JSON.stringify(menuItem)
     })
     .then(response => {
+      console.log('insert', response)
       return response.json();
     })
-    .then((newOrderItem) => {
-      this.setState((prevState, props) => {        
-        let newItems = prevState.orderItems;   
-        newItems.push(newOrderItem);                     
+    .then(newMenuItem => {
+      console.log('NEWMENUITEM', newMenuItem)
+      this.setState((prevState, props) => {  
+        console.log('neworderitem', newMenuItem)      
+        let newItems = prevState.orderItems;
+        console.log(newItems)           
+        newItems.push(newMenuItem);        
         return {orderItems: newItems}
-      });
+      }, () => console.log(this.state.orderItems));
     })
     .catch(err => { 
       console.log(err) 
@@ -50,7 +54,7 @@ export default class MainArea extends Component {
   }
 
   componentDidMount = () => {
-    fetch(`/api/orders/${this.state.order_id}/menu_items_orders`)
+    fetch(`/api/orders/${this.state.order_id}/menu_items`)
       .then(response => {
         return response.json();
       })
