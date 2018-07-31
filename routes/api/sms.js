@@ -15,7 +15,7 @@ module.exports = {
       from: process.env.FROM_NUMBER,
       body: `Thank you! Your reservation code is ${reso_id} You have been added to the waitlist and we will notify you when your table is ready!`
     })
-      .then((message) => console.log("sending sms to" + process.TO_NUMBER, message.sid))
+      .then((message) => console.log("sending sms to " + phone, message.sid))
       .catch(err => { console.log(err) });
   },
 
@@ -25,7 +25,7 @@ module.exports = {
       from: process.env.FROM_NUMBER,
       body: "Thank you for waiting! Your table is ready!"
     })
-      .then((message) => console.log("sending sms to" + phone, message.sid))
+      .then((message) => console.log("sending sms to " + phone, message.sid))
       .catch(err => { console.log(err) });
   },
 }

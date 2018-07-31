@@ -10,10 +10,6 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
-const path = require('path')
-const twilio = require('twilio');
-const smsMsg = require('../routes/api/sms.js');
-
 
 const massive = require('massive');
 const connectionString = process.env.DATABASE_URL;
@@ -43,10 +39,6 @@ massive(connectionString)
 
       socket.on('addReservation', formReservation => {
         submitNewFormData(db, io, formReservation);
-        db.reservations.findOne().then((reservation) =>{
-          console.log('res code is this: ', reservation); 
-          smsMsg.resoTextMsg(formReservation.phone, reservation.res_code); 
-        }); 
       })
     });
   })
