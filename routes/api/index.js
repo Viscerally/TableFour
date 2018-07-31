@@ -97,6 +97,22 @@ module.exports = function (db, io) {
   apiRouter.get('/categories/:cat_id/menu_items', (req, res) => {
     res.send('Return a list of all menu items associated with a category');
   })
+  apiRouter.get('/orders/:order_id/menu_items', (req, res) => {
+    let qStr = 
+    `SELECT * from (SELECT orders.id AS order_id, * FROM menu_items_orders 
+      INNER JOIN orders ON menu_items_orders.order_id = orders.id 
+      WHERE orders.id = 2) AS tb1 
+      INNER JOIN menu_items on menu_items.id = tb1.menu_item_id`;
+    
+    db.query(qStr)
+    .then(result => {
+      res.status(200).json(result);
+    })
+    .then(err => {
+      res.status(500).send({ error: 'Error while retrieving order menu item data' });
+      console.log(err.stack);
+    })
+  })
   apiRouter.post('/orders/:order_id', (req, res) => {
     db.menu_items_orders.insert({
       menu_item_id: req.body.id,
@@ -110,6 +126,12 @@ module.exports = function (db, io) {
     db.menu_items.find()
       .then((menu_items) => {
         res.status(200).json(menu_items);
+      })
+  });
+  apiRouter.get('/menu_items/:item_id', (req, res) => {
+    db.menu_items.findOne(req.params.item_id)
+      .then((menu_item) => {
+        res.status(200).json(menu_item);
       })
   })
 

@@ -4,30 +4,24 @@ import React, { Component } from 'react';
 
 export default class Order extends Component {
  
- 
-   
- 
-
-  render() {
-    let orderItems;
-    if(this.props.order){
-    orderItems = this.props.order.map(menuItem => {
+  render() {    
     
+    const orderItems = this.props.orderItems.map(item => {
+      return (
+        <li key={item.id}><span>{item.id}</span></li>
+      )
     });
-  }
 
     return (
         <div className="OrderDisplay">
         <h3>Order List</h3>
         <ol>
-          <li>{this.props.menuItem}</li>
-        
+          {orderItems}        
           total
         </ol>
-        <button className="button is-link">Pay for your order</button>
-         
+        <button className="button is-link">Pay for your order</button>         
         </div>
-    );
+    )
   }
 }
 

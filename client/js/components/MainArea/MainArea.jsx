@@ -13,6 +13,7 @@ export default class MainArea extends Component {
     this.state = {
       socket: io('http://localhost:3001'),
       res_code: '',
+      order_id: '',
       orderItems: []
     };
   }
@@ -36,7 +37,7 @@ export default class MainArea extends Component {
         let newItems = prevState.orderItems;   
         newItems.push(newOrderItem);             
         return {orderItems: newItems}
-      });          
+      });
     })
     .catch(err => { 
       console.log(err) 
@@ -95,7 +96,9 @@ export default class MainArea extends Component {
              />
           </div>
           <div className='tile order-tile is-4'>
-            <Order />
+            <Order 
+            orderItems={this.state.orderItems}
+            />
           </div>
         </main>
         <footer></footer>
