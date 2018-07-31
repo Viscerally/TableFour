@@ -6,11 +6,14 @@ export default class Order extends Component {
   render() {
     console.log(`\n\n\n ${this.props.orderItems[0]}`);
     console.log('Order is rendering');
+    let positionCounter = 0;
+    let totalPrice = 0;
     const orderItems = this.props.orderItems.map(item => {
-   
+      positionCounter += item.index
+      totalPrice += item.price;
       return (
         <tr key={item.id}>
-        <td></td>
+        <td>{positionCounter}</td>
         <td>{item.name}</td>
         <td>{item.price}</td>
         </tr>
@@ -39,7 +42,7 @@ export default class Order extends Component {
             <tr>
               <th><abbr title="Position"></abbr></th>
               <th>Total</th>
-              <th>$100</th>
+              <th>{totalPrice}</th>
               <th></th>
             </tr>
           </tfoot>  
