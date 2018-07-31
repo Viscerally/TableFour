@@ -62,8 +62,8 @@ const submitNewFormData = async (db, io, formData) => {
     group_size
   }
   const reservation = await saveReservation(db, reservationData);
+  reservation.host = formData.host;
 
-  console.log('res code is this: ', reservation.res_code);
   smsMsg.resoTextMsg(phone, reservation);
   io.emit('news', { customer, reservation });
 };
