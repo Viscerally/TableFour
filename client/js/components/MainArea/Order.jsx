@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 
 export default class Order extends Component {
-  
-  
-  render() {
-    console.log(`\n\n\n ${this.props.orderItems[0]}`);
-    console.log('Order is rendering');
+
+
+  render() {    
     const orderItems = this.props.orderItems.map(item => {
-            
+
       return (
         <li key={item.id}><span>{item.name}</span></li>
       )
@@ -25,4 +23,3 @@ export default class Order extends Component {
     )
   }
 }
-

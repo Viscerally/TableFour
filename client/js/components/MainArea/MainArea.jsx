@@ -30,28 +30,18 @@ export default class MainArea extends Component {
       body: JSON.stringify(menuItem)
     })
       .then(response => {
-        console.log('insert', response)
         return response.json();
       })
       .then(newMenuItem => {
-        console.log('NEWMENUITEM', newMenuItem)
         this.setState((prevState, props) => {
-          console.log('neworderitem', newMenuItem)
           let newItems = prevState.orderItems;
-          console.log(newItems)
           newItems.push(newMenuItem);
           return { orderItems: newItems }
-        }, () => console.log(this.state.orderItems));
+        }
       })
       .catch(err => {
         console.log(err)
       });
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('MainPrevState: ', prevState);
-    console.log('MainState: ', this.state);
-
   }
 
   componentDidMount = () => {
@@ -78,7 +68,6 @@ export default class MainArea extends Component {
   };
 
   render() {
-    console.log('Main Area is rendering');
     return (
       <div className='container is-desktop'>
         <header>

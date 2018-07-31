@@ -22,8 +22,7 @@ export default class Menu extends Component {
   }
 
 
-  render() {
-    console.log('Menu is rendering');
+  render() {    
     let menuItems;
 
     if (this.state){
