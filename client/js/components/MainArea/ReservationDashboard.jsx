@@ -13,13 +13,8 @@ export default class ReservationDashboard extends Component {
   makeTable = () => {
     // set sizeSum to 0 before calculating how many people are ahead of the current customer
     let sizeSum = 0;
-    let stats = (this.state.res_code === '') && (
-      <tr>
-        <th colSpan='4'>
-          {this.state.reservations.length} groups ({sizeSum} people) waiting..
-        </th>
-      </tr>
-    );
+    let stats = '';
+
     // default table header
     const tHeader = (
       <tr>
@@ -35,15 +30,9 @@ export default class ReservationDashboard extends Component {
     const cells = this.state.reservations.map((reservation, index) => {
       // add the group size
       sizeSum += reservation.group_size;
-
       if (this.state.res_code == reservation.res_code) {
-        stats = (
-          <tr>
-            <th colSpan='4'>
-              Your position: {index + 1} ({sizeSum - reservation.group_size} people ahead)
-            </th>
-          </tr>
-        );
+        stats = `Your position: #${index + 1} ${sizeSum - reservation.group_size} people ahead`;
+
         // option for the selected reservation
         options = (
           <a className='button is-link is-rounded is-small'>
@@ -94,9 +83,17 @@ export default class ReservationDashboard extends Component {
       }
     });
 
+    if (this.state.res_code === null) {
+      stats = `Total of ${this.state.reservations.length} groups (${sizeSum} people) waiting..`;
+    }
     return (
       <Fragment>
-        <thead>{stats}{tHeader}</thead>
+        <thead>
+          <tr>
+            <th colSpan='4'>{stats}</th>
+          </tr>
+          {tHeader}
+        </thead>
         <tbody>{cells}</tbody>
       </Fragment>
     );
