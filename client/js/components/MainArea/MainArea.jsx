@@ -22,8 +22,7 @@ export default class MainArea extends Component {
     this.setState({ res_code: resCode })
   }
 
-
-  addToOrder = (menuItem) => {    
+  addToOrder = (menuItem) => {        
     fetch(`/api/orders/${this.state.order_id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -32,10 +31,10 @@ export default class MainArea extends Component {
     .then(response => {
       return response.json();
     })
-    .then((newOrderItem) => {        
+    .then((newOrderItem) => {
       this.setState((prevState, props) => {        
         let newItems = prevState.orderItems;   
-        newItems.push(newOrderItem);             
+        newItems.push(newOrderItem);                     
         return {orderItems: newItems}
       });
     })
@@ -43,8 +42,25 @@ export default class MainArea extends Component {
       console.log(err) 
     }); 
   }
+  
+  componentDidUpdate(prevProps, prevState, snapshot){
+    console.log('MainPrevState: ', prevState);
+    console.log('MainState: ', this.state);
 
+  }
 
+  componentDidMount = () => {
+    fetch(`/api/orders/${this.state.order_id}/menu_items_orders`)
+      .then(response => {
+        return response.json();
+      })
+      .then(menuItems => {
+        this.setState({
+          orderItems: menuItems
+        })
+      })
+
+  }
 
   showRefId = () => {
     if (this.state.res_code) {
@@ -57,6 +73,7 @@ export default class MainArea extends Component {
   };
 
   render() {
+    console.log('Main Area is rendering');
     return (
       <div className='container is-desktop'>
         <header>
@@ -97,7 +114,7 @@ export default class MainArea extends Component {
           </div>
           <div className='tile order-tile is-4'>
             <Order
-            orderId={this.state.orderId} 
+            orderId={this.state.order_id} 
             orderItems={this.state.orderItems}
             />
           </div>

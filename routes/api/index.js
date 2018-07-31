@@ -99,13 +99,14 @@ module.exports = function (db, io) {
   })
   apiRouter.get('/orders/:order_id/menu_items', (req, res) => {
     let qStr = 
-    `SELECT * from (SELECT orders.id AS order_id, * FROM menu_items_orders 
-      INNER JOIN orders ON menu_items_orders.order_id = orders.id 
-      WHERE orders.id = 2) AS tb1 
-      INNER JOIN menu_items on menu_items.id = tb1.menu_item_id`;
+      `SELECT menu_items_orders.id, img_url, menu_item_id, order_id, name, description, price, category_id 
+      FROM menu_items_orders 
+      INNER JOIN menu_items 
+      ON menu_items_orders.menu_item_id = menu_items.id WHERE order_id = 1`;
     
     db.query(qStr)
     .then(result => {
+      console.log(result[5]);
       res.status(200).json(result);
     })
     .then(err => {
@@ -113,7 +114,9 @@ module.exports = function (db, io) {
       console.log(err.stack);
     })
   })
+  
   apiRouter.post('/orders/:order_id', (req, res) => {
+    console.log(req.body);
     db.menu_items_orders.insert({
       menu_item_id: req.body.id,
       order_id: req.params.order_id
@@ -122,6 +125,17 @@ module.exports = function (db, io) {
         res.json(menuItemOrder);
       })
   });
+  
+  apiRouter.get('/orders/:order_id/menu_items_orders', (req, res) => {
+    db.menu_items_orders.find({
+      order_id: req.params.order_id
+    })
+    .then((menuItemOrders) => {
+      res.json(menuItemOrders);
+
+    })
+  })
+
   apiRouter.get('/menu_items', (req, res) => {
     db.menu_items.find()
       .then((menu_items) => {
