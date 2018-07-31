@@ -7,20 +7,44 @@ export default class Order extends Component {
     console.log(`\n\n\n ${this.props.orderItems[0]}`);
     console.log('Order is rendering');
     const orderItems = this.props.orderItems.map(item => {
-            
+   
       return (
-        <li key={item.id}><span>{item.name}</span></li>
+        <tr key={item.id}>
+        <td></td>
+        <td>{item.name}</td>
+        <td>{item.price}</td>
+        </tr>
+        
       )
     });
 
+    console.log("order Items",orderItems)
+
     return (
         <div className="OrderDisplay">
-        <h3>Order List</h3>
-        <ol>
-          {orderItems}
-          total
-        </ol>
-        <button className="button is-link">Pay for your order</button>
+         <p className='title is-4'>ORDER LIST</p>
+        
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orderItems}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th><abbr title="Position"></abbr></th>
+              <th>Total</th>
+              <th>$100</th>
+              <th></th>
+            </tr>
+          </tfoot>  
+        </table>
+        <button className="button is-link">Place your order</button>
         </div>
     )
   }
