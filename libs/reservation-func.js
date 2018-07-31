@@ -72,7 +72,7 @@ const submitNewFormData = async (db, io, formData) => {
 const updateFormData = async (db, io, formData) => {
   const { name, phone, group_size, email, res_code } = formData;
 
-  const reservationRecord = await findReservation(db, { res_code: res_code });
+  const reservationRecord = await findReservation(db, { res_code });
   const { id, customer_id } = reservationRecord[0];
   const customerData = {
     id: customer_id,
@@ -87,4 +87,23 @@ const updateFormData = async (db, io, formData) => {
   io.emit('news', { customer, reservation });
 }
 
-module.exports = { updateFormData, submitNewFormData };
+// remove existing reservation data
+const cancelReservation = async (db, io, formData) => {
+  const { name, phone, email, res_code } = formData;
+
+  const reservationRecord = await findReservation(db, { res_code });
+  const { id, customer_id } = reservationRecord[0];
+  const customerData = {
+    id: customer_id,
+    name,
+    phone,
+    email
+  };
+  const customer = await saveCustomer(db, customerData);
+  const reservationData = { id, status: 'cancelled' };
+  const reservation = await saveReservation(db, reservationData);
+
+  io.emit('news', { customer, reservation });
+}
+
+module.exports = { updateFormData, submitNewFormData, cancelReservation };
