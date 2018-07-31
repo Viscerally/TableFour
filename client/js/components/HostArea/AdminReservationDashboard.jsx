@@ -40,7 +40,7 @@ export default class AdminReservationDashboard extends Component {
     let stats = (
       <tr>
         <th colSpan='5'>
-          {this.state.reservations.length} groups ({sizeSum} people) waiting..
+          Total of {this.state.reservations.length} groups ({sizeSum} people) waiting..
         </th>
       </tr>
     );
