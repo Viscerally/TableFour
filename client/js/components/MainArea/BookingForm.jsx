@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import NumberFormat from 'react-number-format';
+import { getAllReservations } from '../../../libs/reservation-func.js';
 
 export default class BookingForm extends Component {
   constructor(props) {
     super(props);
-    this.state = { name: '', phone: '', group_size: '', email: '' };
+    this.state = {
+      name: '',
+      phone: '',
+      group_size: '',
+      email: '',
+      res_code: ''
+    };
   }
 
   // make a POST request with form data
@@ -21,7 +28,8 @@ export default class BookingForm extends Component {
       phone: phone.value.replace(/\D/g, ''),
       group_size: group_size.value,
       email: email.value,
-      res_code: this.props.res_code
+      res_code: this.props.res_code,
+      host: process.env.HOST || window.location.host
     };
 
     if (this.props.res_code) {
@@ -39,8 +47,23 @@ export default class BookingForm extends Component {
     this.setState({ [name]: value });
   }
 
-  render() {
+  componentWillReceiveProps = () => {
+    // receive res_code as props from MainARea.jsx and save it in state
+    const { res_code } = this.props;
+    getAllReservations()
+      .then(result => {
+        const currentReso = result.filter(reservation => reservation.res_code === res_code)[0];
+        let { name, phone, group_size, email } = currentReso;
+        console.log({ name, phone, group_size, email, res_code });
+        this.setState({ name, phone, group_size, email, res_code });
 
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  render() {
     return (
       <form onSubmit={this.handleFormSubmission}>
         <div className='field'>
@@ -48,7 +71,7 @@ export default class BookingForm extends Component {
           <div className='control has-icons-left has-icons-right'>
             <input
               className='input is-medium'
-              value={this.state.value}
+              value={this.state.name}
               onChange={this.handleChange}
               name='name'
               type='text'
@@ -93,7 +116,7 @@ export default class BookingForm extends Component {
           <div className='control has-icons-left has-icons-right'>
             <input
               className='input is-medium'
-              value={this.state.value}
+              value={this.state.group_size}
               onChange={this.handleChange}
               name='group_size'
               type='number'

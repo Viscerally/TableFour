@@ -18,16 +18,21 @@ export default class MainArea extends Component {
     };
   }
 
-  getResCode = (resCode) => {
+  getResCode = resCode => {
     this.setState({ res_code: resCode })
   }
 
+<<<<<<< HEAD
   addToOrder = (menuItem) => {
+=======
+  addToOrder = menuItem => {
+>>>>>>> master
     fetch(`/api/orders/${this.state.order_id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(menuItem)
     })
+<<<<<<< HEAD
     .then(response => {
       console.log('insert', response)
       return response.json();
@@ -48,6 +53,28 @@ export default class MainArea extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot){
+=======
+      .then(response => {
+        console.log('insert', response)
+        return response.json();
+      })
+      .then(newMenuItem => {
+        console.log('NEWMENUITEM', newMenuItem)
+        this.setState((prevState, props) => {
+          console.log('neworderitem', newMenuItem)
+          let newItems = prevState.orderItems;
+          console.log(newItems)
+          newItems.push(newMenuItem);
+          return { orderItems: newItems }
+        }, () => console.log(this.state.orderItems));
+      })
+      .catch(err => {
+        console.log(err)
+      });
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+>>>>>>> master
     console.log('MainPrevState: ', prevState);
     console.log('MainState: ', this.state);
 

@@ -1,7 +1,5 @@
 const express = require('express');
 const apiRouter = express.Router();
-// const msg = require("./sms.js");
-const rs = require('random-strings');
 
 module.exports = function (db) {
 
@@ -37,12 +35,12 @@ module.exports = function (db) {
     res.send('Return a list of all menu items associated with a category');
   })
   apiRouter.get('/orders/:order_id/menu_items', (req, res) => {
-    let qStr = 
-      `SELECT menu_items_orders.id, img_url, menu_item_id, order_id, name, description, price, category_id 
-      FROM menu_items_orders 
-      INNER JOIN menu_items 
+    let qStr =
+      `SELECT menu_items_orders.id, img_url, menu_item_id, order_id, name, description, price, category_id
+      FROM menu_items_orders
+      INNER JOIN menu_items
       ON menu_items_orders.menu_item_id = menu_items.id WHERE order_id = 2`;
-    
+
     db.query(qStr)
     .then(result => {
       console.log(result[5]);
@@ -53,7 +51,7 @@ module.exports = function (db) {
       console.log(err.stack);
     })
   })
-  
+
   // NOTE: should be extracted into separate route
   apiRouter.post('/orders/:order_id', (req, res) => {
     db.menu_items_orders.insert({
@@ -71,7 +69,7 @@ module.exports = function (db) {
       res.status(200).json(menu_item);
     });
   });
-  
+
   apiRouter.get('/orders/:order_id/menu_items_orders', (req, res) => {
     db.menu_items_orders.find({
       order_id: req.params.order_id

@@ -31,7 +31,7 @@ export default class ReservationDashboard extends Component {
       // add the group size
       sizeSum += reservation.group_size;
       if (this.state.res_code == reservation.res_code) {
-        stats = `Your position: #${index + 1} ${sizeSum - reservation.group_size} people ahead`;
+        stats = `Your position: #${index + 1} (${sizeSum - reservation.group_size} people ahead)`;
 
         // option for the selected reservation
         options = (
