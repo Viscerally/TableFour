@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import MainArea from './components/MainArea/MainArea.jsx';
 import HostArea from './components/HostArea/HostArea.jsx';
 
@@ -13,7 +13,6 @@ export default class App extends Component {
           <Route path="/admin" component={HostArea} />
           <Route exact path="/home" component={MainArea} />
           <Route path="/home/reservations/:res_code" component={MainArea} />
-          <Redirect from={'/'} to={'/home'} />
         </div>
       </Router>
     );
