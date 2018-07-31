@@ -13,7 +13,7 @@ export default class MainArea extends Component {
     this.state = {
       socket: io('http://localhost:3001'),
       res_code: '',
-      order_id: '',
+      order_id: 1,
       orderItems: []
     };
   }
@@ -24,7 +24,7 @@ export default class MainArea extends Component {
 
 
   addToOrder = (menuItem) => {    
-    fetch('/api/orders/1', {
+    fetch(`/api/orders/${this.state.order_id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(menuItem)
@@ -96,7 +96,8 @@ export default class MainArea extends Component {
              />
           </div>
           <div className='tile order-tile is-4'>
-            <Order 
+            <Order
+            orderId={this.state.orderId} 
             orderItems={this.state.orderItems}
             />
           </div>

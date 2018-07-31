@@ -3,12 +3,32 @@ import React, { Component } from 'react';
 
 
 export default class Order extends Component {
- 
-  render() {    
+  
+  constructor(props){
+    super(props);
+    this.state = {
+      menuItems: []
+    }
+  }
+
+  componentDidMount(){
+    fetch(`/api/orders/${this.props.orderId}/menu_items`)
+      .then((response) => {
+        return response.json()
+      })
+      .then((menuItems) => {
+        this.setState({
+          menuItems: menuItems
+        })
+      })
+
+  }
+  
+  render() {
     
-    const orderItems = this.props.orderItems.map(item => {
+    const orderItems = this.state.menuItems.map(item => {
       return (
-        <li key={item.id}><span>{item.id}</span></li>
+        <li key={item.id}><span>{item.name}</span></li>
       )
     });
 
