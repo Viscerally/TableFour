@@ -36,21 +36,63 @@ module.exports = function (db) {
   apiRouter.get('/categories/:cat_id/menu_items', (req, res) => {
     res.send('Return a list of all menu items associated with a category');
   })
+  apiRouter.get('/orders/:order_id/menu_items', (req, res) => {
+    let qStr = 
+      `SELECT menu_items_orders.id, img_url, menu_item_id, order_id, name, description, price, category_id 
+      FROM menu_items_orders 
+      INNER JOIN menu_items 
+      ON menu_items_orders.menu_item_id = menu_items.id WHERE order_id = 2`;
+    
+    db.query(qStr)
+    .then(result => {
+      console.log(result[5]);
+      res.status(200).json(result);
+    })
+    .then(err => {
+      res.status(500).send({ error: 'Error while retrieving order menu item data' });
+      console.log(err.stack);
+    })
+  })
+  
+  // NOTE: should be extracted into separate route
   apiRouter.post('/orders/:order_id', (req, res) => {
     db.menu_items_orders.insert({
       menu_item_id: req.body.id,
       order_id: req.params.order_id
     })
-      .then((menuItemOrder) => {
-        console.log(menuItemOrder);
-        res.json(menuItemOrder);
-      })
+     // .then((menuItemOrder) => {
+        //res.json(menuItemOrder);
+      //})
+    .then((newReference) => {
+      return db.menu_items.findOne(newReference.menu_item_id);
+    })
+    .then((menu_item) => {
+      // returns the new menu item
+      res.status(200).json(menu_item);
+    });
   });
+  
+  apiRouter.get('/orders/:order_id/menu_items_orders', (req, res) => {
+    db.menu_items_orders.find({
+      order_id: req.params.order_id
+    })
+    .then((menuItemOrders) => {
+      res.json(menuItemOrders);
+
+    })
+  })
+
   apiRouter.get('/menu_items', (req, res) => {
     db.menu_items.find()
       .then((menu_items) => {
         res.status(200).json(menu_items);
       })
+  });
+  apiRouter.get('/menu_items/:item_id', (req, res) => {
+    db.menu_items.findOne(req.params.item_id)
+      .then((menu_item) => {
+        res.status(200).json(menu_item);
+      });
   })
 
   ///////////route for sms functionality/////////

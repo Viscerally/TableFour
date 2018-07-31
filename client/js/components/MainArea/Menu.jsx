@@ -3,8 +3,7 @@ import bulmaCarousel from 'bulma-carousel/dist/js/bulma-carousel.js';
 
 export default class Menu extends Component {
   constructor(props){
-    super();
-
+    super(props);
   }
 
   componentDidMount(){
@@ -22,28 +21,14 @@ export default class Menu extends Component {
       })
   }
 
-  addToOrder(ev, menuItem) {
-    ev.preventDefault()
-    fetch('/api/orders/1', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(menuItem)
-    })
-    .then((res) => { 
-      console.log(res)
-    })
-    .catch(err => { 
-      console.log(err) 
-    }); 
-  } 
 
   render() {
-
+    console.log('Menu is rendering');
     let menuItems;
 
     if (this.state){
 
-      menuItems = this.state.menu_items.map((menuItem) => {
+      menuItems = this.state.menu_items.map((menuItem) => {        
         return (
           <div key={menuItem.id} className='carousel-item has-background'>
             <figure className="image is-1by1">
@@ -58,14 +43,13 @@ export default class Menu extends Component {
 
             <div className="title">{menuItem.name}
               <div className="price">{menuItem.price}</div>
-              <button onClick={(e) => this.addToOrder(e, menuItem)} className="button is-danger">Add to your order</button>
+              <button onClick={(e) => this.props.addToOrder(menuItem)} className="button is-danger">Add to your order</button>
               </div>
           </div>
         )
       })
 
       const carousels = bulmaCarousel.attach();
-      console.log(menuItems);
 
     }
 
