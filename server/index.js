@@ -1,6 +1,7 @@
 require('dotenv').config();
 const bodyParser = require('body-parser');
 const { updateFormData, submitNewFormData } = require('../libs/reservation-func.js');
+const { updateReservationStatus } = require('../libs/status-func.js');
 
 //PORT for Express Server, Sockets will use the same server and port
 const PORT = process.env.PORT || 3001;
@@ -39,6 +40,10 @@ massive(connectionString)
 
       socket.on('addReservation', formReservation => {
         submitNewFormData(db, io, formReservation);
+      })
+
+      socket.on('updateReservationStatus', status => {
+        updateReservationStatus(db, io, status);
       })
     });
   })
