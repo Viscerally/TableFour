@@ -18,36 +18,36 @@ export default class MainArea extends Component {
     };
   }
 
-  getResCode = (resCode) => {
+  getResCode = resCode => {
     this.setState({ res_code: resCode })
   }
 
-  addToOrder = (menuItem) => {        
+  addToOrder = menuItem => {
     fetch(`/api/orders/${this.state.order_id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(menuItem)
     })
-    .then(response => {
-      console.log('insert', response)
-      return response.json();
-    })
-    .then(newMenuItem => {
-      console.log('NEWMENUITEM', newMenuItem)
-      this.setState((prevState, props) => {  
-        console.log('neworderitem', newMenuItem)      
-        let newItems = prevState.orderItems;
-        console.log(newItems)           
-        newItems.push(newMenuItem);        
-        return {orderItems: newItems}
-      }, () => console.log(this.state.orderItems));
-    })
-    .catch(err => { 
-      console.log(err) 
-    }); 
+      .then(response => {
+        console.log('insert', response)
+        return response.json();
+      })
+      .then(newMenuItem => {
+        console.log('NEWMENUITEM', newMenuItem)
+        this.setState((prevState, props) => {
+          console.log('neworderitem', newMenuItem)
+          let newItems = prevState.orderItems;
+          console.log(newItems)
+          newItems.push(newMenuItem);
+          return { orderItems: newItems }
+        }, () => console.log(this.state.orderItems));
+      })
+      .catch(err => {
+        console.log(err)
+      });
   }
-  
-  componentDidUpdate(prevProps, prevState, snapshot){
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('MainPrevState: ', prevState);
     console.log('MainState: ', this.state);
 
@@ -112,14 +112,14 @@ export default class MainArea extends Component {
             </div>
           </div>
           <div className='tile menu-tile is-4'>
-            <Menu 
-            addToOrder={this.addToOrder}
-             />
+            <Menu
+              addToOrder={this.addToOrder}
+            />
           </div>
           <div className='tile order-tile is-4'>
             <Order
-            orderId={this.state.order_id} 
-            orderItems={this.state.orderItems}
+              orderId={this.state.order_id}
+              orderItems={this.state.orderItems}
             />
           </div>
         </main>
