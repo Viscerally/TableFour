@@ -5,7 +5,17 @@ import { getAllReservations } from '../../../libs/reservation-func.js';
 export default class AdminReservationDashboard extends Component {
   constructor(props) {
     super(props);
-    this.state = { socket: '', reservations: [] };
+    this.state = {
+      socket: '',
+      reservations: []
+    };
+  }
+
+  selectSeated = (event, status) => {
+    // get value of 'data-key' which is === primary key of reservation
+    const id = event.target.getAttribute('data-key');
+    // send the object to web socket
+    this.state.socket.emit('updateReservationStatus', { id, status });
   }
 
   makeTable = () => {
@@ -24,15 +34,45 @@ export default class AdminReservationDashboard extends Component {
     const cells = this.state.reservations.map((reservation, index) => {
       // add the group size
       sizeSum += reservation.group_size;
-
       const { id, group_size, name, order_id, status } = reservation;
+      const waitingBtnClass = (status === 'waiting') ? 'button is-warning is-selected' : 'button';
+      const seatedBtnClass = (status === 'seated') ? 'button is-success is-selected' : 'button';
+      const cancelledBtnClass = (status === 'cancelled') ? 'button is-danger is-selected' : 'button';
+
+      const orderStatus = (order_id) ? (
+        <span className="icon has-text-success">
+          <i className="fas fa-check-square"></i>
+        </span>
+      ) : (
+          <span className="icon has-text-danger">
+            <i className="fas fa-times"></i>
+          </span>
+        );
+
       return (
         <tr key={id}>
           <td>{index + 1}</td>
           <td>{group_size}</td>
           <td>{name}</td>
-          <td>{(order_id) ? 'Y' : 'N'}</td>
-          <td>{status}</td>
+          <td>{orderStatus}</td>
+          <td>
+            <div className="buttons has-addons is-centered">
+              <span data-key={id}
+                onClick={event => this.selectSeated(event, 'waiting')}
+                className={waitingBtnClass}
+              >WAITING</span>
+              <span
+                data-key={id}
+                onClick={event => this.selectSeated(event, 'seated')}
+                className={seatedBtnClass}
+              >SEATED</span>
+              <span
+                data-key={id}
+                onClick={event => this.selectSeated(event, 'cancelled')}
+                className={cancelledBtnClass}
+              >CANCELED</span>
+            </div>
+          </td>
         </tr>
       )
     });
@@ -81,6 +121,17 @@ export default class AdminReservationDashboard extends Component {
           })
           .catch(err => { console.log(err) });
       });
+
+      socket.on('newStatus', newStatus => {
+        const { id, status } = newStatus;
+        const reservations = this.state.reservations.map(reservation => {
+          if (reservation.id == id) {
+            reservation.status = status;
+          }
+          return reservation;
+        });
+        this.setState({ reservations });
+      })
     });
   }
 
