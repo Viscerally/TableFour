@@ -1,11 +1,5 @@
+@import './partials/_carousel.scss';
 @import './partials/_var.scss';
 @import './partials/_form.scss';
-@import './partials/_carousel.scss';
 @import './partials/_layout.scss';
 @import './partials/_reservation-dashboard.scss';
-
-.menu-tile{
-  justify-content: center;
-  width: 33%;
-  margin-left: 33%;
-}
