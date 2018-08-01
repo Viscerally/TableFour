@@ -2,13 +2,14 @@ CREATE TABLE "customers" (
   "id" SERIAL NOT NULL PRIMARY KEY,
   "name" VARCHAR(50) NOT NULL,
   "phone" BIGINT NOT NULL,
-  "email" VARCHAR(50) 
+  "email" VARCHAR(50)
 );
 CREATE TABLE "orders" (
   "id" SERIAL NOT NULL PRIMARY KEY,
   "price_declared" INTEGER NOT NULL DEFAULT 0,
   "total_paid" INTEGER NOT NULL DEFAULT 0,
-  "is_paid" BOOLEAN NOT NULL DEFAULT false
+  "is_paid" BOOLEAN NOT NULL DEFAULT false,
+  "order_code" VARCHAR(10) NOT NULL
 );
 CREATE TABLE "categories" (
   "id" SERIAL NOT NULL PRIMARY KEY,
@@ -19,7 +20,10 @@ CREATE TABLE "reservations" (
   "id" SERIAL NOT NULL PRIMARY KEY,
   "placement_time" TIMESTAMP WITH TIME ZONE NOT NULL,
   "group_size" INTEGER NOT NULL,
+
   "status" VARCHAR(50) NOT NULL,
+  "res_code" VARCHAR(10) NOT NULL,
+  
   "order_id" INTEGER REFERENCES orders("id"),
   "customer_id" INTEGER REFERENCES customers("id")
 );

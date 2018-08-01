@@ -1,29 +1,17 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-
-import MainArea from './components/MainArea/MainArea.jsx';
-import HostArea from './components/HostArea/HostArea.jsx';
-
-import io from 'socket.io-client';
-
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import ComponentHandler from './components/ComponentHandler.jsx';
 
 import '../scss/application.scss';
 
 export default class App extends Component {
-
-  componentDidMount () {
-    const socket = io('http://localhost:3001');
-    socket.on('connect', () => {
-      
-    });
-
-  }
   render() {
     return (
       <Router>
         <div>
-          <Route path="/" component={MainArea} />
-          <Route path="/host" component={HostArea} />
+          <Route path="/admin" component={ComponentHandler} />
+          <Route exact path="/home" component={ComponentHandler} />
+          <Route path="/reservations/:res_code" component={ComponentHandler} />
         </div>
       </Router>
     );

@@ -1,12 +1,8 @@
 INSERT INTO customers (name, phone, email) VALUES
-('Paulina', 6043624496,
-'paulinate@o2.pl'
-);
+('Paulina', 6043624496, 'paulinate@o2.pl');
 
 INSERT INTO customers (name, phone, email) VALUES
-('John', 6043624496,
-'john@john.pl'
-);
+('John', 6043624496, 'john@john.pl');
 
 
 
@@ -135,16 +131,15 @@ INSERT INTO menu_items (name, description, price , img_url, category_id) VALUES
 
 
 
-INSERT INTO orders (price_declared) VALUES
-(1050);
+INSERT INTO orders (price_declared, order_code) VALUES
+(1050, 'A82NZ9');
 
-INSERT INTO orders (price_declared) VALUES
-(3200);
+INSERT INTO orders (price_declared, order_code) VALUES
+(3200, 'Q9EAS2');
 
 
 INSERT INTO menu_items_orders (menu_item_id, order_id) VALUES
 (1, 1);
-
 
 INSERT INTO menu_items_orders (menu_item_id, order_id) VALUES
 (2, 2);
@@ -158,9 +153,9 @@ INSERT INTO menu_items_orders (menu_item_id, order_id) VALUES
 
 
 
-INSERT INTO reservations (placement_time, group_size, status, order_id, customer_id) VALUES
-('2018-07-07 18:00:00', 2, 'ordered',1 , 1);
+INSERT INTO reservations (placement_time, group_size, status, res_code, order_id, customer_id) VALUES
+('2018-07-07 18:00:00', 2, 'waiting', 'A2B93A', 1 , 1);
 
-INSERT INTO reservations (placement_time, group_size, status, order_id, customer_id) VALUES
-('2018-07-07 18:30:00', 3, 'waiting',2 , 2);
+INSERT INTO reservations (placement_time, group_size, status, res_code, order_id, customer_id) VALUES
+('2018-07-07 18:30:00', 3, 'waiting', '2JS9ZB', 2 , 2);
 

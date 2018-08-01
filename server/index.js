@@ -1,58 +1,85 @@
-// dotenv package
 require('dotenv').config();
+const bodyParser = require('body-parser');
+const serv = require('../libs/serv-helpers.js');
 
-// require express and app
+//PORT for Express Server, Sockets will use the same server and port
+const PORT = process.env.PORT || 3001;
+const ENV = process.env.NODE_ENV || 'development';
+
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
-const path = require('path')
 
-
-server.listen(3001);
-
-app.get('/', function (req, res) {
-  console.log('getting hit in index.js');
-  res.sendFile(path.join(__dirname, '../client/index.html'));
-});
-
-io.on('connection', function(socket){
-  socket.emit('news', {hello: 'world'});
-
-})
-
-// require massive js
 const massive = require('massive');
-
-// include the api router
-const apiRoutes = require('../routes/api/index');
-
-// constants
-const PORT = process.env.PORT || 3002;
-const ENV = process.env.NODE_ENV || 'development';
-
 const connectionString = process.env.DATABASE_URL;
+const countClients = ws => Object.keys(ws.sockets.connected).length;
+
 app.use(express.static(__dirname + '/build'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 massive(connectionString)
-  .then(massiveInstance => {
-    console.log('Connection to PSQL established.')
-
-    // set up middleware
-    // all static files are in /bundle
-    app.use(express.static(__dirname + '/build'));
-
-    // set up /api path for all api routes
+  .then(db => {
+    console.log('Connection to PSQL established.');
+    const apiRoutes = require('../routes/api/index')(db);
     app.use('/api', apiRoutes);
 
-    app.set('db', massiveInstance);
-    const db = app.get('db');
+    io.on('connection', socket => {
+      console.log(`${countClients(io)} CLIENT(S) CONNECTED`);
+      socket.on('disconnect', () => {
+        console.log(`${countClients(io)} CLIENT(S) CONNECTED`);
+      });
 
-    app.listen(PORT, () => {
-      console.log(`Server listening on port ${PORT} in ${ENV} mode.`);
-    });
+      // LOAD INITIAL RESERVATIONS
+      socket.on('getReservations', () => {
+        serv.getAllReservations(db)
+          .then(data => { io.emit('loadReservations', data); })
+      })
 
+      // SUBMIT NEW RESERVATION
+      socket.on('submitReservation', formData => {
+        serv.submitNewReservation(db, formData)
+          .then(data => { io.emit('loadNewReservation', data); });
+      })
+
+      // UPDATE EXISTING RESERVATION
+      socket.on('updateReservation', formData => {
+        serv.updateReservation(db, formData)
+          .then(data => { io.emit('loadChangedReservation', data); });
+      });
+
+      // CANCEL RESERVATION
+      socket.on('cancelReservation', formData => {
+        serv.cancelReservation(db, formData)
+          .then(data => { io.emit('removeCancelledReservation', data); });
+      })
+
+
+      socket.on('getAllMenuItemOrders', status => {
+        serv.getAllMenuItemOrders(db)
+          .then(data => {
+            io.emit('AllMenuItemOrders', data);
+          })
+      })
+      socket.on('getItemOrdersWMenuItemInfo', status => {
+        serv.getItemOrdersWMenuItemInfo(db)
+          .then(data => {
+            io.emit('ItemOrdersWMenuItemInfo', data);
+          })
+      })
+      socket.on('addItemToOrder', status => {
+        serv.addItemOrderWMenuItem(db, status)
+        .then(data => {
+          io.emit('newOrderAdded', data);
+        })
+      })
+    })
   })
   .catch(err => {
     console.log(err.stack);
-  })
+  });
+
+server.listen(PORT, () => {
+  console.log(`Express server listening on port ${PORT} in ${ENV} mode.`);
+});
