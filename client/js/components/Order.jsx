@@ -15,7 +15,7 @@ export default class Order extends Component {
     const orderItems = this.props.orderItems.map((item,index) => {
       let integerToCurrency = numeral(item.price/100).format('$0.00')
       totalPrice += item.price;
-      console.log("This is NUMERAL -------------->",numeral(item.price/100).format('$0.00'))
+    
       return (
         <tr key={item.id}>
           <th>{index + 1}</th>
@@ -59,7 +59,7 @@ export default class Order extends Component {
               </tr>
             </tfoot>  
           </table>
-          <button className="button is-link">Place your order</button>
+          <button className="button is-link"> onClick={() => {this.props.placeOrder()}Place your order</button>
         </div>
       </article>
     )

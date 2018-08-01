@@ -35,6 +35,22 @@ export default class MainComponent extends Component {
     this.props.socket.emit('addItemToOrder', menuItem);
   }
 
+
+  placeOrder = (newOrder) => {
+    this.setState = {
+      orderId: order_id,
+      priceTotal: price_declared,
+      
+    }
+
+  //TODO:
+  //generate new order_id, price_declared(total), payment confirmation (is_paid),order_code(UUID?)
+  //menu_items_ids, 
+
+  //send to db, admin and via Twillio to customer,
+  //generate success message and 'cancel' button both on the app page as a link on Twillio?
+  }
+
   componentDidMount = () => {
     let { res_code, socket } = this.props;
 
@@ -178,6 +194,7 @@ export default class MainComponent extends Component {
                 orderId="2"
                 orderItems={this.state.menuItemOrders}
                 removeFromOrder={this.removeFromOrder}
+                placeOrder={this.state.placeOrder}
               />
             </div>
             <div className='column is-one-third' />
