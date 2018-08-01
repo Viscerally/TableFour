@@ -74,7 +74,7 @@ export default class BookingForm extends Component {
         type='submit'
         onClick={() => this.btnClicked(defaultBtnConfig.type)}
         className={defaultBtnConfig.klassName}
-      >UPDATE</button>
+      >{defaultBtnConfig.type.toUpperCase()}</button>
     );
     return { defaultBtn, cancelBtn };
   }
