@@ -13,7 +13,6 @@ export default class BookingForm extends Component {
         email: '',
         res_code: ''
       },
-      socket: '',
       btnType: ''
     };
   }
@@ -31,8 +30,8 @@ export default class BookingForm extends Component {
     let { name, phone, group_size, email } = event.target;
     // deconstruct state object
     const { btnType, formData: { res_code } } = this.state;
-    // send form data to websocket
-    this.state.socket.emit(`${btnType}Reservation`, {
+
+    this.props.socket.emit(`${btnType}Reservation`, {
       name: namifyStr(name.value),
       phone: getOnlyNumbers(phone.value),
       group_size: group_size.value,
@@ -90,8 +89,8 @@ export default class BookingForm extends Component {
 
   componentDidMount = () => {
     // add formData to state
-    const { socket, formData } = this.props;
-    this.setState({ socket, formData });
+    const { formData } = this.props;
+    this.setState({ formData });
   }
 
   // if updated props !== current state, then replace it with new props
