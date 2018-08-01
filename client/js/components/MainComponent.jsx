@@ -16,6 +16,16 @@ export default class MainComponent extends Component {
     };
   }
 
+  removeFromOrder = (orderItem)=> {
+    this.setState((prevState, props) => {
+      delete prevState.menuItemOrders[orderItem];
+      return {
+        prevState
+      }
+    })   
+    console.log("This.state on DELETE", this.state.orderItems, orderItem)
+   }
+
   addToOrder = menuItem => {
 
     fetch(`/api/orders/${this.state.order_id}`, {
@@ -69,7 +79,6 @@ export default class MainComponent extends Component {
   };
 
   render() {
-    console.log('Order Items: ', this.state.menuItemOrders);
     return (
       <div className='container is-desktop'>
       <Navbar />
@@ -112,6 +121,7 @@ export default class MainComponent extends Component {
             <Order
               orderId="2"
               orderItems={this.state.menuItemOrders}
+              removeFromOrder={this.removeFromOrder}
             />
           </div>
           <div className='column is-one-third' />

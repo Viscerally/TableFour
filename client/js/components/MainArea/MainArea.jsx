@@ -48,7 +48,17 @@ export default class MainArea extends Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+ removeFromOrder = (orderItem)=> {
+  this.setState((prevState, props) => {
+    delete prevState.orderItems[orderItem];
+    return {
+      prevState
+    }
+  })   
+  console.log("This.state on DELETE", this.state.orderItems, orderItem)
+ }
+  
+  componentDidUpdate(prevProps, prevState, snapshot){
     console.log('MainPrevState: ', prevState);
     console.log('MainState: ', this.state);
 
@@ -125,6 +135,7 @@ export default class MainArea extends Component {
             <Order
             orderId={this.state.order_id}
             orderItems={this.state.orderItems}
+            removeFromOrder={this.removeFromOrder}
             />
           </div>
         </main>
