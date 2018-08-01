@@ -1,6 +1,6 @@
 require('dotenv').config();
 const bodyParser = require('body-parser');
-const { updateFormData, submitNewFormData } = require('../libs/reservation-func.js');
+const { updateFormData, submitNewFormData, cancelReservation } = require('../libs/reservation-func.js');
 const { updateReservationStatus } = require('../libs/status-func.js');
 
 //PORT for Express Server, Sockets will use the same server and port
@@ -34,12 +34,16 @@ massive(connectionString)
         console.log(`${countClients(io)} CLIENT(S) CONNECTED`);
       });
 
+      socket.on('submitReservation', formReservation => {
+        submitNewFormData(db, io, formReservation);
+      })
+
       socket.on('updateReservation', formReservation => {
         updateFormData(db, io, formReservation);
       })
 
-      socket.on('addReservation', formReservation => {
-        submitNewFormData(db, io, formReservation);
+      socket.on('cancelReservation', formReservation => {
+        cancelReservation(db, io, formReservation);
       })
 
       socket.on('updateReservationStatus', status => {
