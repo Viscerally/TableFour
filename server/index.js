@@ -55,6 +55,12 @@ massive(connectionString)
           .then(data => { io.emit('removeCancelledReservation', data); });
       })
 
+      // UPDATE RESERVATION STATUS
+      socket.on('updateReservationStatus', status => {
+        serv.updateReservationStatus(db, status)
+          .then(data => { io.emit('changeReservationStatus', data); });
+      })
+
 
       socket.on('getAllMenuItemOrders', status => {
         serv.getAllMenuItemOrders(db)
