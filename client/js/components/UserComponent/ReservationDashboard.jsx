@@ -26,54 +26,30 @@ export default class ReservationDashboard extends Component {
     );
     let options = '';
 
-    // loop through table rows
     const cells = this.state.reservations.map((reservation, index) => {
       // add the group size
       sizeSum += reservation.group_size;
       if (this.state.res_code == reservation.res_code) {
-        stats = `Your position: #${index + 1} ${sizeSum - reservation.group_size} people ahead`;
-
-        // option for the selected reservation
-        options = (
-          <a className='button is-link is-rounded is-small'>
-            <span>Place Order</span>
-            <span className='icon is-small'>
-              <i className="fas fa-cart-arrow-down"></i>
-            </span>
-          </a>
-        );
+        stats = `Your position: #${index + 1} (${sizeSum - reservation.group_size} people ahead)`;
       } else {
-        // hide customer name other than the current customer's name
         options = '';
       }
 
-      // we don't need to show all table rows
-      // show the first 3 rows and then skip to the current user
+
       const visibleRowCut = 3;
       let { name, group_size } = reservation;
-      const klassName = (this.state.res_code == reservation.res_code) ? 'is-selected' : '';
+      const className = (this.state.res_code == reservation.res_code) ? 'is-selected' : '';
       name = (this.state.res_code == reservation.res_code) ? name : '...';
 
-      if (index < visibleRowCut) {
-        // first 3 rows
+      if (index < visibleRowCut || this.state.res_code == reservation.res_code) {
         return (
-          <tr key={reservation.id} className={klassName}>
+          <tr key={reservation.id} className={className}>
             <td>{index + 1}</td>
             <td>{name}</td>
             <td>{group_size}</td>
             <td>{options}</td>
           </tr>
         );
-      } else if (this.state.res_code == reservation.res_code) {
-        // current customer's reservation row
-        return (
-          <tr key={reservation.id} className={klassName}>
-            <td>{index + 1}</td>
-            <td>{name}</td>
-            <td>{group_size}</td>
-            <td>{options}</td>
-          </tr>
-        )
       } else if (index == visibleRowCut) {
         return (
           <tr key='empty_row'>
@@ -100,9 +76,7 @@ export default class ReservationDashboard extends Component {
   };
 
   componentDidMount() {
-    // RESERVATION ID
-    // check if res_code's passed as a URL param
-    // if it exists, save it in the state. if not, save it as null
+
     this.setState(oldState => {
       let { res_code } = this.props.urlParams;
       res_code = (this.props.urlParams.res_code) || null;
@@ -113,8 +87,6 @@ export default class ReservationDashboard extends Component {
       return oldState;
     });
 
-    // INITIAL RESERVATION DATA
-    // get all reservations
     getAllReservations()
       .then(reservations => {
         // save all reso data to state

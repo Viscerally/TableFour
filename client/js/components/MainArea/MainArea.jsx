@@ -18,11 +18,12 @@ export default class MainArea extends Component {
     };
   }
 
-  getResCode = (resCode) => {
+  getResCode = resCode => {
     this.setState({ res_code: resCode })
   }
 
-  addToOrder = (menuItem) => {
+  addToOrder = menuItem => {
+
     fetch(`/api/orders/${this.state.order_id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -34,17 +35,17 @@ export default class MainArea extends Component {
     })
     .then(newMenuItem => {
       console.log('NEWMENUITEM', newMenuItem)
-      this.setState((prevState, props) => {  
+      this.setState((prevState, props) => {
         console.log('neworderitem', newMenuItem)
         let newItems = prevState.orderItems;
         console.log(newItems)
         newItems.push(newMenuItem);
-        return {orderItems: newItems}
+        return { orderItems: newItems }
       }, () => console.log(this.state.orderItems));
     })
-    .catch(err => { 
-      console.log(err) 
-    }); 
+    .catch(err => {
+      console.log(err)
+    });
   }
 
  removeFromOrder = (orderItem)=> {
@@ -121,14 +122,18 @@ export default class MainArea extends Component {
               </article>
             </div>
           </div>
-          <div className='tile menu-tile is-4'>
-            <Menu 
-            addToOrder={this.addToOrder}
-             />
-          </div>
-          <div className='tile order-tile is-6'>
+          <div className='columns' >
+            <div className='column is-one-third' />
+            <div className='column is-one-third'>
+              <Menu
+              addToOrder={this.addToOrder}
+               />
+            </div>
+            <div className='column is-one-third' />
+            </div>
+          <div className='tile order-tile is-4'>
             <Order
-            orderId={this.state.order_id} 
+            orderId={this.state.order_id}
             orderItems={this.state.orderItems}
             removeFromOrder={this.removeFromOrder}
             />
