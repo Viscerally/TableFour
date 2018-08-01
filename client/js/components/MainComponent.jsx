@@ -27,25 +27,12 @@ export default class MainComponent extends Component {
     this.setState((prevState) => {
       return { menuItemOrders: newState}
     })
-    
+
   }
 
-
   addToOrder = menuItem => {
-    fetch(`/api/orders/${this.state.order_id}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(menuItem)
-    })
-      .then(response => response.json())
-      .then(newMenuItem => {
-        this.setState((prevState, props) => {
-          let newItems = prevState.orderItems;
-          newItems.push(newMenuItem);
-          return { orderItems: newItems }
-        })
-      })
-      .catch(err => { console.log(err); });
+    menuItem.orderId = this.state.orderId;
+    this.props.socket.emit('addItemToOrder', menuItem);
   }
 
   componentDidMount = () => {
@@ -118,9 +105,13 @@ export default class MainComponent extends Component {
         this.setState({ menuItemOrders });
       });
 
-      socket.on('NewOrderAdded', data => {
-        //SET STATE TO ADD ORDER TO ORDER ARRAY
-      });
+      socket.on('newOrderAdded', data => {
+        this.setState(prevState => {
+          return {
+            menuItemOrders: [...prevState.menuItemOrders, data]
+           };
+        })
+      })
 
     });
 
