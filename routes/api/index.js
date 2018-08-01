@@ -25,6 +25,22 @@ module.exports = function (db) {
     })
   })
 
+  apiRouter.post('/orders/:order_id', (req, res) => {
+
+    const menuItemOrder = {
+      menu_item_id: req.body.id,
+      order_id: req.params.order_id
+    }
+
+    return serv.addItemToOrder(menuItemOrder)
+      .then(menuItemOrder => {
+         res.json(menuItemOrder);
+       })
+      .catch(err => {
+        console.log(err);
+      })
+  })
+
   apiRouter.post('/reservations/:res_id', (req, res) => {
     res.send('Cancel a reservation.');
   })
