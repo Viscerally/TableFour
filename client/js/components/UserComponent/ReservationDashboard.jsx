@@ -111,7 +111,6 @@ export default class ReservationDashboard extends Component {
   };
 
   render() {
-    // console.log(this.props);
     const { reservations, formData: { res_code } } = this.props;
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
