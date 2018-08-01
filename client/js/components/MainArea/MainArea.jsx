@@ -22,30 +22,30 @@ export default class MainArea extends Component {
     this.setState({ res_code: resCode })
   }
 
-
   addToOrder = menuItem => {
+
     fetch(`/api/orders/${this.state.order_id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(menuItem)
     })
-      .then(response => {
-        console.log('insert', response)
-        return response.json();
-      })
-      .then(newMenuItem => {
-        console.log('NEWMENUITEM', newMenuItem)
-        this.setState((prevState, props) => {
-          console.log('neworderitem', newMenuItem)
-          let newItems = prevState.orderItems;
-          console.log(newItems)
-          newItems.push(newMenuItem);
-          return { orderItems: newItems }
-        }, () => console.log(this.state.orderItems));
-      })
-      .catch(err => {
-        console.log(err)
-      });
+    .then(response => {
+      console.log('insert', response)
+      return response.json();
+    })
+    .then(newMenuItem => {
+      console.log('NEWMENUITEM', newMenuItem)
+      this.setState((prevState, props) => {
+        console.log('neworderitem', newMenuItem)
+        let newItems = prevState.orderItems;
+        console.log(newItems)
+        newItems.push(newMenuItem);
+        return { orderItems: newItems }
+      }, () => console.log(this.state.orderItems));
+    })
+    .catch(err => {
+      console.log(err)
+    });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
