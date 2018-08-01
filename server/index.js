@@ -54,25 +54,25 @@ massive(connectionString)
       socket.on('getAllReservations', status => {
         serv.getAllReservations(db)
         .then(data => {
-          io.emit('AllReservations', data);
+          io.emit('allReservations', data);
         })
       })
       socket.on('getAllMenuItemOrders', status => {
         serv.getAllMenuItemOrders(db)
         .then(data => {
-          io.emit('AllMenuItemOrders', data);
+          io.emit('allMenuItemOrders', data);
         })
       })
-      socket.on('getItemOrdersWMenuItemInfo', status => {
-        serv.getItemOrdersWMenuItemInfo(db)
+      socket.on('getMenuItemsByItemOrders', status => {
+        serv.getMenuItemsByItemOrders(db)
         .then(data => {
-          io.emit('ItemOrdersWMenuItemInfo', data);
+          io.emit('menuItemsByItemOrders', data);
         })
       })
       socket.on('addItemToOrder', status => {
-        serv.addItemToOrder(db)
+        serv.addItemOrderWMenuItem(db, status)
         .then(data => {
-          io.emit('NewOrderAdded', data);
+          io.emit('newOrderAdded', data);
         })
       })
     })

@@ -25,6 +25,22 @@ module.exports = function (db) {
     })
   })
 
+  apiRouter.post('/orders/:order_id', (req, res) => {
+
+    const menuItemOrder = {
+      menu_item_id: req.body.id,
+      order_id: req.params.order_id
+    }
+
+    return serv.addItemToOrder(menuItemOrder)
+      .then(menuItemOrder => {
+         res.json(menuItemOrder);
+       })
+      .catch(err => {
+        console.log(err);
+      })
+  })
+
   apiRouter.post('/reservations/:res_id', (req, res) => {
     res.send('Cancel a reservation.');
   })
@@ -43,26 +59,6 @@ module.exports = function (db) {
   apiRouter.get('/orders/:order_id/menu_items', (req, res) => {
     return serv.getAllMenuItemOrders(db);
   })
-
-  // NOTE: should be extracted into separate route
-  apiRouter.post('/orders/:order_id', (req, res) => {
-    db.menu_items_orders.insert({
-      menu_item_id: req.body.id,
-      order_id: req.params.order_id
-    })
-     // .then((menuItemOrder) => {
-        //res.json(menuItemOrder);
-      //})
-    .then((newReference) => {
-      return db.menu_items.findOne(newReference.menu_item_id);
-    })
-    .then((menu_item) => {
-      // returns the new menu item
-      res.status(200).json(menu_item);
-    });
-  });
-
-
 
   apiRouter.get('/menu_items', (req, res) => {
     db.menu_items.find()

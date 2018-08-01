@@ -22,50 +22,35 @@ export default class MainComponent extends Component {
       return {
         prevState
       }
-    })   
+    })
     console.log("This.state on DELETE", this.state.orderItems, orderItem)
    }
 
   addToOrder = menuItem => {
-
-    fetch(`/api/orders/${this.state.order_id}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(menuItem)
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(newMenuItem => {
-        this.setState((prevState, props) => {
-          let newItems = prevState.orderItems;
-          newItems.push(newMenuItem);
-          return { orderItems: newItems }
-        })
-      })
-      .catch(err => {
-        console.log(err)
-      });
+    menuItem.orderId = this.state.orderId;
+    this.props.socket.emit('addItemToOrder', menuItem);
   }
 
   componentDidMount = () => {
-
-    this.props.socket.on('AllReservations', data => {
+    this.props.socket.on('allReservations', data => {
       this.setState({
         reservations: data
       })
     })
-    this.props.socket.on('ItemOrdersWMenuItemInfo', data => {
+    this.props.socket.on('menuItemsByItemOrders', data => {
       this.setState({
         menuItemOrders: data
       })
     })
-    this.props.socket.on('NewOrderAdded', data => {
-      //SET STATE TO ADD ORDER TO ORDER ARRAY
+    this.props.socket.on('newOrderAdded', data => {
+      this.setState(prevState => {
+        return {
+          menuItemOrders: [...prevState.menuItemOrders, data]
+         };
+      })
     })
     this.props.socket.emit('getAllReservations');
-    this.props.socket.emit('getItemOrdersWMenuItemInfo');
-
+    this.props.socket.emit('getMenuItemsByItemOrders');
   }
 
   showRefId = () => {
