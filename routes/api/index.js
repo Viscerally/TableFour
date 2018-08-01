@@ -1,6 +1,6 @@
 const express = require('express');
 const apiRouter = express.Router();
-const serv = require('../../server/servHelpers');
+const serv = require('../../libs/serv-helpers');
 
 module.exports = function (db) {
 
@@ -23,6 +23,22 @@ module.exports = function (db) {
     .then(data => {
       res.json(data);
     })
+  })
+
+  apiRouter.post('/orders/:order_id', (req, res) => {
+
+    const menuItemOrder = {
+      menu_item_id: req.body.id,
+      order_id: req.params.order_id
+    }
+
+    return serv.addItemToOrder(menuItemOrder)
+      .then(menuItemOrder => {
+         res.json(menuItemOrder);
+       })
+      .catch(err => {
+        console.log(err);
+      })
   })
 
   apiRouter.post('/reservations/:res_id', (req, res) => {
@@ -50,19 +66,17 @@ module.exports = function (db) {
       menu_item_id: req.body.id,
       order_id: req.params.order_id
     })
-     // .then((menuItemOrder) => {
-        //res.json(menuItemOrder);
+      // .then((menuItemOrder) => {
+      //res.json(menuItemOrder);
       //})
-    .then((newReference) => {
-      return db.menu_items.findOne(newReference.menu_item_id);
-    })
-    .then((menu_item) => {
-      // returns the new menu item
-      res.status(200).json(menu_item);
-    });
+      .then((newReference) => {
+        return db.menu_items.findOne(newReference.menu_item_id);
+      })
+      .then((menu_item) => {
+        // returns the new menu item
+        res.status(200).json(menu_item);
+      });
   });
-
-
 
   apiRouter.get('/menu_items', (req, res) => {
     db.menu_items.find()
@@ -83,9 +97,9 @@ module.exports = function (db) {
   ///////////route for sms functionality/////////
   apiRouter.get('/customers/:cust_id', (req, res) => {
     db.customers.find(req.params.cust_id)
-    .then((cust) => {
-      res.status(200).json(cust);
-    })
+      .then((cust) => {
+        res.status(200).json(cust);
+      })
   })
 
   // console.log('test');
