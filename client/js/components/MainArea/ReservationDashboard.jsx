@@ -16,17 +16,27 @@ export default class ReservationDashboard extends Component {
   makeTable = (reservations, res_code) => {
     // set sizeSum to 0 before calculating how many people are ahead of the current customer
     let sizeSum = 0;
+    let index = 0;
     let stats = '';
     let options = '';
 
     // loop through table rows
-    const cells = reservations.map((reservation, index) => {
+    const cells = reservations.map(reservation => {
+      // only display reservation with status being 'waiting'
+      if (reservation.status !== 'waiting') {
+        return true;
+      }
+
+      // set row position
+      const position = index + 1;
+
       // add the group size
       sizeSum += reservation.group_size;
 
+      // current customer's reservation exists in the reservation table
       if (res_code == reservation.res_code) {
         // create stats for the current reservation
-        stats = `Your position: #${index + 1} (${sizeSum - reservation.group_size} people ahead)`;
+        stats = `Your position: #${position} (${sizeSum - reservation.group_size} people ahead)`;
 
         // option for the selected reservation
         options = (
@@ -48,11 +58,12 @@ export default class ReservationDashboard extends Component {
       const klassName = (res_code == reservation.res_code) ? 'is-selected' : '';
       name = (res_code == reservation.res_code) ? name : '...';
 
+      let row = '';
       if (index < visibleRowCut) {
         // first 3 rows
-        return (
+        row = (
           <tr key={reservation.id} className={klassName}>
-            <td>{index + 1}</td>
+            <td>{position}</td>
             <td>{name}</td>
             <td>{group_size}</td>
             <td>{options}</td>
@@ -60,24 +71,28 @@ export default class ReservationDashboard extends Component {
         );
       } else if (res_code == reservation.res_code) {
         // current customer's reservation row
-        return (
+        row = (
           <tr key={reservation.id} className={klassName}>
-            <td>{index + 1}</td>
+            <td>{position}</td>
             <td>{name}</td>
             <td>{group_size}</td>
             <td>{options}</td>
           </tr>
         )
       } else if (index == visibleRowCut) {
-        return (
+        row = (
           <tr key='empty_row'>
             <td colSpan='4'>...</td>
           </tr>
         );
       }
+
+      index++;
+      return row;
     });
 
-    if (res_code === null) {
+    if (!res_code) {
+      // display total number of groups and people in the que
       stats = `Total of ${reservations.length} groups (${sizeSum} people) waiting..`;
     }
 
@@ -89,7 +104,9 @@ export default class ReservationDashboard extends Component {
           </tr>
           {createDefaultHeader()}
         </thead>
-        <tbody>{cells}</tbody>
+        <tbody>
+          {cells}
+        </tbody>
       </Fragment>
     );
   };
