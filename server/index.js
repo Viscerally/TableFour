@@ -69,10 +69,10 @@ massive(connectionString)
           })
       })
       socket.on('addItemToOrder', status => {
-        serv.addItemToOrder(db)
-          .then(data => {
-            io.emit('NewOrderAdded', data);
-          })
+        serv.addItemOrderWMenuItem(db, status)
+        .then(data => {
+          io.emit('newOrderAdded', data);
+        })
       })
     })
   })
