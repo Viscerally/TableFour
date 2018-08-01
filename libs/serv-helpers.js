@@ -13,19 +13,15 @@ function getAllReservations(db) {
 }
 
 const saveCustomer = (db, customerData) => {
-  return new Promise((resolve, reject) => {
-    db.customers.save(customerData)
-      .then(result => { resolve(result); })
-      .catch(err => { reject(err); })
-  });
+  return db.customers.save(customerData)
+    .then(result => { return result })
+    .catch(err => { console.log(err) })
 };
 
 const saveReservation = (db, reservationData) => {
-  return new Promise((resolve, reject) => {
-    db.reservations.save(reservationData)
-      .then(result => { resolve(result); })
-      .catch(err => { reject(err); })
-  })
+  return db.reservations.save(reservationData)
+    .then(result => { return result })
+    .catch(err => { console.log(err) })
 };
 
 const submitNewReservation = async (db, formData) => {
@@ -49,11 +45,9 @@ const submitNewReservation = async (db, formData) => {
 
 const findReservation = (db, param) => {
   const paramKey = Object.keys(param)[0];
-  return new Promise((resolve, reject) => {
-    db.reservations.find({ [paramKey]: param.res_code })
-      .then(result => { resolve(result); })
-      .catch(err => { reject(err); })
-  });
+    return db.reservations.find({ [paramKey]: param.res_code })
+      .then(result => { return result })
+      .catch(err => { console.log(err) })
 };
 
 const updateReservation = async (db, formData) => {
@@ -80,7 +74,7 @@ const cancelReservation = async (db, formData) => {
   return reservation;
 }
 
-function getAllMenuItemOrders(db) {
+const getAllMenuItemOrders = db => {
   return db.menu_items_orders.find()
     .then(data => {
       return data;
@@ -90,7 +84,7 @@ function getAllMenuItemOrders(db) {
     })
 }
 
-function getItemOrdersWMenuItemInfo(db) {
+const getItemOrdersWMenuItemInfo = db => {
   let qStr =
     `SELECT menu_items_orders.id, img_url, menu_item_id, order_id, name, description, price, category_id
     FROM menu_items_orders
@@ -106,7 +100,7 @@ function getItemOrdersWMenuItemInfo(db) {
     })
 }
 
-function getMenuItemByItemOrder(db, menuItemOrder){
+const getMenuItemByItemOrder = (db, menuItemOrder) => {
   return db.menu_items.findOne({
     id: menuItemOrder.menu_item_id
   })
@@ -115,7 +109,7 @@ function getMenuItemByItemOrder(db, menuItemOrder){
   })
 }
 
-function addItemOrderWMenuItem(db, menuItemOrder){
+const addItemOrderWMenuItem = (db, menuItemOrder) => {
   let itemOrderWMenuItem = {}
 
   return addItemToOrder(db, menuItemOrder)
@@ -138,7 +132,7 @@ function addItemOrderWMenuItem(db, menuItemOrder){
     })
 }
 
-function addItemToOrder(db, menuItemOrder){
+const addItemToOrder = (db, menuItemOrder) => {
   return db.menu_items_orders.insert({
     menu_item_id: menuItemOrder.id,
     order_id: menuItemOrder.orderId
