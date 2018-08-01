@@ -51,8 +51,7 @@ export default class ReservationDashboard extends Component {
         options = '';
       }
 
-      // we don't need to show all table rows
-      // show the first 3 rows and then skip to the current user
+
       const visibleRowCut = 3;
       let { name, group_size } = reservation;
       const klassName = (res_code == reservation.res_code) ? 'is-selected' : '';
@@ -112,6 +111,7 @@ export default class ReservationDashboard extends Component {
   };
 
   render() {
+    // console.log(this.props);
     const { reservations, formData: { res_code } } = this.props;
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>

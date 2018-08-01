@@ -24,14 +24,4 @@ const returnResoArray = (reservations, newReservation) => {
   }
 };
 
-// retrieve all reservations stored in reservations table
-const getAllReservations = () => {
-  return new Promise((resolve, reject) => {
-    fetch('/api/reservations')
-      .then(response => response.json())
-      .then(reservations => { resolve(reservations) })
-      .catch(err => { reject(err.stack) });
-  });
-};
-
-module.exports = { getAllReservations, returnResoArray };
+module.exports = { returnResoArray };

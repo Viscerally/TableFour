@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import NumberFormat from 'react-number-format';
-import { namifyStr, getOnlyNumbers } from '../../../libs/form-helper-func.js';
+import { namifyStr, getOnlyNumbers } from '../../libs/form-helper-func.js';
 
 export default class BookingForm extends Component {
   constructor(props) {

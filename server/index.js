@@ -1,7 +1,6 @@
 require('dotenv').config();
 const bodyParser = require('body-parser');
-const { updateFormData, submitNewFormData, cancelReservation } = require('../libs/reservation-func.js');
-const { updateReservationStatus } = require('../libs/status-func.js');
+const serv = require('../libs/serv-helpers.js');
 
 //PORT for Express Server, Sockets will use the same server and port
 const PORT = process.env.PORT || 3001;
@@ -32,22 +31,50 @@ massive(connectionString)
         console.log(`${countClients(io)} CLIENT(S) CONNECTED`);
       });
 
-      socket.on('submitReservation', formReservation => {
-        submitNewFormData(db, io, formReservation);
+      // LOAD INITIAL RESERVATIONS
+      socket.on('getReservations', () => {
+        serv.getAllReservations(db)
+          .then(data => { io.emit('loadReservations', data); })
       })
 
-      socket.on('updateReservation', formReservation => {
-        updateFormData(db, io, formReservation);
+      // SUBMIT NEW RESERVATION
+      socket.on('submitReservation', formData => {
+        serv.submitNewReservation(db, formData)
+          .then(data => { io.emit('loadNewReservation', data); });
       })
 
-      socket.on('cancelReservation', formReservation => {
-        cancelReservation(db, io, formReservation);
+      // UPDATE EXISTING RESERVATION
+      socket.on('updateReservation', formData => {
+        serv.updateReservation(db, formData)
+          .then(data => { io.emit('loadChangedReservation', data); });
+      });
+
+      // CANCEL RESERVATION
+      socket.on('cancelReservation', formData => {
+        serv.cancelReservation(db, formData)
+          .then(data => { io.emit('removeCancelledReservation', data); });
       })
 
-      socket.on('updateReservationStatus', status => {
-        updateReservationStatus(db, io, status);
+
+      socket.on('getAllMenuItemOrders', status => {
+        serv.getAllMenuItemOrders(db)
+          .then(data => {
+            io.emit('AllMenuItemOrders', data);
+          })
       })
-    });
+      socket.on('getItemOrdersWMenuItemInfo', status => {
+        serv.getItemOrdersWMenuItemInfo(db)
+          .then(data => {
+            io.emit('ItemOrdersWMenuItemInfo', data);
+          })
+      })
+      socket.on('addItemToOrder', status => {
+        serv.addItemToOrder(db)
+          .then(data => {
+            io.emit('NewOrderAdded', data);
+          })
+      })
+    })
   })
   .catch(err => {
     console.log(err.stack);
