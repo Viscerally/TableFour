@@ -20,8 +20,6 @@ app.use(express.static(__dirname + '/build'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
-
 massive(connectionString)
   .then(db => {
     console.log('Connection to PSQL established.');
