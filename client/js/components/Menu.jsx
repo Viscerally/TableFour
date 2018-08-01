@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import bulmaCarousel from 'bulma-carousel/dist/js/bulma-carousel.js';
+import numeral from 'numeral';
 
 export default class Menu extends Component {
   constructor(props){
@@ -24,9 +25,7 @@ export default class Menu extends Component {
 
   render() {    
     let menuItems;
-
     if (this.state){
-
       menuItems = this.state.menu_items.map((menuItem) => {
         return (
           <div key={menuItem.id} className='carousel-item has-background'>
@@ -39,7 +38,7 @@ export default class Menu extends Component {
                 />
 
             <div className="title">{menuItem.name}
-              <div className="price">{menuItem.price}</div>
+              <div className="price">{numeral(menuItem.price/100).format('$0.00')}</div>
               <button onClick={(e) => this.props.addToOrder(menuItem)} className="button is-danger">Add to your order</button>
               </div>
           </div>

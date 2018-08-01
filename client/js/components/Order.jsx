@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+import numeral from 'numeral';
+
+
 export default class Order extends Component {
   
   
@@ -10,13 +13,14 @@ export default class Order extends Component {
     let positionCounter = 0;
     let totalPrice = 0;
     const orderItems = this.props.orderItems.map((item,index) => {
+      let integerToCurrency = numeral(item.price/100).format('$0.00')
       totalPrice += item.price;
-      
+      console.log("This is NUMERAL -------------->",numeral(item.price/100).format('$0.00'))
       return (
         <tr key={item.id}>
           <th>{index + 1}</th>
           <td><span className="listItemName">{item.name}</span></td>
-          <td>{item.price}</td>
+          <td>{integerToCurrency}</td>
           <td className='remove-from-order'>
             <a className='button is-danger is-outlined is-small' onClick={() => {this.props.removeFromOrder(item)}}>
               <span>Remove</span>
@@ -50,7 +54,7 @@ export default class Order extends Component {
               <tr>
                 <th><abbr title="Position"></abbr></th>
                 <th className='totalDescription'>Total to pay</th>
-                <th>{totalPrice}</th>
+                <th>{numeral(totalPrice/100).format('$0.00')}</th>
                 <th></th>
               </tr>
             </tfoot>  
