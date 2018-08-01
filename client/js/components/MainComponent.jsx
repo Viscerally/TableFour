@@ -19,13 +19,17 @@ export default class MainComponent extends Component {
     };
   }
 
-  removeFromOrder = orderItem => {
-    this.setState((prevState, props) => {
-      delete prevState.menuItemOrders[orderItem];
-      return { prevState }
+  removeFromOrder = (orderItem)=> {
+    const newState = this.state.menuItemOrders.filter(item => {
+      return item.id !== orderItem.id;
+    });
+
+    this.setState((prevState) => {
+      return { menuItemOrders: newState}
     })
-    console.log("This.state on DELETE", this.state.orderItems, orderItem)
+    
   }
+
 
   addToOrder = menuItem => {
     fetch(`/api/orders/${this.state.order_id}`, {
