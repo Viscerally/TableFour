@@ -103,6 +103,17 @@ export default class MainArea extends Component {
           return { ...oldState, formData, reservations };
         });
       });
+
+      socket.on('newStatus', newStatus => {
+        const { id, status } = newStatus;
+        const reservations = this.state.reservations.map(reservation => {
+          if (reservation.id == id) {
+            reservation.status = status;
+          }
+          return reservation;
+        });
+        this.setState({ reservations });
+      })
     });
   }
 
@@ -118,7 +129,7 @@ export default class MainArea extends Component {
   };
 
   render() {
-    const { formData, reservations, res_code } = this.state;
+    const { formData, reservations } = this.state;
     return (
       <div className='container is-desktop'>
         <header>
