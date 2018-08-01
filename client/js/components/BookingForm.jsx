@@ -65,6 +65,25 @@ export default class BookingForm extends Component {
     return { defaultBtn, cancelBtn };
   }
 
+  addBtns = () => {
+    let defaultBtn = '';
+    let cancelBtn = '';
+
+    if (this.state.res_code) {
+      defaultBtn = (
+        <button type='submit' onClick={() => this.clicked('update')} className="button is-success" >UPDATE</button>
+      );
+      cancelBtn = (
+        <button type='submit' onClick={() => this.clicked('cancel')} className="button is-danger">CANCEL</button>
+      );
+    } else {
+      defaultBtn = (
+        <button type='submit' onClick={() => this.clicked('submit')} className="button is-link">SUBMIT</button>
+      );
+    }
+    return { defaultBtn, cancelBtn };
+  }
+
   render() {
     return (
       <form onSubmit={this.handleFormSubmission}>
