@@ -27,8 +27,7 @@ function getItemOrdersWMenuItemInfo(db){
     ON menu_items_orders.menu_item_id = menu_items.id`;
 
   return db.query(qStr)
-  .then(data => {
-    console.log('SERV: ', data)
+  .then(data => {    
     return data;
   })
   .catch(err => {
