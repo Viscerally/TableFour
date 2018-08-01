@@ -1,6 +1,6 @@
 const express = require('express');
 const apiRouter = express.Router();
-const serv = require('../../server/servHelpers');
+const serv = require('../../libs/serv-helpers');
 
 module.exports = function (db) {
 

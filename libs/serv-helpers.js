@@ -6,9 +6,11 @@ const rs = require('random-strings');
 function getAllReservations(db) {
   const qItems = 'reservations.id, email, group_size, name, phone, placement_time, res_code, order_id, status';
   const q = `SELECT ${qItems} FROM reservations JOIN customers ON customer_id = customers.id WHERE status = 'waiting' ORDER BY placement_time ASC`;
-
+  console.log(q);
   return db.query(q)
-    .then(data => data)
+    .then(data => {      
+      return data;
+    })
     .catch(err => { console.log(err); })
 }
 // LOAD ALL RESERVATIONS - END
