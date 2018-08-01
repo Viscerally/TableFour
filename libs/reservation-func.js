@@ -31,7 +31,6 @@ const saveReservation = (db, reservationData) => {
 // find reservation data
 const findReservation = (db, param) => {
   const paramKey = Object.keys(param)[0];
-  console.log(param, Object.keys(param));
   return new Promise((resolve, reject) => {
     db.reservations.find({ [paramKey]: param.res_code })
       .then(result => {
@@ -71,7 +70,6 @@ const submitNewFormData = async (db, io, formData) => {
 // update existing reservation data
 const updateFormData = async (db, io, formData) => {
   const { name, phone, group_size, email, res_code } = formData;
-
   const reservationRecord = await findReservation(db, { res_code });
   const { id, customer_id } = reservationRecord[0];
   const customerData = {
@@ -83,7 +81,6 @@ const updateFormData = async (db, io, formData) => {
   const customer = await saveCustomer(db, customerData);
   const reservationData = { id, group_size };
   const reservation = await saveReservation(db, reservationData);
-
   io.emit('news', { customer, reservation });
 }
 
