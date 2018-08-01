@@ -11,6 +11,7 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
+const serv = require('./servHelpers');
 
 const massive = require('massive');
 const connectionString = process.env.DATABASE_URL;
@@ -49,7 +50,32 @@ massive(connectionString)
       socket.on('updateReservationStatus', status => {
         updateReservationStatus(db, io, status);
       })
-    });
+
+      socket.on('getAllReservations', status => {
+        serv.getAllReservations(db)
+        .then(data => {
+          io.emit('AllReservations', data);
+        })
+      })
+      socket.on('getAllMenuItemOrders', status => {
+        serv.getAllMenuItemOrders(db)
+        .then(data => {
+          io.emit('AllMenuItemOrders', data);
+        })
+      })
+      socket.on('getItemOrdersWMenuItemInfo', status => {
+        serv.getItemOrdersWMenuItemInfo(db)
+        .then(data => {
+          io.emit('ItemOrdersWMenuItemInfo', data);
+        })
+      })
+      socket.on('addItemToOrder', status => {
+        serv.addItemToOrder(db)
+        .then(data => {
+          io.emit('NewOrderAdded', data);
+        })
+      })
+    })
   })
   .catch(err => {
     console.log(err.stack);

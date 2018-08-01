@@ -1,22 +1,28 @@
 const express = require('express');
 const apiRouter = express.Router();
+const serv = require('../../server/servHelpers');
 
 module.exports = function (db) {
 
-  // initial loading of all reservation records
   apiRouter.get('/reservations', (req, res) => {
-    // query string
-    const qItems = 'reservations.id, email, group_size, name, phone, placement_time, res_code, order_id, status';
-    const q = `SELECT ${qItems} FROM reservations JOIN customers ON customer_id = customers.id ORDER BY placement_time ASC`;
+    serv.getAllReservations(db)
+    .then(data => {
+        res.status(200).json(data);
+    })
+  })
 
-    db.query(q)
-      .then(result => {
-        res.status(200).json(result);
-      })
-      .then(err => {
-        // res.status(500).send({ error: 'Error while retrieving all reservation data' });
-        // console.log(err.stack);
-      })
+  apiRouter.get('/menu_items_orders', (req, res) => {
+    serv.getAllMenuItemOrders(db)
+    .then(data => {
+      res.json(data);
+    })
+  })
+
+  apiRouter.get('/menu_items_orders/menu_items', (req, res) =>{
+    serv.getItemOrdersWMenuItemInfo(db)
+    .then(data => {
+      res.json(data);
+    })
   })
 
   apiRouter.post('/reservations/:res_id', (req, res) => {
@@ -35,21 +41,7 @@ module.exports = function (db) {
     res.send('Return a list of all menu items associated with a category');
   })
   apiRouter.get('/orders/:order_id/menu_items', (req, res) => {
-    let qStr =
-      `SELECT menu_items_orders.id, img_url, menu_item_id, order_id, name, description, price, category_id
-      FROM menu_items_orders
-      INNER JOIN menu_items
-      ON menu_items_orders.menu_item_id = menu_items.id WHERE order_id = 2`;
-
-    db.query(qStr)
-    .then(result => {
-      console.log(result[5]);
-      res.status(200).json(result);
-    })
-    .then(err => {
-      res.status(500).send({ error: 'Error while retrieving order menu item data' });
-      console.log(err.stack);
-    })
+    return serv.getAllMenuItemOrders(db);
   })
 
   // NOTE: should be extracted into separate route
@@ -70,20 +62,15 @@ module.exports = function (db) {
     });
   });
 
-  apiRouter.get('/orders/:order_id/menu_items_orders', (req, res) => {
-    db.menu_items_orders.find({
-      order_id: req.params.order_id
-    })
-    .then((menuItemOrders) => {
-      res.json(menuItemOrders);
 
-    })
-  })
 
   apiRouter.get('/menu_items', (req, res) => {
     db.menu_items.find()
       .then((menu_items) => {
         res.status(200).json(menu_items);
+      })
+      .catch(err => {
+        console.log('NEW ERROR! ', err);
       })
   });
   apiRouter.get('/menu_items/:item_id', (req, res) => {
@@ -108,3 +95,16 @@ module.exports = function (db) {
   return apiRouter;
 
 };
+
+//FROM OLD /reservations query
+/*const qItems = 'reservations.id, email, group_size, name, phone, placement_time, res_code, order_id, status';
+const q = `SELECT ${qItems} FROM reservations JOIN customers ON customer_id = customers.id ORDER BY placement_time ASC`;
+
+db.query(q)
+  .then(result => {
+    res.status(200).json(result);
+  })
+  .then(err => {
+    // res.status(500).send({ error: 'Error while retrieving all reservation data' });
+    // console.log(err.stack);
+  })*/

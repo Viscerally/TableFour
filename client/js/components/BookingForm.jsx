@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import NumberFormat from 'react-number-format';
-import { getAllReservations } from '../../../libs/reservation-func.js';
+//import { getAllReservations } from '../../../libs/reservation-func.js';
 
 export default class BookingForm extends Component {
   constructor(props) {
@@ -43,16 +43,26 @@ export default class BookingForm extends Component {
   componentWillReceiveProps = () => {
     // receive res_code as props from MainArea.jsx and save it in state
     const { res_code } = this.props;
-    getAllReservations()
-      .then(result => {
-        const currentReso = result.filter(reservation => reservation.res_code === res_code)[0];
-        let { name, phone, group_size, email } = currentReso;
+    this.props.reservations;
+  }
 
-        this.setState({ name, phone, group_size, email, res_code });
-      })
-      .catch(err => {
-        console.log(err);
-      })
+  addBtns = () => {
+    let defaultBtn = '';
+    let cancelBtn = '';
+
+    if (this.state.res_code) {
+      defaultBtn = (
+        <button type='submit' onClick={() => this.clicked('update')} className="button is-success" >UPDATE</button>
+      );
+      cancelBtn = (
+        <button type='submit' onClick={() => this.clicked('cancel')} className="button is-danger">CANCEL</button>
+      );
+    } else {
+      defaultBtn = (
+        <button type='submit' onClick={() => this.clicked('submit')} className="button is-link">SUBMIT</button>
+      );
+    }
+    return { defaultBtn, cancelBtn };
   }
 
   addBtns = () => {
