@@ -11,7 +11,8 @@ export default class BookingForm extends Component {
         phone: '',
         group_size: '',
         email: '',
-        res_code: ''
+        res_code: '',
+        host: process.env.HOST || window.location.host
       },
       btnType: ''
     };
@@ -27,7 +28,7 @@ export default class BookingForm extends Component {
     // prevent default GET request
     event.preventDefault();
     // deconstruct event.target
-    let { name, phone, group_size, email } = event.target;
+    let { name, phone, group_size, email, host } = event.target;
     // deconstruct state object
     const { btnType, formData: { res_code } } = this.state;
 
@@ -37,7 +38,7 @@ export default class BookingForm extends Component {
       group_size: group_size.value,
       email: email.value,
       res_code,
-      host: process.env.HOST || window.location.host
+      host
     });
   }
 
@@ -75,6 +76,7 @@ export default class BookingForm extends Component {
         className={defaultBtnConfig.klassName}
       >{defaultBtnConfig.type.toUpperCase()}</button>
     );
+
     return { defaultBtn, cancelBtn };
   }
 

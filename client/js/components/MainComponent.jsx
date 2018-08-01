@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 
-import Navbar from './Navbar.jsx';
 import ReservationDashboard from './UserComponent/ReservationDashboard.jsx';
+import AdminReservationDashboard from './AdminComponent/AdminReservationDashboard.jsx';
 import BookingForm from './BookingForm.jsx';
+
+import Navbar from './Navbar.jsx';
 import Order from './Order.jsx'
 import Menu from './Menu.jsx';
 
@@ -19,17 +21,11 @@ export default class MainComponent extends Component {
     };
   }
 
-  removeFromOrder = (orderItem)=> {
-    const newState = this.state.menuItemOrders.filter(item => {
-      return item.id !== orderItem.id;
-    });
-
-    this.setState((prevState) => {
-      return { menuItemOrders: newState}
-    })
-
+  removeFromOrder = orderItem => {
+    const menuItemOrders = this.state.menuItemOrders.filter(item => item.id !== orderItem.id);
+    this.setState({ menuItemOrders });
   }
-
+  
   addToOrder = menuItem => {
     menuItem.orderId = this.state.orderId;
     this.props.socket.emit('addItemToOrder', menuItem);
@@ -37,9 +33,7 @@ export default class MainComponent extends Component {
 
   componentDidMount = () => {
     let { res_code, socket } = this.props;
-
     this.setState(oldState => {
-      if (!res_code) { res_code = null; }
       oldState.formData.res_code = res_code;
       return oldState;
     })
@@ -88,6 +82,14 @@ export default class MainComponent extends Component {
         });
       })
 
+      // UPDATE RESERVATION STATUS BY ADMIN
+      socket.on('changeReservationStatus', newReservation => {
+        this.setState(oldState => {
+          const reservations = returnResoArray(oldState.reservations, newReservation);
+          return { ...oldState, formData: newReservation, reservations };
+        });
+      })
+
       // socket.on('newStatus', newStatus => {
       //   const { id, status } = newStatus;
       //   const reservations = this.state.reservations.map(reservation => {
@@ -126,10 +128,31 @@ export default class MainComponent extends Component {
         </span>
       );
     }
-  };
+  }
+
+  selectDashboard = (socket, formData, reservations) => {
+    if (this.props.isAdmin) {
+      // ADMIN DASHBOARD
+      return (
+        <AdminReservationDashboard
+          socket={socket}
+          reservations={reservations}
+        />
+      );
+    } else {
+      // CUSTOMER DASHBOARD
+      return (
+        <ReservationDashboard
+          formData={formData}
+          reservations={reservations}
+        />
+      );
+    }
+  }
 
   render() {
-    const { formData, reservations } = this.state;
+    const { formData, reservations, menuItemOrders } = this.state;
+    const { socket, isAdmin } = this.props;
     return (
       <div className='container is-desktop'>
         <header>
@@ -144,8 +167,9 @@ export default class MainComponent extends Component {
                   <span className='title is-4'>BOOK YOUR TABLE</span>
                   {this.showRefId()}
                   <BookingForm
+                    isAdmin={isAdmin}
                     formData={formData}
-                    socket={this.props.socket}
+                    socket={socket}
                   />
                 </div>
               </article>
@@ -154,10 +178,7 @@ export default class MainComponent extends Component {
               <article className='tile is-child box'>
                 <div className='content'>
                   <p className='title is-4'>RESERVATION STATUS</p>
-                  <ReservationDashboard
-                    formData={formData}
-                    reservations={reservations}
-                  />
+                  {this.selectDashboard(socket, formData, reservations)}
                 </div>
               </article>
             </div>
@@ -176,7 +197,7 @@ export default class MainComponent extends Component {
             <div className='column is-one-third'>
               <Order
                 orderId="2"
-                orderItems={this.state.menuItemOrders}
+                orderItems={menuItemOrders}
                 removeFromOrder={this.removeFromOrder}
               />
             </div>

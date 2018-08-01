@@ -5,10 +5,9 @@ const rs = require('random-strings');
 function getAllReservations(db) {
   const qItems = 'reservations.id, email, group_size, name, phone, placement_time, res_code, order_id, status';
   const q = `SELECT ${qItems} FROM reservations JOIN customers ON customer_id = customers.id WHERE status = 'waiting' ORDER BY placement_time ASC`;
+
   return db.query(q)
-    .then(data => {
-      return data;
-    })
+    .then(data => { return data; })
     .catch(err => { console.log(err); })
 }
 
@@ -45,13 +44,16 @@ const submitNewReservation = async (db, formData) => {
 
 const findReservation = (db, param) => {
   const paramKey = Object.keys(param)[0];
-    return db.reservations.find({ [paramKey]: param.res_code })
-      .then(result => { return result })
-      .catch(err => { console.log(err) })
+
+  return db.reservations.find({ [paramKey]: param.res_code })
+    .then(result => { return result })
+    .catch(err => { console.log(err) })
 };
 
 const updateReservation = async (db, formData) => {
   const { name, phone, group_size, email, res_code } = formData;
+
+  // find the reservation record by res_code
   const reservationRecord = await findReservation(db, { res_code });
 
   const { id, customer_id } = reservationRecord[0];
@@ -73,6 +75,29 @@ const cancelReservation = async (db, formData) => {
 
   return reservation;
 }
+// CANCEL RESERVATION - END
+
+// UPDATE RESERVATION STATUS BY ADMIN
+// read customer data
+const readCustomer = (db, customerData) => {
+  return db.customers.findOne(customerData)
+    .then(result => result)
+    .catch(err => { console.log(err); });
+};
+
+const updateReservationStatus = async (db, resoStatus) => {
+  // find reservation by id
+  const reservationRecord = await findReservation(db, { id: resoStatus.id });
+  const reservationData = reservationRecord[0];
+  // read customer data
+  customer = await readCustomer(db, { id: reservationData.customer_id });
+
+  // update reservation data
+  reservationData.status = resoStatus.status;
+  reservation = await saveReservation(db, reservationData);
+
+  return { ...customer, ...reservation };
+};
 
 const getAllMenuItemOrders = db => {
   return db.menu_items_orders.find()
@@ -150,6 +175,7 @@ module.exports = {
   submitNewReservation,
   updateReservation,
   cancelReservation,
+  updateReservationStatus,
   getAllMenuItemOrders,
   getItemOrdersWMenuItemInfo,
   getMenuItemByItemOrder,
