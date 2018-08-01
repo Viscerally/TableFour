@@ -22,7 +22,7 @@ export default class MainArea extends Component {
     this.setState({ res_code: resCode })
   }
 
-  addToOrder = (menuItem) => {        
+  addToOrder = (menuItem) => {
     fetch(`/api/orders/${this.state.order_id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -35,10 +35,10 @@ export default class MainArea extends Component {
     .then(newMenuItem => {
       console.log('NEWMENUITEM', newMenuItem)
       this.setState((prevState, props) => {  
-        console.log('neworderitem', newMenuItem)      
+        console.log('neworderitem', newMenuItem)
         let newItems = prevState.orderItems;
-        console.log(newItems)           
-        newItems.push(newMenuItem);        
+        console.log(newItems)
+        newItems.push(newMenuItem);
         return {orderItems: newItems}
       }, () => console.log(this.state.orderItems));
     })
@@ -116,7 +116,7 @@ export default class MainArea extends Component {
             addToOrder={this.addToOrder}
              />
           </div>
-          <div className='tile order-tile is-4'>
+          <div className='tile order-tile is-6'>
             <Order
             orderId={this.state.order_id} 
             orderItems={this.state.orderItems}
