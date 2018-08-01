@@ -10,8 +10,13 @@ export default class BookingForm extends Component {
       phone: '',
       group_size: '',
       email: '',
-      res_code: ''
+      res_code: '',
+      btnType: ''
     };
+  }
+
+  clicked = btnType => {
+    this.setState({ btnType });
   }
 
   // make a POST request with form data
@@ -20,27 +25,15 @@ export default class BookingForm extends Component {
     event.preventDefault();
     // deconstruct event.target
     const { name, phone, group_size, email } = event.target;
-
     // send form data to websocket
-    const { socket } = this.props;
-    const formData = {
+    this.props.socket.emit(`${this.state.btnType}Reservation`, {
       name: name.value.trim(),
       phone: phone.value.replace(/\D/g, ''),
       group_size: group_size.value,
       email: email.value,
       res_code: this.props.res_code,
       host: process.env.HOST || window.location.host
-    };
-
-    if (this.props.res_code) {
-      // CASE 2: update existing reservation
-      // res_code !== null
-      socket.emit('updateReservation', formData);
-    } else {
-      // CASE 1: send new reservation
-      // res_code === null
-      socket.emit('addReservation', formData);
-    }
+    });
   }
 
   handleChange = ({ target: { name, value } }) => {
@@ -48,9 +41,28 @@ export default class BookingForm extends Component {
   }
 
   componentWillReceiveProps = () => {
-    // receive res_code as props from MainARea.jsx and save it in state
+    // receive res_code as props from MainArea.jsx and save it in state
     const { res_code } = this.props;
     this.props.reservations;
+  }
+
+  addBtns = () => {
+    let defaultBtn = '';
+    let cancelBtn = '';
+
+    if (this.state.res_code) {
+      defaultBtn = (
+        <button type='submit' onClick={() => this.clicked('update')} className="button is-success" >UPDATE</button>
+      );
+      cancelBtn = (
+        <button type='submit' onClick={() => this.clicked('cancel')} className="button is-danger">CANCEL</button>
+      );
+    } else {
+      defaultBtn = (
+        <button type='submit' onClick={() => this.clicked('submit')} className="button is-link">SUBMIT</button>
+      );
+    }
+    return { defaultBtn, cancelBtn };
   }
 
   render() {
@@ -144,10 +156,13 @@ export default class BookingForm extends Component {
           </div>
         </div>
 
-        <div className="field is-grouped">
-          <div className="control">
-            <button className="button is-link">Submit</button>
-          </div>
+        <div className="field is-centered is-grouped">
+          <p className="control">
+            {this.addBtns().defaultBtn}
+          </p>
+          <p className="control">
+            {this.addBtns().cancelBtn}
+          </p>
         </div>
       </form>
     );
