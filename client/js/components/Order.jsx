@@ -10,7 +10,7 @@ export default class Order extends Component {
       return (
         <tr key={item.id}>
         <th>{/*index + 1*/}</th>
-        <td><span class="listItemName">{item.name}</span></td>
+        <td><span className="listItemName">{item.name}</span></td>
         <td>{item.price}</td>
         </tr>
 
@@ -21,7 +21,7 @@ export default class Order extends Component {
       <article className='tile is-12 box'>
        <div className='content'>
           <p className='title is-4'>ORDER LIST</p>
-          <table class="orderTable">
+          <table className="orderTable">
             <thead>
               <tr>
                 <th>#</th>
@@ -35,7 +35,7 @@ export default class Order extends Component {
             <tfoot>
               <tr>
                 <th><abbr title="Position"></abbr></th>
-                <th class='totalDescription'>Total to pay</th>
+                <th className='totalDescription'>Total to pay</th>
                 <th>{/*totalPrice*/}</th>
                 <th></th>
               </tr>
