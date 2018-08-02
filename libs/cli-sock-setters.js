@@ -32,7 +32,7 @@ function setSocket(socket, react){
     })
 
     // UPDATE RESERVATION DATA
-    socket.on('loadChangedReservation', data => {      
+    socket.on('loadChangedReservation', data => {
       const newResList = react.state.reservations.map(reservation => {
         if (reservation.id === data.reservation.id) {
           reservation = data.reservation;
@@ -48,8 +48,19 @@ function setSocket(socket, react){
       })
     })
 
-    // CANCEL RESERVATION
+    socket.on('loadReservation', data => {
+      react.setState({
+        currentReservation: data
+      })
+    })
 
+    socket.on('loadCustomer', data => {      
+      react.setState({
+        currentCustomer: data
+      })
+    })
+
+    // CANCEL RESERVATION
     socket.on('removeCancelledReservation', newData => {
       react.setState(oldState => {
         const reservations = react.state.reservations.filter(reso => {

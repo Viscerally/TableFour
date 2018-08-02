@@ -14,6 +14,6 @@ export default class App extends Component {
           <Route path="/reservations/:res_code" component={ComponentHandler} />
         </div>
       </Router>
-    );
+    )
   }
-};
+}

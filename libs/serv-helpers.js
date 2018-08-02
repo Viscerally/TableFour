@@ -49,6 +49,24 @@ const submitNewReservation = async (db, formData) => {
   return { customer, reservation };
 }
 
+const getReservationByResCode = (db, res_code) => {
+  return db.reservations.findOne({
+      'res_code': res_code
+    })
+    .then(result => { return result })
+    .catch(err => { console.log(err) })
+}
+
+const getCustomerByReservation = (db, reso) => {
+  return db.customers.findOne({
+    'id': reso.customer_id
+  })
+  .then(result => {    
+    return result
+   })
+  .catch(err => { console.log(err) })
+}
+
 const findReservation = (db, param) => {
   const paramKey = Object.keys(param)[0];
   return db.reservations.findOne({ [paramKey]: param.res_code })
@@ -197,5 +215,7 @@ module.exports = {
   getItemOrdersWMenuItemInfo,
   getMenuItemByItemOrder,
   addItemOrderWMenuItem,
-  addItemToOrder
+  addItemToOrder,
+  getReservationByResCode,
+  getCustomerByReservation
 }

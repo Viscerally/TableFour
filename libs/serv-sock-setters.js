@@ -15,6 +15,23 @@ function setSocketServer(io, db){
         .catch(err => console.log(err));
     })
 
+    socket.on('getReservationByResCode', data => {
+      serv.getReservationByResCode(db, data)
+        .then(data => { io.emit('loadReservation', data) })
+        .catch(err => { console.log(err)} );
+    })
+
+    socket.on('getCustomerByResCode', data => {
+      serv.getReservationByResCode(db, data)
+      .then(reso => {
+        return serv.getCustomerByReservation(db, reso)
+      })
+      .then(custo => {        
+        io.emit('loadCustomer', custo)
+      })
+      .catch(err => { console.log(err)} );
+    })
+
     // SUBMIT NEW RESERVATION
     socket.on('submitReservation', formData => {
       console.log('Server socket handling submit');
@@ -24,7 +41,7 @@ function setSocketServer(io, db){
     })
 
     // UPDATE EXISTING RESERVATION
-    socket.on('updateReservation', formData => {      
+    socket.on('updateReservation', formData => {
       serv.updateReservation(db, formData)
         .then(data => { io.emit('loadChangedReservation', data) })
         .catch(err => console.log(err));

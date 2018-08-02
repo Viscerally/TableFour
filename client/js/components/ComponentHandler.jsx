@@ -4,12 +4,12 @@ import MainComponent from './MainComponent.jsx';
 
 export default function (props) {
   const isAdmin = props.match.url === '/admin' ? true : false;
-  const res_code = props.match.params.res_code === undefined ? null : props.match.params.res_code;
+  const res_code = props.match.params.res_code === undefined ? null : props.match.params.res_code;  
   const socket = io('http://localhost:3001');
 
   // NEED TO GENERATE THE RES_CODE AS SOON AS USER LOGS IN
   // STORE IT IN STATE
-  
+
   return (
     <MainComponent
       isAdmin={isAdmin}

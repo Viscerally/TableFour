@@ -17,7 +17,7 @@ export default class MainComponent extends Component {
       reservations: [],
       orderId: '2',
       menuItemOrders: [],
-      res_code: ''
+      res_code: props.res_code
     };
   }
 
@@ -43,7 +43,11 @@ export default class MainComponent extends Component {
     socket = setSocket(this.props.socket, this);
     socket.emit('getReservations');
     socket.emit('getItemOrdersWMenuItemInfo');
-
+    if (this.state.res_code){
+      console.log('GET ME A RES CODE!');
+      socket.emit('getReservationByResCode', this.state.res_code);
+      socket.emit('getCustomerByResCode', this.state.res_code);
+    }
   }
 
   render() {
