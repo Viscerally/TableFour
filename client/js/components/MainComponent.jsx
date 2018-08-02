@@ -35,21 +35,33 @@ export default class MainComponent extends Component {
     this.props.socket.emit('addItemToOrder', menuItem);
   }
 
+///////////////////////////////////
+  placeOrder = (order_id) => {
+    const newOrder = {
+      orderId: this.state.order_id,
+      priceTotal: this.state.price_declared,
+      paymentConfirmation: this.state.is_paid,
+      orderCode: order_id,
+    };
 
-  placeOrder = (newOrder) => {
-    this.setState = {
-      orderId: order_id,
-      priceTotal: price_declared,
-      
-    }
-
+    
+  console.log("placeOrder ------>", this.setstate)
   //TODO:
-  //generate new order_id, price_declared(total), payment confirmation (is_paid),order_code(UUID?)
+  //generate new order_id,
+  // price_declared(total), 
+  //total_paid - to be inplemented later
+  // payment confirmation (is_paid),
+  // order_code(UUID?)
   //menu_items_ids, 
 
-  //send to db, admin and via Twillio to customer,
-  //generate success message and 'cancel' button both on the app page as a link on Twillio?
+  //send to db,
+  //send to admin
+  //send via Twillio and as notification to customer on the home page,
+  //generate success message (notification or new page -if statement
+  // add 'cancel' button both on the app page as a link on message on sms from Twillio?
   }
+
+/////////////////////////////////////
 
   componentDidMount = () => {
     let { res_code, socket } = this.props;
