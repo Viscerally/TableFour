@@ -38,6 +38,7 @@ export default class BookingForm extends Component {
       group_size: group_size.value,
       email: email.value,
       res_code,
+      isAdmin: this.props.isAdmin,
       host
     });
   }
@@ -95,10 +96,19 @@ export default class BookingForm extends Component {
     this.setState({ formData });
   }
 
-  // if updated props !== current state, then replace it with new props
   componentDidUpdate(prevProps, prevState) {
-    const { formData } = this.props;
-    if (prevState.formData !== formData) {
+    const { isAdmin, formData } = this.props;
+    // there are 2 conditions to check for any update to occur
+    // 1. this.props.isAdmin must be === as this.props.formData.isAdmin
+    // this.props.isAdmin represents on which page BookingForm.jsx is RENDERED.
+    // For example, if this.props.isAdmin === true, this component is rendered at /admin
+    // this.props.formData.isAdmin represents on which page the FORM WAS SUBMITTED.
+    // in short, it represents the origin of the form data.
+    // For example, if this.props.formData.isAdmin === true, the form was submitted at /admin
+    // without this condition check, a form submission on the customer page will both render
+    // the form BOTH on the customer AND admin pages (NOT GOOD).
+    // 2. the current formData is different from formData in the previous state
+    if ((isAdmin === formData.isAdmin) && (prevState.formData !== formData)) {
       this.setState({ formData });
     }
   }
