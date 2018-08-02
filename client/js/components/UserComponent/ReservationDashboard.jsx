@@ -1,16 +1,5 @@
 import React, { Component, Fragment } from 'react';
 
-// default table header
-const createDefaultHeader = () => {
-  return (
-    <tr>
-      <th>#</th>
-      <th>NAME</th>
-      <th>SIZE</th>
-      <th></th>
-    </tr>
-  );
-};
 
 export default class ReservationDashboard extends Component {
   makeTable = (reservations, res_code) => {
@@ -19,15 +8,11 @@ export default class ReservationDashboard extends Component {
     let index = 0;
     let stats = '';
     let options = '';
-
-    // loop through table rows
     const cells = reservations.map(reservation => {
-      // only display reservation with status being 'waiting'
       if (reservation.status !== 'waiting') {
         return true;
       }
 
-      // set row position
       const position = index + 1;
 
       // add the group size
@@ -35,6 +20,7 @@ export default class ReservationDashboard extends Component {
 
       // current customer's reservation exists in the reservation table
       if (res_code == reservation.res_code) {
+
         // create stats for the current reservation
         stats = `Your position: #${position} (${sizeSum - reservation.group_size} people ahead)`;
 
@@ -53,7 +39,8 @@ export default class ReservationDashboard extends Component {
 
 
       const visibleRowCut = 3;
-      let { name, group_size } = reservation;
+      let { group_size } = reservation;
+      let name = this.props.currentCustomer.name;
       const klassName = (res_code == reservation.res_code) ? 'is-selected' : '';
       name = (res_code == reservation.res_code) ? name : '...';
 
@@ -91,7 +78,6 @@ export default class ReservationDashboard extends Component {
     });
 
     if (!res_code) {
-      // display total number of groups and people in the que
       stats = `Total of ${reservations.length} groups (${sizeSum} people) waiting..`;
     }
 
@@ -101,7 +87,12 @@ export default class ReservationDashboard extends Component {
           <tr>
             <th colSpan='4'>{stats}</th>
           </tr>
-          {createDefaultHeader()}
+          <tr>
+            <th>#</th>
+            <th>NAME</th>
+            <th>SIZE</th>
+            <th></th>
+          </tr>
         </thead>
         <tbody>
           {cells}
@@ -111,10 +102,10 @@ export default class ReservationDashboard extends Component {
   };
 
   render() {
-    const { reservations, formData: { res_code } } = this.props;
+    const { reservations } = this.props;
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-        {this.makeTable(reservations, res_code)}
+        {this.makeTable(reservations, this.props.res_code)}
       </table>
     );
   }
