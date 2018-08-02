@@ -80,55 +80,55 @@ export default class MainComponent extends Component {
         </header>
         <br />
         <main>
-          <div className='tile is-ancestor top-tile'>
-            <div className='tile is-5 is-parent'>
-              <article className='tile is-child box'>
-                <div className='content'>
-                  <span className='title is-4'>BOOK YOUR TABLE</span>
-                  <BookingForm
-                    currentReservation={this.state.currentReservation}
-                    currentCustomer={this.state.currentCustomer}
-                    socket={this.props.socket}
-                  />
-                </div>
-              </article>
-            </div>
-            <div className='tile is-parent'>
-              <article className='tile is-child box'>
-                <div className='content'>
-                  <p className='title is-4'>RESERVATION STATUS</p>
-                  <ReservationDashboard
-                    res_code={this.state.res_code}
-                    reservations={this.state.reservations}
-                    currentReservation={this.state.currentReservation}
-                    currentCustomer={this.state.currentCustomer}
-                  />
-                  {/*this.selectDashboard(socket, formData, reservations)*/}
-                </div>
-              </article>
-            </div>
+        <div className='tile is-ancestor top-tile'>
+          <div className='tile is-5 is-parent'>
+            <article className='tile is-child box'>
+              <div className='content'>
+                <span className='title is-4'>BOOK YOUR TABLE</span>
+                <BookingForm
+                  currentReservation={this.state.currentReservation}
+                  currentCustomer={this.state.currentCustomer}
+                  socket={this.props.socket}
+                />
+              </div>
+            </article>
           </div>
-          <div className='columns' >
-            <div className='column is-one-third' />
-            <div className='column is-one-third'>
-              <Menu
-                addToOrder={this.addToOrder}
-              />
-            </div>
-            <div className='column is-one-third' />
+          <div className='tile is-parent'>
+            <article className='tile is-child box'>
+              <div className='content'>
+                <p className='title is-4'>RESERVATION STATUS</p>
+                <ReservationDashboard
+                  res_code={this.state.res_code}
+                  reservations={this.state.reservations}
+                  currentReservation={this.state.currentReservation}
+                  currentCustomer={this.state.currentCustomer}
+                />
+                {/*this.selectDashboard(socket, formData, reservations)*/}
+              </div>
+            </article>
           </div>
-          <div className='columns' >
-            <div className='column is-one-third' />
-            <div className='column is-one-third'>
-              <Order
-                orderId="2"
-                orderItems={menuItemOrders}
-                removeFromOrder={this.removeFromOrder}
-                placeOrder={this.state.placeOrder}
-              />
-            </div>
-            <div className='column is-one-third' />
+        </div>
+        <div className='columns' >
+          <div className='column is-one-third' />
+          <div className='column is-one-third'>
+            <Menu
+              addToOrder={this.addToOrder}
+            />
           </div>
+          <div className='column is-one-third' />
+        </div>
+        <div className='columns' >
+          <div className='column is-one-third' />
+          <div className='column is-one-third'>
+            <Order
+              orderId="2"
+              orderItems={this.state.menuItemOrders}
+              removeFromOrder={this.removeFromOrder}
+              placeOrder={this.state.placeOrder}
+            />
+          </div>
+          <div className='column is-one-third' />
+        </div>
         </main>
         <footer></footer>
       </div >

@@ -7,8 +7,6 @@ export default class Order extends Component {
 
 
   render() {
-    // console.log(`\n\n\n ${this.props.orderItems[0]}`);
-    // console.log('Order is rendering');
 
     let positionCounter = 0;
     let totalPrice = 0;

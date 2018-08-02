@@ -143,13 +143,12 @@ export default class BookingForm extends Component {
               <a className='button is-static'>
                 +1
               </a>
-              </span>
-              <span className='icon is-medium is-right'>
-                <i className='fas fa-check fa-lg'></i>
-              </span>
-            </div>
+            </span>
+            <span className='icon is-medium is-right'>
+              <i className='fas fa-check fa-lg'></i>
+            </span>
           </div>
-        </div>
+        </div>        
 
         <div className='field'>
           <label className='label is-medium'>Group Size*</label>
