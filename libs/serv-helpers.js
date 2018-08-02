@@ -2,6 +2,7 @@ const twilio = require('twilio');
 const smsMsg = require('../routes/api/sms.js');
 const rs = require('random-strings');
 
+// GET ALL RESERVATIONS
 function getAllReservations(db) {
   const qItems = 'reservations.id, email, group_size, name, phone, placement_time, res_code, order_id, status';
   const q = `SELECT ${qItems} FROM reservations JOIN customers ON customer_id = customers.id WHERE status = 'waiting' ORDER BY placement_time ASC`;
@@ -10,7 +11,9 @@ function getAllReservations(db) {
     .then(data => { return data; })
     .catch(err => { console.log(err); })
 }
+// GET ALL RESERVATIONS - END
 
+// SUBMIT NEW RESERVATION
 const saveCustomer = (db, customerData) => {
   return db.customers.save(customerData)
     .then(result => { return result })
@@ -24,7 +27,7 @@ const saveReservation = (db, reservationData) => {
 };
 
 const submitNewReservation = async (db, formData) => {
-  const { name, phone, group_size, email } = formData;
+  const { name, phone, group_size, email, isAdmin } = formData;
   const customer = await saveCustomer(db, { name, phone, email });
 
   const reservationData = {
@@ -39,9 +42,11 @@ const submitNewReservation = async (db, formData) => {
 
   // text the reservation data
   smsMsg.resoTextMsg(phone, reservation);
-  return { ...customer, ...reservation };
+  return { ...customer, ...reservation, isAdmin };
 }
+// SUBMIT NEW RESERVATION - END
 
+// UPDATE RESERVATION
 const findReservation = (db, param) => {
   const paramKey = Object.keys(param)[0];
 
@@ -51,7 +56,7 @@ const findReservation = (db, param) => {
 };
 
 const updateReservation = async (db, formData) => {
-  const { name, phone, group_size, email, res_code } = formData;
+  const { name, phone, group_size, email, res_code, isAdmin } = formData;
 
   // find the reservation record by res_code
   const reservationRecord = await findReservation(db, { res_code });
@@ -63,9 +68,11 @@ const updateReservation = async (db, formData) => {
   const reservationData = { id, group_size };
   const reservation = await saveReservation(db, reservationData);
 
-  return { ...customer, ...reservation };
+  return { ...customer, ...reservation, isAdmin };
 }
+// SUBMIT NEW RESERVATION - END
 
+// CANCEL RESERVATION
 const cancelReservation = async (db, formData) => {
   const { res_code } = formData;
   const reservationRecord = await findReservation(db, { res_code });
