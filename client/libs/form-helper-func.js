@@ -30,6 +30,7 @@ const resoData = (state) => {
     email: customer.email,
   }
 }
+
 module.exports = {
   namifyStr,
   getOnlyNumbers,

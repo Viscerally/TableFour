@@ -76,6 +76,8 @@ export default class MainComponent extends Component {
                   <ReservationDashboard
                     res_code={this.state.res_code}
                     reservations={this.state.reservations}
+                    currentReservation={this.state.currentReservation}
+                    currentCustomer={this.state.currentCustomer}
                   />
                 </div>
               </article>

@@ -39,7 +39,8 @@ export default class ReservationDashboard extends Component {
 
 
       const visibleRowCut = 3;
-      let { name, group_size } = reservation;
+      let { group_size } = reservation;
+      let name = this.props.currentCustomer.name;
       const klassName = (res_code == reservation.res_code) ? 'is-selected' : '';
       name = (res_code == reservation.res_code) ? name : '...';
 
@@ -101,7 +102,7 @@ export default class ReservationDashboard extends Component {
   };
 
   render() {
-    const { reservations } = this.props;    
+    const { reservations } = this.props;
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
         {this.makeTable(reservations, this.props.res_code)}

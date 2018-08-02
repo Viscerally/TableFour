@@ -41,7 +41,7 @@ function setSocket(socket, react){
       })
       react.setState(oldState => {
         return {
-          currentCustomer : data.customer,
+          currentCustomer : data.customer[0],
           currentReservation: data.reservation[0],
           reservations: newResList
          }
