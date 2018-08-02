@@ -13,8 +13,13 @@ export default class BookingForm extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    console.log('PREVPROPS: ', prevProps);
+    console.log('PREVSTATE: ', prevState);
+    console.log('UPDATE STATE: ', this.state);
+    console.log('UPDATE PROPS: ', this.props);
     const { reservation, customer } = this.state;
     if (prevProps.currentReservation.res_code !== this.props.currentReservation.res_code) {
+
       this.setState({
         reservation: this.props.currentReservation,
         customer: this.props.currentCustomer

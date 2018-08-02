@@ -57,18 +57,41 @@ const findReservation = (db, param) => {
 };
 
 const updateReservation = (db, formData) => {
-  console.log('UPDATE: ', formData);
-  //TODO UPDATE THE RESERVATION DATA
-  db.reservations.update({id: formData.resId}, {}, result =>{
-    return result;
+  let newReso;
+  let newCusto;
+  return db.reservations.update(
+    {id: formData.resId},
+    {
+      group_size: formData.group_size,
+    },
+    result => {
+      return result;
   })
-    .then(result => {
+  .then(updReso => {
+    newReso = updReso;
+    return db.customers.update(
+      {id: formData.custId},
+      {
+        phone: formData.phone,
+        email: formData.email,
+        name: formData.name
+      },
+      result => {
+        return result;
+      }
+    )
+  }).then(updCustomer => {
+    newCusto = updCustomer;
+    return {
+      customer: newCusto,
+      reservation: newReso
+    }
+  })
 
-    })
-  const customer = saveCustomer(db, customerData);
+  /*const customer = saveCustomer(db, customerData);
   const reservation = insertReservation(db, reservationData);
 
-  return { ...customer, ...reservation };
+  return { ...customer, ...reservation };*/
 }
 
 const cancelReservation = (db, formData) => {
