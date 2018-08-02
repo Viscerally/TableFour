@@ -5,18 +5,19 @@ import ReservationDashboard from './UserComponent/ReservationDashboard.jsx';
 import BookingForm from './BookingForm.jsx';
 import Order from './Order.jsx'
 import Menu from './Menu.jsx';
-
+import * as formHelp from '../../libs/form-helper-func.js';
 import { setSocket } from '../../../libs/cli-sock-setters.js';
 
 export default class MainComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentCustomer: {},
-      currentReservation: {},
+      currentCustomer: formHelp.blankCustomer(),
+      currentReservation: formHelp.blankReservation(),
       reservations: [],
       orderId: '2',
       menuItemOrders: [],
+      res_code: ''
     };
   }
 
@@ -45,18 +46,8 @@ export default class MainComponent extends Component {
 
   }
 
-  // showRefId = () => {
-  //   const { res_code } = this.state.formData;
-  //   if (res_code) {
-  //     return (
-  //       <span className='subtitle is-5'>
-  //         <em> - Reference ID: {res_code}</em>
-  //       </span>
-  //     );
-  //   }
-  // };
-
   render() {
+    console.log('MAIN COMPONENT RENDERING: ', this.state);
     const { formData, reservations } = this.state;
     return (
       <div className='container is-desktop'>
@@ -70,9 +61,8 @@ export default class MainComponent extends Component {
               <article className='tile is-child box'>
                 <div className='content'>
                   <span className='title is-4'>BOOK YOUR TABLE</span>
-                  {/*this.showRefId()*/}
                   <BookingForm
-                    reservation={this.state.currentReservation}
+                    currentReservation={this.state.currentReservation}
                     currentCustomer={this.state.currentCustomer}
                     socket={this.props.socket}
                   />
@@ -84,7 +74,7 @@ export default class MainComponent extends Component {
                 <div className='content'>
                   <p className='title is-4'>RESERVATION STATUS</p>
                   <ReservationDashboard
-                    res_code={this.props.res_code}
+                    res_code={this.state.res_code}
                     reservations={this.state.reservations}
                   />
                 </div>

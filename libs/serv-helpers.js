@@ -14,19 +14,21 @@ function getAllReservations(db) {
 
 const insertCustomer = (db, customerData) => {
   return db.customers.insert(customerData)
-    .then(result => { return result })
+    .then(result => {
+      return result
+    })
     .catch(err => { console.log(err) })
-};
+}
 
 const insertReservation = (db, reservationData) => {
   return db.reservations.insert(reservationData)
     .then(result => { return result })
     .catch(err => { console.log(err) })
-};
+}
 
 const submitNewReservation = async (db, formData) => {
   const { name, phone, group_size, email } = formData;
-  const customer = await saveCustomer(db, { name, phone, email });
+  const customer = await insertCustomer(db, { name, phone, email });
 
   const reservationData = {
     placement_time: new Date(),
@@ -35,23 +37,23 @@ const submitNewReservation = async (db, formData) => {
     res_code: rs.alphaNumUpper(6),
     group_size
   }
-  const reservation = await saveReservation(db, reservationData);
-  reservation.host = formData.host;
+  const reservation = await insertReservation(db, reservationData);
+  //reservation.host = formData.host;
 
   //
   // TODO: INSERT AN ORDER RECORD HERE!
   //
 
   // text the reservation data
-  smsMsg.resoTextMsg(phone, reservation);
-  return { ...customer, ...reservation };
+  //smsMsg.resoTextMsg(phone, reservation);
+  return { customer, reservation };
 }
 
 const findReservation = (db, param) => {
   const paramKey = Object.keys(param)[0];
-    return db.reservations.find({ [paramKey]: param.res_code })
-      .then(result => { return result })
-      .catch(err => { console.log(err) })
+  return db.reservations.findOne({ [paramKey]: param.res_code })
+    .then(result => { return result })
+    .catch(err => { console.log(err) })
 };
 
 const updateReservation = async (db, formData) => {
@@ -63,19 +65,36 @@ const updateReservation = async (db, formData) => {
   const customer = await saveCustomer(db, customerData);
 
   const reservationData = { id, group_size };
-  const reservation = await saveReservation(db, reservationData);
+  const reservation = await insertReservation(db, reservationData);
 
   return { ...customer, ...reservation };
 }
 
 const cancelReservation = async (db, formData) => {
   const { res_code } = formData;
-  const reservationRecord = await findReservation(db, { res_code });
-  const { id } = reservationRecord[0];
-  const reservationData = { id, status: 'cancelled' };
-  const reservation = await saveReservation(db, reservationData);
+  return db.reservations.findOne({
+      'res_code': res_code
+    })
+    .then(reso => {
+      return db.reservations.update(
+        {id: reso.id},
+        {status: 'cancelled'},
+        (err, resp) => {
 
-  return reservation;
+          console.log('MY RESP');
+          return resp;
+        }
+      )
+    })
+    .then(reso => {
+      console.log(reso)
+      //IT IS RETURNING CANCELLED!!! YAY!!!
+      return reso;
+    })
+    .catch(err => {
+      console.log(err);
+    })
+
 }
 
 const getAllMenuItemOrders = db => {

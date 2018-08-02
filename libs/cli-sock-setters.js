@@ -1,4 +1,5 @@
 import { returnResoArray } from '../client/libs/reservation-func.js';
+import * as formHelp from '../client/libs/form-helper-func.js';
 function setSocket(socket, react){
 
   socket.on('connect', () => {
@@ -13,38 +14,51 @@ function setSocket(socket, react){
       }
       formData = (currentReservation.length === 0) ? react.state.formData : currentReservation[0];
       react.setState({ formData, reservations });
-    });
+    })
 
-    // LOAD NEW RESERVATIONS
-    socket.on('loadNewReservation', newReservation => {
+    // LOAD NEW RESERVATION
+    socket.on('loadNewReservation', ({customer, reservation}) => {
+      //Make sure that this gets called from MainComponent
       react.setState(oldState => {
-        const reservations = [...oldState.reservations, newReservation];
-        return { formData: newReservation, reservations };
-      });
+        const reservations = [...oldState.reservations, reservation];
+        const res_code = reservation.res_code;
+        return {
+          currentCustomer: customer,
+          currentReservation: reservation,
+          reservations: reservations,
+          res_code: res_code
+         }
+      })
     })
 
     // UPDATE RESERVATION DATA
-    socket.on('loadChangedReservation', newReservation => {
+    /*socket.on('loadChangedReservation', newReservation => {
       react.setState(oldState => {
         const reservations = returnResoArray(oldState.reservations, newReservation);
         return { formData: newReservation, reservations };
       });
-    })
+    })*/
 
     // CANCEL RESERVATION
+
     socket.on('removeCancelledReservation', newData => {
       react.setState(oldState => {
-        const reservations = returnResoArray(oldState.reservations, newData);
+        //const reservations = returnResoArray(oldState.reservations, newData);
+        console.log('NEWDATA: ' + newData);
 
+        //TODO HANDLE THE CANCELLED RESERVATION
+        const reservations = this.state.reservations.filter(reso => {
+          return reso.id !== newData.id;
+        });
         return {
-          formData: { name: '', phone: '', group_size: '', email: '', res_code: '' },
+          currentCustomer: formHelp.blankCustomer(),
+          currentReservation: formHelp.blankReservation(),
           reservations
-        };
+        }
       });
     })
 
     socket.on('ItemOrdersWMenuItemInfo', menuItemOrders => {
-      console.log('Message received on the client!');
       react.setState({ menuItemOrders });
     });
 

@@ -8,15 +8,11 @@ export default class ReservationDashboard extends Component {
     let index = 0;
     let stats = '';
     let options = '';
-
-    // loop through table rows
     const cells = reservations.map(reservation => {
-      // only display reservation with status being 'waiting'
       if (reservation.status !== 'waiting') {
         return true;
       }
 
-      // set row position
       const position = index + 1;
 
       // add the group size
@@ -24,6 +20,7 @@ export default class ReservationDashboard extends Component {
 
       // current customer's reservation exists in the reservation table
       if (res_code == reservation.res_code) {
+
         // create stats for the current reservation
         stats = `Your position: #${position} (${sizeSum - reservation.group_size} people ahead)`;
 
@@ -80,7 +77,6 @@ export default class ReservationDashboard extends Component {
     });
 
     if (!res_code) {
-      // display total number of groups and people in the que
       stats = `Total of ${reservations.length} groups (${sizeSum} people) waiting..`;
     }
 
@@ -105,7 +101,7 @@ export default class ReservationDashboard extends Component {
   };
 
   render() {
-    const { reservations } = this.props;
+    const { reservations } = this.props;    
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
         {this.makeTable(reservations, this.props.res_code)}
