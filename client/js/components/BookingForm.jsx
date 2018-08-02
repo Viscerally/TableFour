@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import NumberFormat from 'react-number-format';
 import { blankReservation, blankCustomer, resoData } from '../../libs/form-helper-func.js';
 
@@ -13,10 +13,6 @@ export default class BookingForm extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('PREVPROPS: ', prevProps);
-    console.log('PREVSTATE: ', prevState);
-    console.log('UPDATE STATE: ', this.state);
-    console.log('UPDATE PROPS: ', this.props);
     const { reservation, customer } = this.state;
     if (prevProps.currentReservation.res_code !== this.props.currentReservation.res_code) {
       this.setState({
@@ -88,8 +84,7 @@ export default class BookingForm extends Component {
         >SUBMIT</button>
       )
   }
-
-  // handle changes in input boxes
+  
   handleCustomerChange = ({ target: { name, value } }) => {
     this.setState(oldState => {
       const { customer } = oldState;

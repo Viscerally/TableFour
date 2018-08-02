@@ -2,15 +2,16 @@ const twilio = require('twilio');
 const smsMsg = require('../routes/api/sms.js');
 const rs = require('random-strings');
 
+// GET ALL RESERVATIONS
 function getAllReservations(db) {
   const qItems = 'reservations.id, email, group_size, name, phone, placement_time, res_code, order_id, status';
   const q = `SELECT ${qItems} FROM reservations JOIN customers ON customer_id = customers.id WHERE status = 'waiting' ORDER BY placement_time ASC`;
+
   return db.query(q)
-    .then(data => {
-      return data;
-    })
+    .then(data => { return data; })
     .catch(err => { console.log(err); })
 }
+// GET ALL RESERVATIONS - END
 
 const insertCustomer = (db, customerData) => {
   return db.customers.insert(customerData)
@@ -48,6 +49,7 @@ const submitNewReservation = async (db, formData) => {
   //smsMsg.resoTextMsg(phone, reservation);
   return { customer, reservation };
 }
+// SUBMIT NEW RESERVATION - END
 
 const getReservationByResCode = (db, res_code) => {
   return db.reservations.findOne({
@@ -61,7 +63,7 @@ const getCustomerByReservation = (db, reso) => {
   return db.customers.findOne({
     'id': reso.customer_id
   })
-  .then(result => {    
+  .then(result => {
     return result
    })
   .catch(err => { console.log(err) })
@@ -111,6 +113,7 @@ const updateReservation = (db, formData) => {
 
   return { ...customer, ...reservation };*/
 }
+// SUBMIT NEW RESERVATION - END
 
 const cancelReservation = (db, formData) => {
   const { res_code } = formData;
@@ -134,6 +137,29 @@ const cancelReservation = (db, formData) => {
     })
 
 }
+// CANCEL RESERVATION - END
+
+// UPDATE RESERVATION STATUS BY ADMIN
+// read customer data
+const readCustomer = (db, customerData) => {
+  return db.customers.findOne(customerData)
+    .then(result => result)
+    .catch(err => { console.log(err); });
+};
+
+const updateReservationStatus = async (db, resoStatus) => {
+  // find reservation by id
+  const reservationRecord = await findReservation(db, { id: resoStatus.id });
+  const reservationData = reservationRecord[0];
+  // read customer data
+  customer = await readCustomer(db, { id: reservationData.customer_id });
+
+  // update reservation data
+  reservationData.status = resoStatus.status;
+  reservation = await saveReservation(db, reservationData);
+
+  return { ...customer, ...reservation };
+};
 
 const getAllMenuItemOrders = db => {
   return db.menu_items_orders.find()
@@ -165,9 +191,9 @@ const getMenuItemByItemOrder = (db, menuItemOrder) => {
   return db.menu_items.findOne({
     id: menuItemOrder.menu_item_id
   })
-  .then(data => {
-    return data;
-  })
+    .then(data => {
+      return data;
+    })
 }
 
 const addItemOrderWMenuItem = (db, menuItemOrder) => {
@@ -198,12 +224,12 @@ const addItemToOrder = (db, menuItemOrder) => {
     menu_item_id: menuItemOrder.id,
     order_id: menuItemOrder.orderId
   })
-  .then(data => {
-    return data;
-  })
-  .catch(err => {
-    console.log(err);
-  })
+    .then(data => {
+      return data;
+    })
+    .catch(err => {
+      console.log(err);
+    })
 }
 
 module.exports = {
@@ -211,6 +237,7 @@ module.exports = {
   submitNewReservation,
   updateReservation,
   cancelReservation,
+  updateReservationStatus,
   getAllMenuItemOrders,
   getItemOrdersWMenuItemInfo,
   getMenuItemByItemOrder,

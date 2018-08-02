@@ -13,7 +13,7 @@ export default class StatusButton extends Component {
     ];
 
     const btnGroup = btnConfig.map((config, index) => {
-      let btnClass = 'button';
+      let btnClass = 'button is-small';
       if (this.props.status === config.status) {
         btnClass += ` ${config.colorClass} is-selected`;
       }
