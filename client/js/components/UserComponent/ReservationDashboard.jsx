@@ -1,16 +1,5 @@
 import React, { Component, Fragment } from 'react';
 
-// default table header
-const createDefaultHeader = () => {
-  return (
-    <tr>
-      <th>#</th>
-      <th>NAME</th>
-      <th>SIZE</th>
-      <th></th>
-    </tr>
-  );
-};
 
 export default class ReservationDashboard extends Component {
   makeTable = (reservations, res_code) => {
@@ -101,7 +90,12 @@ export default class ReservationDashboard extends Component {
           <tr>
             <th colSpan='4'>{stats}</th>
           </tr>
-          {createDefaultHeader()}
+          <tr>
+            <th>#</th>
+            <th>NAME</th>
+            <th>SIZE</th>
+            <th></th>
+          </tr>
         </thead>
         <tbody>
           {cells}
@@ -111,11 +105,10 @@ export default class ReservationDashboard extends Component {
   };
 
   render() {
-    // console.log(this.props);
-    const { reservations, formData: { res_code } } = this.props;
+    const { reservations } = this.props;
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-        {this.makeTable(reservations, res_code)}
+        {this.makeTable(reservations, this.props.res_code)}
       </table>
     );
   }

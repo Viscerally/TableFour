@@ -5,92 +5,121 @@ import { namifyStr, getOnlyNumbers } from '../../libs/form-helper-func.js';
 export default class BookingForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      formData: {
-        name: '',
-        phone: '',
-        group_size: '',
-        email: '',
-        res_code: ''
-      },
-      btnType: ''
-    };
-  }
-
-  // store the form button type in state (submit, update, cancel)
-  btnClicked = btnType => {
-    this.setState({ btnType });
-  }
-
-  // submit the form data
-  handleFormSubmission = event => {
-    // prevent default GET request
-    event.preventDefault();
-    // deconstruct event.target
-    let { name, phone, group_size, email } = event.target;
-    // deconstruct state object
-    const { btnType, formData: { res_code } } = this.state;
-
-    this.props.socket.emit(`${btnType}Reservation`, {
-      name: namifyStr(name.value),
-      phone: getOnlyNumbers(phone.value),
-      group_size: group_size.value,
-      email: email.value,
-      res_code,
-      host: process.env.HOST || window.location.host
-    });
-  }
-
-  // add submit button for a new reservation or
-  // add update and cancel buttons for an existing reservation
-  addBtns = () => {
-    let defaultBtnConfig = {};
-    let cancelBtn = '';
-
-    if (this.state.formData.res_code) {
-      // CASE 1: res_code exists. show update and cancel buttons
-      defaultBtnConfig = {
-        type: 'update',
-        klassName: 'button is-success'
-      };
-      cancelBtn = (
-        <button
-          type='submit'
-          onClick={() => this.btnClicked('cancel')}
-          className="button is-danger"
-        >CANCEL</button>
-      );
-    } else {
-      // CASE 2: res_code doesn't exist. show new buttons
-      defaultBtnConfig = {
-        type: 'submit',
-        klassName: 'button is-link'
-      };
+    let reservation;
+    if (this.props.current_reservation){
+      reservation = this.props.current_reservation
+    }else{
+      reservation = {
+        placement_time: '',
+        order_id: '',
+        status: '',
+        group_size: '2',
+        customer_id: ''
+      }
     }
-
-    let defaultBtn = (
-      <button
-        type='submit'
-        onClick={() => this.btnClicked(defaultBtnConfig.type)}
-        className={defaultBtnConfig.klassName}
-      >{defaultBtnConfig.type.toUpperCase()}</button>
-    );
-    return { defaultBtn, cancelBtn };
+    let customer;
+    if (this.props.customer){
+      customer = this.props.current_customer
+    }else{
+      customer = {
+        name: ' ',
+        phone: '',
+        email: ''
+      }
+    }
+    this.state = {
+      reservation: reservation,
+      customer: customer,
+    }
   }
 
-  // handle changes in input boxes
-  handleChange = ({ target: { name, value } }) => {
-    this.setState(oldState => {
-      const { formData } = oldState;
-      formData[name] = value;
-      return { ...oldState, formData };
+  handleFormSubmission = event => {
+    event.preventDefault();
+    console.log('I am submitting! ', this.state);
+
+    this.props.socket.emit(`submitReservation`, {
+      name: namifyStr(this.state.customer.name),
+      phone: getOnlyNumbers(this.state.customer.phone),
+      group_size: this.state.reservation.group_size,
+      email: this.customer.email,
+      res_code: this.props.res_code,
     })
   }
 
-  componentDidMount = () => {
-    // add formData to state
-    const { formData } = this.props;
-    this.setState({ formData });
+  cancelReservation = event => {
+    event.preventDefault();
+
+    this.props.socket.emit('cancelReservation', {
+      res_code: this.props.res_code
+    })
+  }
+
+  updateButton = () => {
+    return (
+      <button
+        type='submit'
+        className="button is-success"
+      >UPDATE</button>
+    )
+  }
+  cancelButton = () => {
+    return (
+      <button
+        type='submit'
+        onClick={(e) => this.cancelReservation()}
+        className="button is-danger"
+        >CANCEL</button>
+      )
+  }
+
+  submitButton = () => {
+    return (
+      <button
+        type='submit'
+        onClick={(e) => this.handleFormSubmission()}
+        className="button is-link"
+        >SUBMIT</button>
+      )
+  }
+
+  handleReservationChange = ({ target: { name, value } }) => {
+    this.setState(oldState => {
+      const { reservation } = oldState;
+      reservation[name] = value;
+      return { ...oldState, reservation };
+    })
+  }
+
+  handleNameChange = (e) => {
+    this.setState({
+      customer: {
+        name: e.target.value
+      }
+    })
+  }
+
+  handleEmailChange = (e) => {
+    this.setState({
+      customer: {
+        email: e.target.value
+      }
+    })
+  }
+
+  handlePhoneChange = (e) => {
+    this.setState({
+      customer: {
+        phone: e.target.value
+      }
+    })
+  }
+
+  handleSizeChange = (e) => {
+    this.setSate({
+      reservation: {
+        group_size: e.target.value
+      }
+    })
   }
 
   // if updated props !== current state, then replace it with new props
@@ -102,7 +131,8 @@ export default class BookingForm extends Component {
   }
 
   render() {
-    const { name, phone, group_size, email } = this.state.formData;
+    const { group_size } = this.state.reservation;
+    const { name, phone, email } = this.state.customer;
     return (
       <form onSubmit={this.handleFormSubmission}>
         <div className='field'>
@@ -111,7 +141,7 @@ export default class BookingForm extends Component {
             <input
               className='input is-medium'
               value={name}
-              onChange={this.handleChange}
+              onChange={this.handleNameChange}
               name='name'
               type='text'
               placeholder='Your name'
@@ -133,7 +163,7 @@ export default class BookingForm extends Component {
               className='input is-medium'
               format='(###) ###-####'
               value={phone}
-              onChange={this.handleChange}
+              onChange={this.handlePhoneChange}
               name='phone'
               type='tel'
               placeholder='(778) 123-4567'
@@ -156,7 +186,7 @@ export default class BookingForm extends Component {
             <input
               className='input is-medium'
               value={group_size}
-              onChange={this.handleChange}
+              onChange={this.handleSizeChange}
               name='group_size'
               type='number'
               min='1'
@@ -179,7 +209,7 @@ export default class BookingForm extends Component {
             <input
               className='input is-medium'
               value={email}
-              onChange={this.handleChange}
+              onChange={this.handleEmailChange}
               name='email'
               type='email'
               placeholder='example@gmail.com'
@@ -195,10 +225,10 @@ export default class BookingForm extends Component {
 
         <div className="field is-centered is-grouped">
           <p className="control">
-            {this.addBtns().defaultBtn}
+            {this.updateButton()}
           </p>
           <p className="control">
-            {this.addBtns().cancelBtn}
+            {this.cancelButton()}
           </p>
         </div>
       </form>

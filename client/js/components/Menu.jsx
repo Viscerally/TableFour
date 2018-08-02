@@ -23,7 +23,7 @@ export default class Menu extends Component {
   }
 
 
-  render() {    
+  render() {
     let menuItems;
     if (this.state){
       menuItems = this.state.menu_items.map((menuItem) => {
@@ -36,7 +36,6 @@ export default class Menu extends Component {
                 width="250"
                 height="250"
                 />
-
             <div className="title">{menuItem.name}
               <div className="price">{numeral(menuItem.price/100).format('$0.00')}</div>
               <button onClick={(e) => this.props.addToOrder(menuItem)} className="button is-danger">Add to your order</button>

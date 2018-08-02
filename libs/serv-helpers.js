@@ -12,14 +12,14 @@ function getAllReservations(db) {
     .catch(err => { console.log(err); })
 }
 
-const saveCustomer = (db, customerData) => {
-  return db.customers.save(customerData)
+const insertCustomer = (db, customerData) => {
+  return db.customers.insert(customerData)
     .then(result => { return result })
     .catch(err => { console.log(err) })
 };
 
-const saveReservation = (db, reservationData) => {
-  return db.reservations.save(reservationData)
+const insertReservation = (db, reservationData) => {
+  return db.reservations.insert(reservationData)
     .then(result => { return result })
     .catch(err => { console.log(err) })
 };
@@ -37,6 +37,10 @@ const submitNewReservation = async (db, formData) => {
   }
   const reservation = await saveReservation(db, reservationData);
   reservation.host = formData.host;
+
+  //
+  // TODO: INSERT AN ORDER RECORD HERE!
+  //
 
   // text the reservation data
   smsMsg.resoTextMsg(phone, reservation);
