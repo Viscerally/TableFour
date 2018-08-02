@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import NumberFormat from 'react-number-format';
-import { resoData } from '../../libs/form-helper-func.js';
+import { blankReservation, blankCustomer, resoData } from '../../libs/form-helper-func.js';
 
 export default class BookingForm extends Component {
   constructor(props) {
@@ -16,8 +16,9 @@ export default class BookingForm extends Component {
     const { reservation, customer } = this.state;
     if (prevProps.currentReservation.res_code !== this.props.currentReservation.res_code) {
       this.setState({
-        reservation: this.props.currentReservation
-      });
+        reservation: this.props.currentReservation,
+        customer: this.props.currentCustomer
+      })
     }
   }
 

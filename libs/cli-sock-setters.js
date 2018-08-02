@@ -43,12 +43,8 @@ function setSocket(socket, react){
 
     socket.on('removeCancelledReservation', newData => {
       react.setState(oldState => {
-        //const reservations = returnResoArray(oldState.reservations, newData);
-        console.log('NEWDATA: ' + newData);
-
-        //TODO HANDLE THE CANCELLED RESERVATION
-        const reservations = this.state.reservations.filter(reso => {
-          return reso.id !== newData.id;
+        const reservations = react.state.reservations.filter(reso => {
+          return reso.id !== newData[0].id;
         });
         return {
           currentCustomer: formHelp.blankCustomer(),

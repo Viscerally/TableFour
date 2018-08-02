@@ -70,7 +70,7 @@ const updateReservation = async (db, formData) => {
   return { ...customer, ...reservation };
 }
 
-const cancelReservation = async (db, formData) => {
+const cancelReservation = (db, formData) => {
   const { res_code } = formData;
   return db.reservations.findOne({
       'res_code': res_code
@@ -80,15 +80,11 @@ const cancelReservation = async (db, formData) => {
         {id: reso.id},
         {status: 'cancelled'},
         (err, resp) => {
-
-          console.log('MY RESP');
           return resp;
         }
       )
     })
-    .then(reso => {
-      console.log(reso)
-      //IT IS RETURNING CANCELLED!!! YAY!!!
+    .then(reso => {      
       return reso;
     })
     .catch(err => {
