@@ -107,17 +107,6 @@ export default class MainComponent extends Component {
 
   }
 
-  showRefId = () => {
-    const { res_code } = this.state.formData;
-    if (res_code) {
-      return (
-        <span className='subtitle is-5'>
-          <em> - Reference ID: {res_code}</em>
-        </span>
-      );
-    }
-  }
-
   selectDashboard = (socket, formData, reservations) => {
     if (this.props.isAdmin) {
       // ADMIN DASHBOARD
@@ -153,7 +142,6 @@ export default class MainComponent extends Component {
               <article className='tile is-child box'>
                 <div className='content'>
                   <span className='title is-4'>BOOK YOUR TABLE</span>
-                  {this.showRefId()}
                   <BookingForm
                     isAdmin={isAdmin}
                     formData={formData}
