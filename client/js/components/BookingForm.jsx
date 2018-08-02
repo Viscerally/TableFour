@@ -5,7 +5,6 @@ import { blankReservation, blankCustomer, resoData } from '../../libs/form-helpe
 export default class BookingForm extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {
       reservation: props.currentReservation,
       customer: props.currentCustomer
@@ -52,7 +51,6 @@ export default class BookingForm extends Component {
 
   cancelReservation = (event) => {
     event.preventDefault();
-    console.log('RES_CODE: ', this.state.reservation.res_code);
     this.props.socket.emit('cancelReservation', {
       res_code: this.state.reservation.res_code
     })
@@ -84,7 +82,7 @@ export default class BookingForm extends Component {
         >SUBMIT</button>
       )
   }
-  
+
   handleCustomerChange = ({ target: { name, value } }) => {
     this.setState(oldState => {
       const { customer } = oldState;
@@ -101,8 +99,7 @@ export default class BookingForm extends Component {
     })
   }
 
-  render() {
-    console.log("BOOKINGFORM RES CODE: ", this.state.reservation.res_code);
+  render() {    
     const { group_size } = this.state.reservation;
     const { name, phone, email } = this.state.customer;
     return (
