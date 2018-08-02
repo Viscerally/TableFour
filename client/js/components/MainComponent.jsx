@@ -25,7 +25,7 @@ export default class MainComponent extends Component {
     const menuItemOrders = this.state.menuItemOrders.filter(item => item.id !== orderItem.id);
     this.setState({ menuItemOrders });
   }
-  
+
   addToOrder = menuItem => {
     menuItem.orderId = this.state.orderId;
     this.props.socket.emit('addItemToOrder', menuItem);
@@ -90,18 +90,6 @@ export default class MainComponent extends Component {
         });
       })
 
-      // socket.on('newStatus', newStatus => {
-      //   const { id, status } = newStatus;
-      //   const reservations = this.state.reservations.map(reservation => {
-      //     if (reservation.id == id) {
-      //       reservation.status = status;
-      //     }
-      //     return reservation;
-      //   });
-      //   this.setState({ reservations });
-      // });
-
-
       socket.emit('getItemOrdersWMenuItemInfo');
       socket.on('ItemOrdersWMenuItemInfo', menuItemOrders => {
         this.setState({ menuItemOrders });
@@ -111,7 +99,7 @@ export default class MainComponent extends Component {
         this.setState(prevState => {
           return {
             menuItemOrders: [...prevState.menuItemOrders, data]
-           };
+          };
         })
       })
 
