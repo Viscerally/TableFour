@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import NumberFormat from 'react-number-format';
 import { blankReservation, blankCustomer, resoData } from '../../libs/form-helper-func.js';
 
@@ -143,10 +143,11 @@ export default class BookingForm extends Component {
               <a className='button is-static'>
                 +1
               </a>
-            </span>
-            <span className='icon is-medium is-right'>
-              <i className='fas fa-check fa-lg'></i>
-            </span>
+              </span>
+              <span className='icon is-medium is-right'>
+                <i className='fas fa-check fa-lg'></i>
+              </span>
+            </div>
           </div>
         </div>
 

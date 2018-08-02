@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 
-import Navbar from './Navbar.jsx';
 import ReservationDashboard from './UserComponent/ReservationDashboard.jsx';
+import AdminReservationDashboard from './AdminComponent/AdminReservationDashboard.jsx';
 import BookingForm from './BookingForm.jsx';
+
+import Navbar from './Navbar.jsx';
 import Order from './Order.jsx'
 import Menu from './Menu.jsx';
 import * as formHelp from '../../libs/form-helper-func.js';
@@ -21,21 +23,43 @@ export default class MainComponent extends Component {
     };
   }
 
-  removeFromOrder = (orderItem)=> {
-    const newState = this.state.menuItemOrders.filter(item => {
-      return item.id !== orderItem.id;
-    });
-
-    this.setState((prevState) => {
-      return { menuItemOrders: newState}
-    })
-
+  removeFromOrder = orderItem => {
+    const menuItemOrders = this.state.menuItemOrders.filter(item => item.id !== orderItem.id);
+    this.setState({ menuItemOrders });
   }
 
   addToOrder = menuItem => {
     menuItem.orderId = this.state.orderId;
     this.props.socket.emit('addItemToOrder', menuItem);
   }
+
+///////////////////////////////////
+  placeOrder = (order_id) => {
+    const newOrder = {
+      orderId: this.state.order_id,
+      priceTotal: this.state.price_declared,
+      paymentConfirmation: this.state.is_paid,
+      orderCode: order_id,
+    };
+
+
+  console.log("placeOrder ------>", this.setstate)
+  //TODO:
+  //generate new order_id,
+  // price_declared(total),
+  //total_paid - to be inplemented later
+  // payment confirmation (is_paid),
+  // order_code(UUID?)
+  //menu_items_ids,
+
+  //send to db,
+  //send to admin
+  //send via Twillio and as notification to customer on the home page,
+  //generate success message (notification or new page -if statement
+  // add 'cancel' button both on the app page as a link on message on sms from Twillio?
+  }
+
+/////////////////////////////////////
 
   componentDidMount = () => {
     let { res_code, socket } = this.props;
@@ -79,6 +103,7 @@ export default class MainComponent extends Component {
                     currentReservation={this.state.currentReservation}
                     currentCustomer={this.state.currentCustomer}
                   />
+                  {/*this.selectDashboard(socket, formData, reservations)*/}
                 </div>
               </article>
             </div>
@@ -97,8 +122,9 @@ export default class MainComponent extends Component {
             <div className='column is-one-third'>
               <Order
                 orderId="2"
-                orderItems={this.state.menuItemOrders}
+                orderItems={menuItemOrders}
                 removeFromOrder={this.removeFromOrder}
+                placeOrder={this.state.placeOrder}
               />
             </div>
             <div className='column is-one-third' />
