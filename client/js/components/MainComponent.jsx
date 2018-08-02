@@ -42,8 +42,6 @@ export default class MainComponent extends Component {
       orderCode: order_id,
     };
 
-
-  console.log("placeOrder ------>", this.setstate)
   //TODO:
   //generate new order_id,
   // price_declared(total),
@@ -67,15 +65,13 @@ export default class MainComponent extends Component {
     socket = setSocket(this.props.socket, this);
     socket.emit('getReservations');
     socket.emit('getItemOrdersWMenuItemInfo');
-    if (this.state.res_code){
-      console.log('GET ME A RES CODE!');
+    if (this.state.res_code){      
       socket.emit('getReservationByResCode', this.state.res_code);
       socket.emit('getCustomerByResCode', this.state.res_code);
     }
   }
 
   render() {
-    console.log('MAIN COMPONENT RENDERING: ', this.state);
     const { formData, reservations } = this.state;
     return (
       <div className='container is-desktop'>
