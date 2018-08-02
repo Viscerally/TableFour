@@ -7,6 +7,7 @@ import BookingForm from './BookingForm.jsx';
 import Navbar from './Navbar.jsx';
 import Order from './Order.jsx'
 import Menu from './Menu.jsx';
+import Categories from './Categories.jsx';
 
 import { returnResoArray } from '../../libs/reservation-func.js';
 
@@ -32,16 +33,16 @@ export default class MainComponent extends Component {
   }
 
 ///////////////////////////////////
-  placeOrder = (order_id) => {
-    const newOrder = {
-      orderId: this.state.order_id,
-      priceTotal: this.state.price_declared,
-      paymentConfirmation: this.state.is_paid,
-      orderCode: order_id,
-    };
+  // placeOrder = (order_id) => {
+  //   const newOrder = {
+  //     orderId: this.state.order_id,
+  //     priceTotal: this.state.price_declared,
+  //     paymentConfirmation: this.state.is_paid,
+  //     orderCode: order_id,
+  //   };
 
     
-  console.log("placeOrder ------>", this.setstate)
+  // console.log("placeOrder ------>", this.setstate)
   //TODO:
   //generate new order_id,
   // price_declared(total), 
@@ -55,7 +56,7 @@ export default class MainComponent extends Component {
   //send via Twillio and as notification to customer on the home page,
   //generate success message (notification or new page -if statement
   // add 'cancel' button both on the app page as a link on message on sms from Twillio?
-  }
+  // }
 
 /////////////////////////////////////
 
@@ -187,9 +188,11 @@ export default class MainComponent extends Component {
               </article>
             </div>
           </div>
+          <Categories/>
           <div className='columns' >
             <div className='column is-one-third' />
             <div className='column is-one-third'>
+            
               <Menu
                 addToOrder={this.addToOrder}
               />
@@ -199,11 +202,12 @@ export default class MainComponent extends Component {
           <div className='columns' >
             <div className='column is-one-third' />
             <div className='column is-one-third'>
+             
               <Order
                 orderId="2"
                 orderItems={menuItemOrders}
                 removeFromOrder={this.removeFromOrder}
-                placeOrder={this.state.placeOrder}
+                // placeOrder={this.state.placeOrder}
               />
             </div>
             <div className='column is-one-third' />

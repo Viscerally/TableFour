@@ -23,7 +23,7 @@ export default class Menu extends Component {
   }
 
 
-  render() {    
+  render() {
     let menuItems;
     if (this.state){
       menuItems = this.state.menu_items.map((menuItem) => {
