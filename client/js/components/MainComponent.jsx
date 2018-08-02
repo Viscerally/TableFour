@@ -7,7 +7,7 @@ import BookingForm from './BookingForm.jsx';
 import Navbar from './Navbar.jsx';
 import Order from './Order.jsx'
 import Menu from './Menu.jsx';
-import Categories from './Categories.jsx';
+import Categories from './Category.jsx';
 
 import { returnResoArray } from '../../libs/reservation-func.js';
 
@@ -21,6 +21,8 @@ export default class MainComponent extends Component {
       menuItemOrders: [],
     };
   }
+
+
 
   removeFromOrder = orderItem => {
     const menuItemOrders = this.state.menuItemOrders.filter(item => item.id !== orderItem.id);
@@ -70,6 +72,13 @@ export default class MainComponent extends Component {
     socket.on('connect', () => {
       console.log('Connected to websocket');
 
+      socket.emit('getMenu');
+      socket.on('returnedMenu', menu => {
+        this.setState({
+          menu: menu
+        })  
+      })
+
       // LOAD INITIAL RESERVATIONS
       socket.emit('getReservations');
       socket.on('loadReservations', reservations => {
@@ -81,6 +90,7 @@ export default class MainComponent extends Component {
         formData = (currentReservation.length === 0) ? this.state.formData : currentReservation[0];
         this.setState({ formData, reservations });
       });
+
 
       // LOAD NEW RESERVATIONS
       socket.on('loadNewReservation', newReservation => {
