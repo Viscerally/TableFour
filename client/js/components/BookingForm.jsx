@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import NumberFormat from 'react-number-format';
 import { namifyStr, getOnlyNumbers } from '../../libs/form-helper-func.js';
 
@@ -90,6 +90,17 @@ export default class BookingForm extends Component {
     })
   }
 
+  showResCode = () => {
+    const { res_code } = this.state.formData;
+    if (res_code) {
+      return (
+        <span className='subtitle is-5'>
+          <em> - Reference ID: {res_code}</em>
+        </span>
+      );
+    }
+  }
+
   componentDidMount = () => {
     // add formData to state
     const { formData } = this.props;
@@ -116,104 +127,107 @@ export default class BookingForm extends Component {
   render() {
     const { name, phone, group_size, email } = this.state.formData;
     return (
-      <form onSubmit={this.handleFormSubmission}>
-        <div className='field'>
-          <label className='label is-medium'>Name*</label>
-          <div className='control has-icons-left has-icons-right'>
-            <input
-              className='input is-medium'
-              value={name}
-              onChange={this.handleChange}
-              name='name'
-              type='text'
-              placeholder='Your name'
-              required
-            />
-            <span className='icon is-medium is-left'>
-              <i className='fas fa-user-alt'></i>
-            </span>
-            <span className='icon is-medium is-right'>
-              <i className='fas fa-check fa-lg'></i>
-            </span>
+      <Fragment>
+        {this.showResCode()}
+        < form onSubmit={this.handleFormSubmission} >
+          <div className='field'>
+            <label className='label is-medium'>Name*</label>
+            <div className='control has-icons-left has-icons-right'>
+              <input
+                className='input is-medium'
+                value={name}
+                onChange={this.handleChange}
+                name='name'
+                type='text'
+                placeholder='Your name'
+                required
+              />
+              <span className='icon is-medium is-left'>
+                <i className='fas fa-user-alt'></i>
+              </span>
+              <span className='icon is-medium is-right'>
+                <i className='fas fa-check fa-lg'></i>
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div className='field'>
-          <label className='label is-medium'>Phone*</label>
-          <div className='control has-icons-left has-icons-right'>
-            <NumberFormat
-              className='input is-medium'
-              format='(###) ###-####'
-              value={phone}
-              onChange={this.handleChange}
-              name='phone'
-              type='tel'
-              placeholder='(778) 123-4567'
-              required
-            />
-            <span className='icon is-medium is-left'>
-              <a className='button is-static'>
-                +1
+          <div className='field'>
+            <label className='label is-medium'>Phone*</label>
+            <div className='control has-icons-left has-icons-right'>
+              <NumberFormat
+                className='input is-medium'
+                format='(###) ###-####'
+                value={phone}
+                onChange={this.handleChange}
+                name='phone'
+                type='tel'
+                placeholder='(778) 123-4567'
+                required
+              />
+              <span className='icon is-medium is-left'>
+                <a className='button is-static'>
+                  +1
               </a>
-            </span>
-            <span className='icon is-medium is-right'>
-              <i className='fas fa-check fa-lg'></i>
-            </span>
+              </span>
+              <span className='icon is-medium is-right'>
+                <i className='fas fa-check fa-lg'></i>
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div className='field'>
-          <label className='label is-medium'>Group Size*</label>
-          <div className='control has-icons-left has-icons-right'>
-            <input
-              className='input is-medium'
-              value={group_size}
-              onChange={this.handleChange}
-              name='group_size'
-              type='number'
-              min='1'
-              max='10'
-              placeholder='e.g. 2'
-              required
-            />
-            <span className='icon is-medium is-left'>
-              <i className='fas fa-user-alt'></i>
-            </span>
-            <span className='icon is-medium is-right'>
-              <i className='fas fa-check fa-lg'></i>
-            </span>
+          <div className='field'>
+            <label className='label is-medium'>Group Size*</label>
+            <div className='control has-icons-left has-icons-right'>
+              <input
+                className='input is-medium'
+                value={group_size}
+                onChange={this.handleChange}
+                name='group_size'
+                type='number'
+                min='1'
+                max='10'
+                placeholder='e.g. 2'
+                required
+              />
+              <span className='icon is-medium is-left'>
+                <i className='fas fa-user-alt'></i>
+              </span>
+              <span className='icon is-medium is-right'>
+                <i className='fas fa-check fa-lg'></i>
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div className='field'>
-          <label className='label is-medium'>Email (optional)</label>
-          <div className='control has-icons-left has-icons-right'>
-            <input
-              className='input is-medium'
-              value={email}
-              onChange={this.handleChange}
-              name='email'
-              type='email'
-              placeholder='example@gmail.com'
-            />
-            <span className='icon is-medium is-left'>
-              <i className='fas fa-envelope'></i>
-            </span>
-            <span className='icon is-medium is-right'>
-              <i className='fas fa-check fa-lg'></i>
-            </span>
+          <div className='field'>
+            <label className='label is-medium'>Email (optional)</label>
+            <div className='control has-icons-left has-icons-right'>
+              <input
+                className='input is-medium'
+                value={email}
+                onChange={this.handleChange}
+                name='email'
+                type='email'
+                placeholder='example@gmail.com'
+              />
+              <span className='icon is-medium is-left'>
+                <i className='fas fa-envelope'></i>
+              </span>
+              <span className='icon is-medium is-right'>
+                <i className='fas fa-check fa-lg'></i>
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div className="field is-centered is-grouped">
-          <p className="control">
-            {this.addBtns().defaultBtn}
-          </p>
-          <p className="control">
-            {this.addBtns().cancelBtn}
-          </p>
-        </div>
-      </form>
+          <div className="field is-centered is-grouped">
+            <p className="control">
+              {this.addBtns().defaultBtn}
+            </p>
+            <p className="control">
+              {this.addBtns().cancelBtn}
+            </p>
+          </div>
+        </form >
+      </Fragment>
     );
   }
 }
