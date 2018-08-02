@@ -27,7 +27,7 @@ const resoData = (state) => {
     name: namifyStr(customer.name),
     phone: getOnlyNumbers(customer.phone),
     group_size: reservation.group_size,
-    email: customer.email
+    email: customer.email,
   }
 }
 module.exports = {

@@ -36,7 +36,10 @@ export default class BookingForm extends Component {
   }
 
   updateReservation = () => {
-    this.props.socket.emit(`updateReservation`, resoData(this.state));
+    let reso = resoData(this.state)
+    reso.resId = this.state.reservation.id;
+    reso.custId = this.state.customer.id;
+    this.props.socket.emit(`updateReservation`, reso);
   }
 
   cancelReservation = (event) => {

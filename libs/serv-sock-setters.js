@@ -24,8 +24,7 @@ function setSocketServer(io, db){
     })
 
     // UPDATE EXISTING RESERVATION
-    socket.on('updateReservation', formData => {
-      //TODO HANDLE THE UPDATED RESERVATIONG
+    socket.on('updateReservation', formData => {      
       serv.updateReservation(db, formData)
         .then(data => { io.emit('loadChangedReservation', data) })
         .catch(err => console.log(err));

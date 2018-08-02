@@ -56,16 +56,17 @@ const findReservation = (db, param) => {
     .catch(err => { console.log(err) })
 };
 
-const updateReservation = async (db, formData) => {
-  const { name, phone, group_size, email, res_code } = formData;
-  const reservationRecord = await findReservation(db, { res_code });
+const updateReservation = (db, formData) => {
+  console.log('UPDATE: ', formData);
+  //TODO UPDATE THE RESERVATION DATA
+  db.reservations.update({id: formData.resId}, {}, result =>{
+    return result;
+  })
+    .then(result => {
 
-  const { id, customer_id } = reservationRecord[0];
-  const customerData = { id: customer_id, name, phone, email };
-  const customer = await saveCustomer(db, customerData);
-
-  const reservationData = { id, group_size };
-  const reservation = await insertReservation(db, reservationData);
+    })
+  const customer = saveCustomer(db, customerData);
+  const reservation = insertReservation(db, reservationData);
 
   return { ...customer, ...reservation };
 }
@@ -84,7 +85,7 @@ const cancelReservation = (db, formData) => {
         }
       )
     })
-    .then(reso => {      
+    .then(reso => {
       return reso;
     })
     .catch(err => {
