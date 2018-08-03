@@ -11,7 +11,7 @@ export default class Menu extends Component {
     let menuItems = [];
     let menuItemComponents;
     if (this.props.currentMenu.menuItems !== undefined){
-      menuItems = this.props.currentMenu.menuItems;      
+      menuItems = this.props.currentMenu.menuItems;
       menuItemComponents = menuItems.map((menuItem) => {
         return (
           <div key={menuItem.id} className='carousel-item has-background'>

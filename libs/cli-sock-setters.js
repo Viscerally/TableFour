@@ -107,11 +107,11 @@ function setSocket(socket, react) {
     socket.on('deletedOrderItem', delItem => {
       const menuItemOrders = react.state.menuItemOrders.filter(item => {
         return item.id !== delItem[0].id;
-      })      
+      })
       react.setState({ menuItemOrders });
-    })  
+    })
   })
   return socket;
 }
-            
+
 module.exports = { setSocket }

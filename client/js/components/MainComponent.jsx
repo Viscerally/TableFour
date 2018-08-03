@@ -49,25 +49,16 @@ export default class MainComponent extends Component {
       paymentConfirmation: this.state.is_paid,
       orderCode: order_id,
     };
-
-
-    ///////////////////////////////////
-    //TODO:
-    //generate new order_id,
-    // price_declared(total),
-    //total_paid - to be inplemented later
-    // payment confirmation (is_paid),
-    // order_code(UUID?)
-    //menu_items_ids,
-
-    //send to db,
-    //send to admin
-    //send via Twillio and as notification to customer on the home page,
-    //generate success message (notification or new page -if statement
-    // add 'cancel' button both on the app page as a link on message on sms from Twillio?
   }
 
-  /////////////////////////////////////
+  orderComponent = () => {
+    return (<Order
+
+              order={this.state.reservation.order}//Throws an error
+              orderItems={this.state.menuItemOrders}
+              removeFromOrder={this.removeFromOrder}
+            />)
+  }
 
   selectDashboard = state => {
     const { res_code, reservations, currentReservation, currentCustomer } = state;
@@ -110,7 +101,7 @@ export default class MainComponent extends Component {
   }
 
   render() {
-    console.log("RESERVATIONS", this.state.reservations);    
+    console.log("RESERVATIONS", this.state.currentReservation);
     const { socket, urls } = this.props;
     const categoriesArray = [];
     let categoryComponents = [];
@@ -183,12 +174,9 @@ export default class MainComponent extends Component {
           <div className='columns'>
             <div className='column is-one-third' />
             <div className='column is-one-third'>
-              <Order
-                orderId="2"
-                orderItems={this.state.menuItemOrders}
-                removeFromOrder={this.removeFromOrder}
-                placeOrder={this.state.placeOrder}
-              />
+            {/* TODO NEED AN IF STATEMENT HERE TO CONDITIONAL RENDER */}
+            {this.state.currentReservation ?
+              (this.orderComponent()) : (null)}
             </div>
           </div>
         </main>
