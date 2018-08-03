@@ -1,8 +1,40 @@
-// lowercase the string, then remove all white space, and
-// lastly, capitalise the first letter
 const namifyStr = str => str.toLowerCase().trim().replace(/^\w/, letter => letter.toUpperCase());
 
-// only return numbers in a string
 const getOnlyNumbers = str => str.replace(/\D/g, '');
 
-module.exports = { namifyStr, getOnlyNumbers };
+const blankReservation = () => {
+  return {
+    placement_time: '',
+    order_id: '',
+    status: '',
+    group_size: '',
+    customer_id: '',
+    res_code: ''
+  }
+}
+
+const blankCustomer = () => {
+  return {
+    name: '',
+    phone: '',
+    email: ''
+  }
+}
+
+const resoData = (state) => {
+  const {customer, reservation} = state;
+  return {
+    name: namifyStr(customer.name),
+    phone: getOnlyNumbers(customer.phone),
+    group_size: reservation.group_size,
+    email: customer.email,
+  }
+}
+
+module.exports = {
+  namifyStr,
+  getOnlyNumbers,
+  blankReservation,
+  blankCustomer,
+  resoData
+};

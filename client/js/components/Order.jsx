@@ -3,18 +3,15 @@ import numeral from 'numeral';
 
 
 export default class Order extends Component {
-  
-  
+
+
   render() {
-    // console.log(`\n\n\n ${this.props.orderItems[0]}`);
-    // console.log('Order is rendering');
 
     let positionCounter = 0;
     let totalPrice = 0;
     const orderItems = this.props.orderItems.map((item,index) => {
       let integerToCurrency = numeral(item.price/100).format('$0.00')
       totalPrice += item.price;
-    
       return (
         <tr key={item.id}>
           <th>{index + 1}</th>
@@ -31,7 +28,7 @@ export default class Order extends Component {
         </tr>
       )
     });
-  
+
 
     return (
       <article className='tile is-12 box'>
@@ -56,7 +53,7 @@ export default class Order extends Component {
                 <th>{numeral(totalPrice/100).format('$0.00')}</th>
                 <th></th>
               </tr>
-            </tfoot>  
+            </tfoot>
           </table>
           <button className="button is-link" onClick={() => {this.props.placeOrder(orderItems.id)}}>Place your order</button>
         </div>
@@ -64,4 +61,3 @@ export default class Order extends Component {
     )
   }
 }
-
