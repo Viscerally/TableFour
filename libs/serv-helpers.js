@@ -232,6 +232,15 @@ const addItemToOrder = (db, menuItemOrder) => {
     })
 }
 
+const removeOrderItem = (db, orderItem) => {
+  return db.menu_items_orders.destroy(
+    {id: orderItem.id},
+    (err, res) => {
+      return res;
+    })
+}
+
+
 module.exports = {
   getAllReservations,
   submitNewReservation,
@@ -244,5 +253,6 @@ module.exports = {
   addItemOrderWMenuItem,
   addItemToOrder,
   getReservationByResCode,
-  getCustomerByReservation
+  getCustomerByReservation,
+  removeOrderItem
 }
