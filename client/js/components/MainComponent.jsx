@@ -71,7 +71,6 @@ export default class MainComponent extends Component {
 
   selectDashboard = state => {
     const { res_code, reservations, currentReservation, currentCustomer } = state;
-    console.log('state reservations', state.reservations);
     if (this.props.isAdmin) {
       // ADMIN DASHBOARD
       return (

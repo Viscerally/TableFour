@@ -17,24 +17,25 @@ function setSocket(socket, react) {
     });
 
     // LOAD NEW RESERVATION - DO NOT CHANGE
-    socket.on('loadNewReservation', ({ customer, reservation, path }) => {
+    socket.on('loadNewReservation', data => {
+      const { customer, reservation, path } = data;
       //Make sure that this gets called from MainComponent
       react.setState(oldState => {
         // we need customer data in reservations. please DON'T remove customer
         const reservations = [...oldState.reservations, { ...customer, ...reservation }];
 
         // instead of showing new reservation in the root,
-        // it is better to display it in /reservations/:res_code because
-        // so as to prevent each client from receiving other customers' reservations
-        if (path !== '/admin') {
-          window.location = `/reservations/${reservation.res_code}`;
+        // it is better to display it in /reservations/:res_code in order to prevent customers
+        // from receiving other customers' reservations
+        // (path !== '/admin') is to prevent redirection from happening when a form is submitted on /admin
+        if (Object.keys(data).includes('redirectTo') && (path !== '/admin')) {
+          window.location = `/reservations/${data.redirectTo}`;
         }
 
         return {
           currentCustomer: customer,
           currentReservation: reservation,
-          reservations,
-          res_code: reservation.res_code
+          reservations
         }
       })
     });
@@ -103,15 +104,15 @@ function setSocket(socket, react) {
         menu: menu
       })
     })
-    
+
     socket.on('deletedOrderItem', delItem => {
       const menuItemOrders = react.state.menuItemOrders.filter(item => {
         return item.id !== delItem[0].id;
-      })      
+      })
       react.setState({ menuItemOrders });
-    })  
+    })
   })
   return socket;
 }
-            
+
 module.exports = { setSocket }
