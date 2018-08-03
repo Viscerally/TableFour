@@ -2,24 +2,9 @@ const serv = require('./serv-helpers.js');
 const { countClients } = require('./socket-helpers.js');
 
 module.exports = function setSocketServer(io, db) {
-  // create empty objects to store socket client id and url
-  // from which requests were made. save admin data in a separate object
-  const clients = {}, admin = {};
-
   // HANDLE SOCKET CONNECTION
   return io.on('connection', socket => {
     console.log(`${countClients(io)} CLIENT(S) CONNECTED`);
-
-    // deconstruct socket object and save id and path (referer without origin)
-    const { id, request: { headers: { origin, referer } } } = socket;
-    const path = referer.replace(origin, '');
-    // if client is admin, save id and path to "admin"
-    if (path === '/admin') {
-      admin[id] = { id, path };
-    } else {
-      // otherwise save it to "clients"
-      clients[id] = { id, path };
-    }
 
     // HANDLE SOCKET DISCONNECTION
     socket.on('disconnect', () => {
