@@ -100,7 +100,7 @@ function setSocket(socket, react){
     })
   
   return socket;
-}
+})
 
   module.exports = {
     setSocket
