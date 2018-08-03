@@ -29,6 +29,7 @@ export default class AdminReservationDashboard extends Component {
 
     // loop through table rows
     const cells = reservations.map(reservation => {
+      console.log('RESERVATION', reservation);
       if (reservation.status !== 'waiting') {
         return true;
       }
@@ -37,8 +38,8 @@ export default class AdminReservationDashboard extends Component {
 
       // add the group size
       sizeSum += reservation.group_size;
-      const { id, group_size, name, order_id, status } = reservation;
-      const orderStatus = (order_id) ? (
+      const { id, group_size, name, order_code, status } = reservation;
+      const orderStatus = (order_code) ? (
         <span className="icon has-text-success">
           <i className="fas fa-check-square"></i>
         </span>
