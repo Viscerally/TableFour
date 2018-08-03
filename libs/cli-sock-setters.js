@@ -1,11 +1,11 @@
-import { returnResoArray } from '../client/libs/reservation-func.js';
 import * as formHelp from '../client/libs/form-helper-func.js';
-function setSocket(socket, react){
 
+function setSocket(socket, react) {
   socket.on('connect', () => {
     console.log('Connected to websocket');
-    let {res_code} = react.props;
+    let { res_code } = react.props;
 
+    // LOAD ALL RESERVATIONS - DO NOT CHANGE
     socket.on('loadReservations', reservations => {
       let formData = {};
       let currentReservation = [];
@@ -14,64 +14,69 @@ function setSocket(socket, react){
       }
       formData = (currentReservation.length === 0) ? react.state.formData : currentReservation[0];
       react.setState({ formData, reservations });
-    })
+    });
 
-    // LOAD NEW RESERVATION
-    socket.on('loadNewReservation', ({customer, reservation}) => {
+    // LOAD NEW RESERVATION - DO NOT CHANGE
+    socket.on('loadNewReservation', ({ customer, reservation }) => {
       //Make sure that this gets called from MainComponent
       react.setState(oldState => {
-        const reservations = [...oldState.reservations, reservation];
-        const res_code = reservation.res_code;
+        // we need customer data in reservations. please DON'T remove customer
+        const reservations = [...oldState.reservations, { ...customer, ...reservation }];
+
         return {
           currentCustomer: customer,
           currentReservation: reservation,
-          reservations: reservations,
-          res_code: res_code
-         }
+          reservations,
+          res_code: reservation.res_code
+        }
       })
-    })
+    });
 
-    // UPDATE RESERVATION DATA
+    // UPDATE RESERVATION DATA - DO NOT CHANGE
     socket.on('loadChangedReservation', data => {
+      const { customer, reservation } = data;
+      const newResList = react.state.reservations.map(currentReso => {
+        if (currentReso.id === reservation.id) {
+          // please do NOT remove customer. reservations need customer detail.
+          currentReso = { ...customer, ...reservation };
+        }
+        return currentReso;
+      });
+      react.setState({
+        currentCustomer: customer,
+        currentReservation: reservation,
+        reservations: newResList
+      });
+    });
+
+    // UPDATE RESERVATION STATUS BY ADMIN - DO NOT CHANGE
+    socket.on('changeReservationStatus', data => {
       const newResList = react.state.reservations.map(reservation => {
         if (reservation.id === data.reservation.id) {
           reservation = data.reservation;
         }
         return reservation;
-      })
-      react.setState(oldState => {
-        return {
-          currentCustomer : data.customer[0],
-          currentReservation: data.reservation[0],
-          reservations: newResList
-         }
-      })
-    })
+      });
+      react.setState({ reservations: newResList });
+    });
+
+    // CANCEL RESERVATION - DO NOT CHANGE
+    socket.on('removeCancelledReservation', newData => {
+      const reservations = react.state.reservations.filter(reso => reso.id !== newData[0].id);
+      react.setState({
+        currentCustomer: formHelp.blankCustomer(),
+        currentReservation: formHelp.blankReservation(),
+        reservations
+      });
+    });
+
 
     socket.on('loadReservation', data => {
-      react.setState({
-        currentReservation: data
-      })
+      react.setState({ currentReservation: data });
     })
 
-    socket.on('loadCustomer', data => {      
-      react.setState({
-        currentCustomer: data
-      })
-    })
-
-    // CANCEL RESERVATION
-    socket.on('removeCancelledReservation', newData => {
-      react.setState(oldState => {
-        const reservations = react.state.reservations.filter(reso => {
-          return reso.id !== newData[0].id;
-        });
-        return {
-          currentCustomer: formHelp.blankCustomer(),
-          currentReservation: formHelp.blankReservation(),
-          reservations
-        }
-      });
+    socket.on('loadCustomer', data => {
+      react.setState({ currentCustomer: data });
     })
 
     socket.on('ItemOrdersWMenuItemInfo', menuItemOrders => {
@@ -82,13 +87,11 @@ function setSocket(socket, react){
       react.setState(prevState => {
         return {
           menuItemOrders: [...prevState.menuItemOrders, data]
-         };
+        };
       })
     })
   })
   return socket;
 }
 
-  module.exports = {
-    setSocket
-  }
+module.exports = { setSocket }
