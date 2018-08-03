@@ -1,5 +1,5 @@
 const serv = require('./serv-helpers.js');
-const { countClients } = require('./socket-helpers.js');
+const { countClients, broadcastData } = require('./socket-helpers.js');
 
 // create empty objects to store socket client id and url
 // from which requests were made. save admin data in a separate object
@@ -15,6 +15,7 @@ module.exports = function setSocketServer(io, db) {
       console.log(`${countClients(io)} CLIENT(S) CONNECTED`);
     });
 
+    // KEEP TRACK OF WEBSOCKET CLIENT ID AND PATH FROM WHICH WHERE THEY CAME FROM
     // deconstruct socket object and save id and path (referer without origin)
     const { id, request: { headers: { origin, referer } } } = socket;
     const path = referer.replace(origin, '');
@@ -44,9 +45,7 @@ module.exports = function setSocketServer(io, db) {
         .then(reso => {
           return serv.getCustomerByReservation(db, reso)
         })
-        .then(custo => {
-          io.emit('loadCustomer', custo)
-        })
+        .then(custo => { io.emit('loadCustomer', custo); })
         .catch(err => { console.log(err) });
     })
 
@@ -68,21 +67,11 @@ module.exports = function setSocketServer(io, db) {
     //     .catch(err => {console.log(err)});
     // })
 
-
     // SUBMIT NEW RESERVATION
     socket.on('submitReservation', formData => {
       serv.submitNewReservation(db, formData)
         .then(data => {
-          // if sender is admin, broadcast message to all clients including the sender
-          if (Object.keys(admin).includes(socket.id)) {
-            io.emit('loadNewReservation', data);
-          } else {
-            // otherwise, broadcast message to the original sender and admin(s)
-            socket.emit('loadNewReservation', data);
-            Object.keys(admin).forEach(adminId => {
-              socket.broadcast.to(adminId).emit('loadNewReservation', data);
-            })
-          }
+          broadcastData(io, socket, 'loadNewReservation', data, admin);
         })
         .catch(err => { console.log(err) });
     })
@@ -91,16 +80,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('updateReservation', formData => {
       serv.updateReservation(db, formData)
         .then(data => {
-          // if sender is admin, broadcast message to all clients including the sender
-          if (Object.keys(admin).includes(socket.id)) {
-            io.emit('loadChangedReservation', data);
-          } else {
-            // otherwise, broadcast message to the original sender and admin(s)
-            socket.emit('loadChangedReservation', data);
-            Object.keys(admin).forEach(adminId => {
-              socket.broadcast.to(adminId).emit('loadChangedReservation', data);
-            })
-          }
+          broadcastData(io, socket, 'loadChangedReservation', data, admin);
         })
         .catch(err => console.log(err));
     });
@@ -109,16 +89,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('cancelReservation', formData => {
       serv.cancelReservation(db, formData)
         .then(data => {
-          // if sender is admin, broadcast message to all clients including the sender
-          if (Object.keys(admin).includes(socket.id)) {
-            io.emit('removeCancelledReservation', data);
-          } else {
-            // otherwise, broadcast message to the original sender and admin(s)
-            socket.emit('removeCancelledReservation', data);
-            Object.keys(admin).forEach(adminId => {
-              socket.broadcast.to(adminId).emit('removeCancelledReservation', data);
-            })
-          }
+          broadcastData(io, socket, 'removeCancelledReservation', data, admin);
         });
     })
 
