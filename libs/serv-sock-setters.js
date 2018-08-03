@@ -90,6 +90,14 @@ function setSocketServer(io, db){
         })
         .catch(err => console.log(err));
     })
+
+    socket.on('removeOrderItem', orderItem => {
+      serv.removeOrderItem(db, orderItem)
+        .then(deletedOrderItem => {
+          io.emit('deletedOrderItem', deletedOrderItem);
+        })
+    })
+
     socket.on('addItemToOrder', status => {
 
       serv.addItemOrderWMenuItem(db, status)

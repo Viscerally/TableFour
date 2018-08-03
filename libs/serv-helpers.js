@@ -264,6 +264,15 @@ const processMenu = function(categories, menuItems){
   return menu;
 }
 
+const removeOrderItem = (db, orderItem) => {
+  return db.menu_items_orders.destroy(
+    {id: orderItem.id},
+    (err, res) => {
+      return res;
+    })
+}
+
+
 module.exports = {
   getAllReservations,
   submitNewReservation,
@@ -277,5 +286,6 @@ module.exports = {
   addItemToOrder,
   getReservationByResCode,
   getCustomerByReservation,
-  getMenu
+  getMenu,
+  removeOrderItem
 }

@@ -33,8 +33,7 @@ export default class MainComponent extends Component {
   }
 
   removeFromOrder = orderItem => {
-    const menuItemOrders = this.state.menuItemOrders.filter(item => item.id !== orderItem.id);
-    this.setState({ menuItemOrders });
+    this.props.socket.emit('removeOrderItem', (orderItem));    
   }
 
   addToOrder = menuItem => {
