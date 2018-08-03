@@ -1,6 +1,10 @@
 const serv = require('./serv-helpers.js');
 const { countClients } = require('./socket-helpers.js');
 
+// create empty objects to store socket client id and url
+// from which requests were made. save admin data in a separate object
+const clients = {}, admin = {};
+
 module.exports = function setSocketServer(io, db) {
   // HANDLE SOCKET CONNECTION
   return io.on('connection', socket => {
@@ -10,6 +14,17 @@ module.exports = function setSocketServer(io, db) {
     socket.on('disconnect', () => {
       console.log(`${countClients(io)} CLIENT(S) CONNECTED`);
     });
+
+    // deconstruct socket object and save id and path (referer without origin)
+    const { id, request: { headers: { origin, referer } } } = socket;
+    const path = referer.replace(origin, '');
+    // if client is admin, save id and path to "admin"
+    if (path === '/admin') {
+      admin[id] = { id, path };
+    } else {
+      // otherwise save it to "clients"
+      clients[id] = { id, path };
+    }
 
     // LOAD INITIAL RESERVATIONS
     socket.on('getReservations', () => {
@@ -26,23 +41,23 @@ module.exports = function setSocketServer(io, db) {
 
     socket.on('getCustomerByResCode', data => {
       serv.getReservationByResCode(db, data)
-      .then(reso => {
-        return serv.getCustomerByReservation(db, reso)
-      })
-      .then(custo => {
-        io.emit('loadCustomer', custo)
-      })
-      .catch(err => { console.log(err)} );
+        .then(reso => {
+          return serv.getCustomerByReservation(db, reso)
+        })
+        .then(custo => {
+          io.emit('loadCustomer', custo)
+        })
+        .catch(err => { console.log(err) });
     })
 
-/// GET MENU    
+    /// GET MENU
     socket.on('getMenu', () => {
       serv.getMenu(db)
         .then(menu => {
           //Specify which socket if necessary
           io.emit('returnedMenu', menu);
         })
-        .catch(err => {console.log(err)});
+        .catch(err => { console.log(err) });
     })
 
     //GET MENU ITEMS BY CATEGORY
@@ -57,21 +72,54 @@ module.exports = function setSocketServer(io, db) {
     // SUBMIT NEW RESERVATION
     socket.on('submitReservation', formData => {
       serv.submitNewReservation(db, formData)
-        .then(data => { io.emit('loadNewReservation', data); })
+        .then(data => {
+          // if sender is admin, broadcast message to all clients including the sender
+          if (Object.keys(admin).includes(socket.id)) {
+            io.emit('loadNewReservation', data);
+          } else {
+            // otherwise, broadcast message to the original sender and admin(s)
+            socket.emit('loadNewReservation', data);
+            Object.keys(admin).forEach(adminId => {
+              socket.broadcast.to(adminId).emit('loadNewReservation', data);
+            })
+          }
+        })
         .catch(err => { console.log(err) });
     })
 
     // UPDATE EXISTING RESERVATION
     socket.on('updateReservation', formData => {
       serv.updateReservation(db, formData)
-        .then(data => { io.emit('loadChangedReservation', data); })
+        .then(data => {
+          // if sender is admin, broadcast message to all clients including the sender
+          if (Object.keys(admin).includes(socket.id)) {
+            io.emit('loadChangedReservation', data);
+          } else {
+            // otherwise, broadcast message to the original sender and admin(s)
+            socket.emit('loadChangedReservation', data);
+            Object.keys(admin).forEach(adminId => {
+              socket.broadcast.to(adminId).emit('loadChangedReservation', data);
+            })
+          }
+        })
         .catch(err => console.log(err));
     });
 
     // CANCEL RESERVATION
     socket.on('cancelReservation', formData => {
       serv.cancelReservation(db, formData)
-        .then(data => { io.emit('removeCancelledReservation', data); });
+        .then(data => {
+          // if sender is admin, broadcast message to all clients including the sender
+          if (Object.keys(admin).includes(socket.id)) {
+            io.emit('removeCancelledReservation', data);
+          } else {
+            // otherwise, broadcast message to the original sender and admin(s)
+            socket.emit('removeCancelledReservation', data);
+            Object.keys(admin).forEach(adminId => {
+              socket.broadcast.to(adminId).emit('removeCancelledReservation', data);
+            })
+          }
+        });
     })
 
     // UPDATE RESERVATION STATUS BY ADMIN
