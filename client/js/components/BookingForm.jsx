@@ -7,7 +7,9 @@ export default class BookingForm extends Component {
     super(props);
     this.state = {
       reservation: blankReservation(),
-      customer: blankCustomer()
+      customer: blankCustomer(),
+      // path refers to where the form was submitted (customer or admin)
+      path: ''
     }
   }
 
@@ -91,6 +93,7 @@ export default class BookingForm extends Component {
   // DO NOT CHANGE
   componentDidMount() {
     const { socket, urls } = this.props;
+    this.setState({ path: urls.path });
     // check the url path
     if (urls.path === '/reservations/:res_code') {
       // if res_code is given as a url param, request customer and reservation

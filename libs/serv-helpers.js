@@ -42,7 +42,7 @@ const saveReservation = (db, reservationData) => {
 
 // SUBMIT NEW RESERVATION - DO NOT CHANGE
 const submitNewReservation = async (db, formData) => {
-  const { name, phone, group_size, email } = formData;
+  const { name, phone, group_size, email, path } = formData;
   const customer = await saveCustomer(db, { name, phone, email });
 
   const reservationData = {
@@ -61,7 +61,7 @@ const submitNewReservation = async (db, formData) => {
 
   // text the reservation data
   //smsMsg.resoTextMsg(phone, reservation);
-  return { customer, reservation };
+  return { customer, reservation, path };
 }
 // SUBMIT NEW RESERVATION - END
 

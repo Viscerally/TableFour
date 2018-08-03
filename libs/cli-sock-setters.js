@@ -17,7 +17,7 @@ function setSocket(socket, react) {
     });
 
     // LOAD NEW RESERVATION - DO NOT CHANGE
-    socket.on('loadNewReservation', ({ customer, reservation }) => {
+    socket.on('loadNewReservation', ({ customer, reservation, path }) => {
       //Make sure that this gets called from MainComponent
       react.setState(oldState => {
         // we need customer data in reservations. please DON'T remove customer
@@ -26,7 +26,9 @@ function setSocket(socket, react) {
         // instead of showing new reservation in the root,
         // it is better to display it in /reservations/:res_code because
         // so as to prevent each client from receiving other customers' reservations
-        window.location = `/reservations/${reservation.res_code}`;
+        if (path !== '/admin') {
+          window.location = `/reservations/${reservation.res_code}`;
+        }
 
         return {
           currentCustomer: customer,
