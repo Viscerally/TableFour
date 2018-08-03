@@ -86,13 +86,19 @@ function setSocket(socket, react){
       })
     })
 
+    socket.on('returnedMenu', menu => {
+      react.setState({
+        menu: menu
+      })
+    })
+    
     socket.on('deletedOrderItem', delItem => {
       const menuItemOrders = react.state.menuItemOrders.filter(item => {
         return item.id !== delItem[0].id;
       })      
       react.setState({ menuItemOrders });
     })
-  })
+  
   return socket;
 }
 

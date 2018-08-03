@@ -7,6 +7,7 @@ import BookingForm from './BookingForm.jsx';
 import Navbar from './Navbar.jsx';
 import Order from './Order.jsx'
 import Menu from './Menu.jsx';
+import Category from './Category.jsx';
 import * as formHelp from '../../libs/form-helper-func.js';
 import { setSocket } from '../../../libs/cli-sock-setters.js';
 
@@ -19,8 +20,16 @@ export default class MainComponent extends Component {
       reservations: [],
       orderId: '2',
       menuItemOrders: [],
-      res_code: props.res_code
+      res_code: props.res_code,
+      currentMenu: {}
     };
+  }
+
+  setMenu = menu => {
+  
+    this.setState({
+      currentMenu: menu
+    })
   }
 
   removeFromOrder = orderItem => {
@@ -32,7 +41,6 @@ export default class MainComponent extends Component {
     this.props.socket.emit('addItemToOrder', menuItem);
   }
 
-///////////////////////////////////
   placeOrder = (order_id) => {
     const newOrder = {
       orderId: this.state.order_id,
@@ -40,7 +48,8 @@ export default class MainComponent extends Component {
       paymentConfirmation: this.state.is_paid,
       orderCode: order_id,
     };
-
+    
+///////////////////////////////////
   //TODO:
   //generate new order_id,
   // price_declared(total),
@@ -68,10 +77,34 @@ export default class MainComponent extends Component {
       socket.emit('getReservationByResCode', this.state.res_code);
       socket.emit('getCustomerByResCode', this.state.res_code);
     }
+
+    socket.emit('getMenu');
+
   }
 
   render() {
     const { formData, reservations } = this.state;
+    const categoriesArray = [];
+    let categoryComponents = [];
+    if (this.state.menu){
+      for (let cat in this.state.menu){
+        categoriesArray.push(this.state.menu[cat]);
+      }
+      categoryComponents = categoriesArray.map((category) => {
+        return (
+          <div className="tile is-parent">
+            <article className="tile is-child box">
+              <Category                 
+                menu={category}
+                setMenu={this.setMenu} 
+              />
+
+            </article>
+          </div>
+        )
+      })
+    }
+
     return (
       <div className='container is-desktop'>
         <header>
@@ -107,16 +140,23 @@ export default class MainComponent extends Component {
             </article>
           </div>
         </div>
+        {/*LOAD THE CATEGORY COMPONENTS*/}
+        <article className="menuCategories">
+          <div className="tile is-ancestor">
+            {categoryComponents}
+          </div>
+        </article>
         <div className='columns' >
           <div className='column is-one-third' />
           <div className='column is-one-third'>
             <Menu
               addToOrder={this.addToOrder}
+              currentMenu={this.state.currentMenu}
             />
           </div>
           <div className='column is-one-third' />
         </div>
-        <div className='columns' >
+        <div className='columns'>
           <div className='column is-one-third' />
           <div className='column is-one-third'>
             <Order

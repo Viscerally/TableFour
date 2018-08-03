@@ -32,6 +32,25 @@ function setSocketServer(io, db){
       .catch(err => { console.log(err)} );
     })
 
+/// GET MENU    
+    socket.on('getMenu', () => {
+      serv.getMenu(db)
+        .then(menu => {
+          //Specify which socket if necessary
+          io.emit('returnedMenu', menu);
+        })
+        .catch(err => {console.log(err)});
+    })
+
+    //GET MENU ITEMS BY CATEGORY
+    // socket.on('submitReservation', formData => {
+    //   console.log('Server socket handling submit');
+    //   serv.submitNewReservation(db, formData)
+    //     .then(data => { io.emit('loadNewReservation', data); })
+    //     .catch(err => {console.log(err)});
+    // })
+
+
     // SUBMIT NEW RESERVATION
     socket.on('submitReservation', formData => {
       console.log('Server socket handling submit');

@@ -232,6 +232,38 @@ const addItemToOrder = (db, menuItemOrder) => {
     })
 }
 
+const getMenu = (db) => {
+  let allCats;
+
+  return db.categories.find()
+  .then(allCategories => {
+    allCats = allCategories;
+    return db.menu_items.find()
+  })
+  .then(allMenuItems => {
+    // console.log(allCats[0]);
+    const processedMenu = processMenu(allCats, allMenuItems);
+    return processedMenu;
+  })
+  .catch(err => {
+    console.log(err)
+  })
+}
+
+const processMenu = function(categories, menuItems){
+  const menu = {};
+  for (category of categories){    
+    menu[category.id] = category;   
+  }
+  for (menuItem of menuItems){ 
+    if (!menu[menuItem.category_id].menuItems){
+      menu[menuItem.category_id].menuItems = [];
+    }
+    menu[menuItem.category_id].menuItems.push(menuItem);
+  }
+  return menu;
+}
+
 const removeOrderItem = (db, orderItem) => {
   return db.menu_items_orders.destroy(
     {id: orderItem.id},
@@ -254,5 +286,6 @@ module.exports = {
   addItemToOrder,
   getReservationByResCode,
   getCustomerByReservation,
+  getMenu,
   removeOrderItem
 }
