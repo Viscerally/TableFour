@@ -27,14 +27,14 @@ export default class MainComponent extends Component {
   }
 
   setMenu = menu => {
-  
+
     this.setState({
       currentMenu: menu
     })
   }
 
   removeFromOrder = orderItem => {
-    this.props.socket.emit('removeOrderItem', (orderItem));    
+    this.props.socket.emit('removeOrderItem', (orderItem));
   }
 
   addToOrder = menuItem => {
@@ -50,15 +50,15 @@ export default class MainComponent extends Component {
       orderCode: order_id,
     };
 
-    
-///////////////////////////////////
-  //TODO:
-  //generate new order_id,
-  // price_declared(total),
-  //total_paid - to be inplemented later
-  // payment confirmation (is_paid),
-  // order_code(UUID?)
-  //menu_items_ids,
+
+    ///////////////////////////////////
+    //TODO:
+    //generate new order_id,
+    // price_declared(total),
+    //total_paid - to be inplemented later
+    // payment confirmation (is_paid),
+    // order_code(UUID?)
+    //menu_items_ids,
 
     //send to db,
     //send to admin
@@ -105,31 +105,25 @@ export default class MainComponent extends Component {
 
     socket.emit('getReservations');
     socket.emit('getItemOrdersWMenuItemInfo');
-
-    if (this.state.res_code){
-      socket.emit('getReservationByResCode', this.state.res_code);
-      socket.emit('getCustomerByResCode', this.state.res_code);
-    }
-
     socket.emit('getMenu');
 
   }
 
   render() {
-    const { formData, reservations } = this.state;
+    const { socket, urls } = this.props;
     const categoriesArray = [];
     let categoryComponents = [];
-    if (this.state.menu){
-      for (let cat in this.state.menu){
+    if (this.state.menu) {
+      for (let cat in this.state.menu) {
         categoriesArray.push(this.state.menu[cat]);
       }
       categoryComponents = categoriesArray.map((category) => {
         return (
           <div className="tile is-parent">
             <article className="tile is-child box">
-              <Category                 
+              <Category
                 menu={category}
-                setMenu={this.setMenu} 
+                setMenu={this.setMenu}
               />
 
             </article>
@@ -146,6 +140,7 @@ export default class MainComponent extends Component {
         <br />
         <main>
           <div className='tile is-ancestor top-tile'>
+
             <div className='tile is-5 is-parent'>
               <article className='tile is-child box'>
                 <div className='content'>
@@ -154,6 +149,7 @@ export default class MainComponent extends Component {
                 </div>
               </article>
             </div>
+
             <div className='tile is-parent'>
               <article className='tile is-child box'>
                 <div className='content'>
@@ -162,33 +158,37 @@ export default class MainComponent extends Component {
                 </div>
               </article>
             </div>
+
           </div>
-        </div>
-        {/*LOAD THE CATEGORY COMPONENTS*/}
-        <article className="menuCategories">
-          <div className="tile is-ancestor">
-            {categoryComponents}
+          {/*LOAD THE CATEGORY COMPONENTS*/}
+
+          <article className="menuCategories">
+            <div className="tile is-ancestor">
+              {categoryComponents}
+            </div>
+          </article>
+
+          <div className='columns' >
+            <div className='column is-one-third' />
+            <div className='column is-one-third'>
+              <Menu
+                addToOrder={this.addToOrder}
+                currentMenu={this.state.currentMenu}
+              />
+            </div>
+            <div className='column is-one-third' />
           </div>
-        </article>
-        <div className='columns' >
-          <div className='column is-one-third' />
-          <div className='column is-one-third'>
-            <Menu
-              addToOrder={this.addToOrder}
-              currentMenu={this.state.currentMenu}
-            />
-          </div>
-          <div className='column is-one-third' />
-        </div>
-        <div className='columns'>
-          <div className='column is-one-third' />
-          <div className='column is-one-third'>
-            <Order
-              orderId="2"
-              orderItems={this.state.menuItemOrders}
-              removeFromOrder={this.removeFromOrder}
-              placeOrder={this.state.placeOrder}
-            />
+
+          <div className='columns'>
+            <div className='column is-one-third' />
+            <div className='column is-one-third'>
+              <Order
+                orderId="2"
+                orderItems={this.state.menuItemOrders}
+                removeFromOrder={this.removeFromOrder}
+                placeOrder={this.state.placeOrder}
+              />
+            </div>
           </div>
         </main>
         <footer></footer>
