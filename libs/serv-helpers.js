@@ -2,34 +2,48 @@ const twilio = require('twilio');
 const smsMsg = require('../routes/api/sms.js');
 const rs = require('random-strings');
 
-// GET ALL RESERVATIONS
+// "DO NOT CHANGE" REFERS TO FUNCTIONS CONFIRMED TO BE WORKING
+// GET ALL RESERVATIONS - DO NOT CHANGE
 function getAllReservations(db) {
   const qItems = 'reservations.id, email, group_size, name, phone, placement_time, res_code, order_id, status';
   const q = `SELECT ${qItems} FROM reservations JOIN customers ON customer_id = customers.id WHERE status = 'waiting' ORDER BY placement_time ASC`;
 
   return db.query(q)
-    .then(data => { return data; })
+    .then(data => data)
     .catch(err => { console.log(err); })
 }
 // GET ALL RESERVATIONS - END
 
-const insertCustomer = (db, customerData) => {
+const insertCustmer = (db, customerData) => {
   return db.customers.insert(customerData)
-    .then(result => {
-      return result
-    })
+    .then(result => result)
     .catch(err => { console.log(err) })
 }
 
 const insertReservation = (db, reservationData) => {
   return db.reservations.insert(reservationData)
-    .then(result => { return result })
+    .then(result => result)
     .catch(err => { console.log(err) })
 }
 
+// DO NOT CHANGE
+const saveCustomer = (db, customerData) => {
+  return db.customers.save(customerData)
+    .then(result => result)
+    .catch(err => { console.log(err) })
+}
+
+// DO NOT CHANGE
+const saveReservation = (db, reservationData) => {
+  return db.reservations.save(reservationData)
+    .then(result => result)
+    .catch(err => { console.log(err) })
+}
+
+// SUBMIT NEW RESERVATION - DO NOT CHANGE
 const submitNewReservation = async (db, formData) => {
-  const { name, phone, group_size, email } = formData;
-  const customer = await insertCustomer(db, { name, phone, email });
+  const { name, phone, group_size, email, path } = formData;
+  const customer = await saveCustomer(db, { name, phone, email });
 
   const reservationData = {
     placement_time: new Date(),
@@ -38,7 +52,7 @@ const submitNewReservation = async (db, formData) => {
     res_code: rs.alphaNumUpper(6),
     group_size
   }
-  const reservation = await insertReservation(db, reservationData);
+  const reservation = await saveReservation(db, reservationData);
   //reservation.host = formData.host;
 
   //
@@ -47,15 +61,13 @@ const submitNewReservation = async (db, formData) => {
 
   // text the reservation data
   //smsMsg.resoTextMsg(phone, reservation);
-  return { customer, reservation };
+  return { customer, reservation, path };
 }
 // SUBMIT NEW RESERVATION - END
 
 const getReservationByResCode = (db, res_code) => {
-  return db.reservations.findOne({
-      'res_code': res_code
-    })
-    .then(result => { return result })
+  return db.reservations.findOne({ res_code })
+    .then(result => result)
     .catch(err => { console.log(err) })
 }
 
@@ -63,83 +75,48 @@ const getCustomerByReservation = (db, reso) => {
   return db.customers.findOne({
     'id': reso.customer_id
   })
-  .then(result => {
-    return result
-   })
-  .catch(err => { console.log(err) })
+    .then(result => result)
+    .catch(err => { console.log(err) })
 }
 
+// DO NOT CHANGE
 const findReservation = (db, param) => {
   const paramKey = Object.keys(param)[0];
-  return db.reservations.findOne({ [paramKey]: param.res_code })
-    .then(result => { return result })
+  return db.reservations.findOne({ [paramKey]: param[paramKey] })
+    .then(result => result)
     .catch(err => { console.log(err) })
 };
 
-const updateReservation = (db, formData) => {
-  let newReso;
-  let newCusto;
-  return db.reservations.update(
-    {id: formData.resId},
-    {
-      group_size: formData.group_size,
-    },
-    result => {
-      return result;
-  })
-  .then(updReso => {
-    newReso = updReso;
-    return db.customers.update(
-      {id: formData.custId},
-      {
-        phone: formData.phone,
-        email: formData.email,
-        name: formData.name
-      },
-      result => {
-        return result;
-      }
-    )
-  }).then(updCustomer => {
-    newCusto = updCustomer;
-    return {
-      customer: newCusto,
-      reservation: newReso
-    }
-  })
+// DO NOT CHANGE
+const updateReservation = async (db, formData) => {
+  const { name, phone, group_size, email, res_code } = formData;
 
-  /*const customer = saveCustomer(db, customerData);
-  const reservation = insertReservation(db, reservationData);
+  // find the reservation record by res_code
+  const reservationRecord = await findReservation(db, { res_code });
 
-  return { ...customer, ...reservation };*/
+  const { id, customer_id } = reservationRecord;
+  const customerData = { id: customer_id, name, phone, email };
+  const customer = await saveCustomer(db, customerData);
+
+  const reservationData = { id, group_size };
+  const reservation = await saveReservation(db, reservationData);
+  return { customer, reservation };
 }
 // SUBMIT NEW RESERVATION - END
 
-const cancelReservation = (db, formData) => {
+// CANCEL RESERVATION - DO NOT CHANGE
+const cancelReservation = async (db, formData) => {
   const { res_code } = formData;
-  return db.reservations.findOne({
-      'res_code': res_code
-    })
-    .then(reso => {
-      return db.reservations.update(
-        {id: reso.id},
-        {status: 'cancelled'},
-        (err, resp) => {
-          return resp;
-        }
-      )
-    })
-    .then(reso => {
-      return reso;
-    })
-    .catch(err => {
-      console.log(err);
-    })
+  const reservationRecord = await findReservation(db, { res_code });
+  const { id } = reservationRecord;
+  const reservationData = { id, status: 'cancelled' };
+  const reservation = await saveReservation(db, reservationData);
 
+  return reservation;
 }
 // CANCEL RESERVATION - END
 
-// UPDATE RESERVATION STATUS BY ADMIN
+// UPDATE RESERVATION STATUS BY ADMIN - DO NOT CHANGE
 // read customer data
 const readCustomer = (db, customerData) => {
   return db.customers.findOne(customerData)
@@ -147,25 +124,24 @@ const readCustomer = (db, customerData) => {
     .catch(err => { console.log(err); });
 };
 
+// DO NOT CHANGE
 const updateReservationStatus = async (db, resoStatus) => {
   // find reservation by id
-  const reservationRecord = await findReservation(db, { id: resoStatus.id });
-  const reservationData = reservationRecord[0];
+  const reservationData = await findReservation(db, { id: resoStatus.id });
+
   // read customer data
   customer = await readCustomer(db, { id: reservationData.customer_id });
 
   // update reservation data
   reservationData.status = resoStatus.status;
   reservation = await saveReservation(db, reservationData);
-
-  return { ...customer, ...reservation };
+  return { customer, reservation };
 };
+// UPDATE RESERVATION STATUS BY ADMIN - END
 
 const getAllMenuItemOrders = db => {
   return db.menu_items_orders.find()
-    .then(data => {
-      return data;
-    })
+    .then(data => data)
     .catch(err => {
       console.log(err)
     })
@@ -179,9 +155,7 @@ const getItemOrdersWMenuItemInfo = db => {
     ON menu_items_orders.menu_item_id = menu_items.id`;
 
   return db.query(qStr)
-    .then(data => {
-      return data;
-    })
+    .then(data => data)
     .catch(err => {
       console.log(err);
     })
@@ -191,9 +165,7 @@ const getMenuItemByItemOrder = (db, menuItemOrder) => {
   return db.menu_items.findOne({
     id: menuItemOrder.menu_item_id
   })
-    .then(data => {
-      return data;
-    })
+    .then(data => data)
 }
 
 const addItemOrderWMenuItem = (db, menuItemOrder) => {
@@ -224,9 +196,7 @@ const addItemToOrder = (db, menuItemOrder) => {
     menu_item_id: menuItemOrder.id,
     order_id: menuItemOrder.orderId
   })
-    .then(data => {
-      return data;
-    })
+    .then(data => data)
     .catch(err => {
       console.log(err);
     })

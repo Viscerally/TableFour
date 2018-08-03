@@ -14,9 +14,10 @@ import { setSocket } from '../../../libs/cli-sock-setters.js';
 export default class MainComponent extends Component {
   constructor(props) {
     super(props);
+    const { blankCustomer, blankReservation } = formHelp;
     this.state = {
-      currentCustomer: formHelp.blankCustomer(),
-      currentReservation: formHelp.blankReservation(),
+      currentCustomer: blankCustomer(),
+      currentReservation: blankReservation(),
       reservations: [],
       orderId: '2',
       menuItemOrders: [],
@@ -48,6 +49,7 @@ export default class MainComponent extends Component {
       paymentConfirmation: this.state.is_paid,
       orderCode: order_id,
     };
+
     
 ///////////////////////////////////
   //TODO:
@@ -58,21 +60,52 @@ export default class MainComponent extends Component {
   // order_code(UUID?)
   //menu_items_ids,
 
-  //send to db,
-  //send to admin
-  //send via Twillio and as notification to customer on the home page,
-  //generate success message (notification or new page -if statement
-  // add 'cancel' button both on the app page as a link on message on sms from Twillio?
+    //send to db,
+    //send to admin
+    //send via Twillio and as notification to customer on the home page,
+    //generate success message (notification or new page -if statement
+    // add 'cancel' button both on the app page as a link on message on sms from Twillio?
   }
 
-/////////////////////////////////////
+  /////////////////////////////////////
+
+  selectDashboard = state => {
+    const { res_code, reservations, currentReservation, currentCustomer } = state;
+    console.log('state reservations', state.reservations);
+    if (this.props.isAdmin) {
+      // ADMIN DASHBOARD
+      return (
+        <AdminReservationDashboard
+          socket={this.props.socket}
+          reservations={reservations}
+        />
+      );
+    } else {
+      // CUSTOMER DASHBOARD
+      return (
+        <ReservationDashboard
+          res_code={res_code}
+          reservations={reservations}
+          currentReservation={currentReservation}
+          currentCustomer={currentCustomer}
+        />
+      );
+    }
+  }
 
   componentDidMount = () => {
-    let { res_code, socket } = this.props;
+    let { socket } = this.props;
+    const { res_code } = this.state;
+    socket = setSocket(socket, this);
+    if (res_code) {
+      // res_code received as a url param
+      socket.emit('getReservationByResCode', res_code);
+      socket.emit('getCustomerByResCode', res_code);
+    }
 
-    socket = setSocket(this.props.socket, this);
     socket.emit('getReservations');
     socket.emit('getItemOrdersWMenuItemInfo');
+
     if (this.state.res_code){
       socket.emit('getReservationByResCode', this.state.res_code);
       socket.emit('getCustomerByResCode', this.state.res_code);
@@ -112,32 +145,23 @@ export default class MainComponent extends Component {
         </header>
         <br />
         <main>
-        <div className='tile is-ancestor top-tile'>
-          <div className='tile is-5 is-parent'>
-            <article className='tile is-child box'>
-              <div className='content'>
-                <span className='title is-4'>BOOK YOUR TABLE</span>
-                <BookingForm
-                  currentReservation={this.state.currentReservation}
-                  currentCustomer={this.state.currentCustomer}
-                  socket={this.props.socket}
-                />
-              </div>
-            </article>
-          </div>
-          <div className='tile is-parent'>
-            <article className='tile is-child box'>
-              <div className='content'>
-                <p className='title is-4'>RESERVATION STATUS</p>
-                <ReservationDashboard
-                  res_code={this.state.res_code}
-                  reservations={this.state.reservations}
-                  currentReservation={this.state.currentReservation}
-                  currentCustomer={this.state.currentCustomer}
-                />
-                {/*this.selectDashboard(socket, formData, reservations)*/}
-              </div>
-            </article>
+          <div className='tile is-ancestor top-tile'>
+            <div className='tile is-5 is-parent'>
+              <article className='tile is-child box'>
+                <div className='content'>
+                  <span className='title is-4'>BOOK YOUR TABLE</span>
+                  <BookingForm urls={urls} socket={socket} />
+                </div>
+              </article>
+            </div>
+            <div className='tile is-parent'>
+              <article className='tile is-child box'>
+                <div className='content'>
+                  <p className='title is-4'>RESERVATION STATUS</p>
+                  {this.selectDashboard(this.state)}
+                </div>
+              </article>
+            </div>
           </div>
         </div>
         {/*LOAD THE CATEGORY COMPONENTS*/}
@@ -166,8 +190,6 @@ export default class MainComponent extends Component {
               placeOrder={this.state.placeOrder}
             />
           </div>
-          <div className='column is-one-third' />
-        </div>
         </main>
         <footer></footer>
       </div >

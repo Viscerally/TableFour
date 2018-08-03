@@ -18,19 +18,26 @@ export default class AdminReservationDashboard extends Component {
   selectBtn = (event, status) => {
     // get value of 'data-key' which is === primary key of reservation
     const id = event.target.getAttribute('data-key');
+
     // send the object to web socket
     this.props.socket.emit('updateReservationStatus', { id, status });
   }
 
   makeTable = reservations => {
     let sizeSum = 0;
+    let index = 0;
 
     // loop through table rows
-    const cells = reservations.map((reservation, index) => {
+    const cells = reservations.map(reservation => {
+      if (reservation.status !== 'waiting') {
+        return true;
+      }
+
+      const position = index + 1;
+
       // add the group size
       sizeSum += reservation.group_size;
       const { id, group_size, name, order_id, status } = reservation;
-
       const orderStatus = (order_id) ? (
         <span className="icon has-text-success">
           <i className="fas fa-check-square"></i>
@@ -43,7 +50,7 @@ export default class AdminReservationDashboard extends Component {
 
       return (
         <tr key={id}>
-          <td>{index + 1}</td>
+          <td>{position}</td>
           <td>{group_size}</td>
           <td>{name}</td>
           <td>{orderStatus}</td>

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import NumberFormat from 'react-number-format';
 import { blankReservation, blankCustomer, resoData } from '../../libs/form-helper-func.js';
 
@@ -6,54 +6,51 @@ export default class BookingForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      reservation: props.currentReservation,
-      customer: props.currentCustomer
+      reservation: blankReservation(),
+      customer: blankCustomer(),
+      // path refers to where the form was submitted (customer or admin)
+      path: ''
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { reservation, customer } = this.state;
-    if (prevProps.currentReservation.res_code !== this.props.currentReservation.res_code) {
-      this.setState({
-        reservation: this.props.currentReservation,
-        customer: this.props.currentCustomer
-      })
-    }
-    if (prevProps.currentCustomer.name !== this.props.currentCustomer.name ||
-        prevProps.currentCustomer.phone !== this.props.currentCustomer.phone ||
-        prevProps.currentCustomer.email !== this.props.currentCustomer.email
-      ){
-        this.setState({
-          customer: this.props.currentCustomer
-        })
-      }
-    }
+  // ADD NEW RESERVATION - DO NOT CHANGE
+  createReservation = () => {
+    this.props.socket.emit('submitReservation', resoData(this.state));
+  }
 
+  // UPDATE EXISTING RESERVATION - DO NOT CHANGE
+  updateReservation = () => {
+    const { customer, reservation } = this.state;
+    this.props.socket.emit('updateReservation', { ...customer, ...reservation });
+  }
+
+  // CANCEL RESERVATION - DO NOT CHANGE
+  cancelReservation = event => {
+    event.preventDefault();
+    const { res_code } = this.state.reservation;
+    this.props.socket.emit('cancelReservation', { res_code });
+  }
+
+  // FORM SUBMISSION - DO NOT CHANGE
   handleSubmit = event => {
     event.preventDefault();
-    if (!this.state.reservation.res_code){
-      this.createReservation();
-    }else{
+    const { res_code } = this.state.reservation;
+
+    if (res_code) {
       this.updateReservation();
+    } else {
+      this.createReservation();
     }
   }
 
-  createReservation = () => {
-    this.props.socket.emit(`submitReservation`, resoData(this.state));
-  }
-
-  updateReservation = () => {
-    let reso = resoData(this.state)
-    reso.resId = this.state.reservation.id;
-    reso.custId = this.state.customer.id;
-    this.props.socket.emit(`updateReservation`, reso);
-  }
-
-  cancelReservation = (event) => {
-    event.preventDefault();
-    this.props.socket.emit('cancelReservation', {
-      res_code: this.state.reservation.res_code
-    })
+  // CREATE BUTTONS - DO NOT CHANGE
+  submitButton = () => {
+    return (
+      <button
+        type='submit'
+        className="button is-link"
+      >SUBMIT</button>
+    )
   }
 
   updateButton = () => {
@@ -70,19 +67,12 @@ export default class BookingForm extends Component {
       <button
         onClick={this.cancelReservation}
         className="button is-danger"
-        >CANCEL</button>
-      )
+      >CANCEL</button>
+    )
   }
+  // CREATE BUTTONS - END
 
-  submitButton = () => {
-    return (
-      <button
-        type='submit'
-        className="button is-link"
-        >SUBMIT</button>
-      )
-  }
-
+  // HANDLE CUSTOMER INPUTS - DO NOT CHANGE
   handleCustomerChange = ({ target: { name, value } }) => {
     this.setState(oldState => {
       const { customer } = oldState;
@@ -91,7 +81,8 @@ export default class BookingForm extends Component {
     })
   }
 
-  handleReservationChange = ({ target: {name, value }}) => {
+  // HANDLE RESERVATION INPUTS - DO NOT CHANGE
+  handleReservationChange = ({ target: { name, value } }) => {
     this.setState(oldState => {
       const { reservation } = oldState;
       reservation[name] = value;
@@ -99,9 +90,28 @@ export default class BookingForm extends Component {
     })
   }
 
-  render() {    
-    const { group_size } = this.state.reservation;
-    const { name, phone, email } = this.state.customer;
+  // DO NOT CHANGE
+  componentDidMount() {
+    const { socket, urls } = this.props;
+    this.setState({ path: urls.path });
+    // check the url path
+    if (urls.path === '/reservations/:res_code') {
+      // if res_code is given as a url param, request customer and reservation
+      // associated with the res_code and save them in state
+      socket.emit('getCustomerByResCode', urls.params.res_code);
+      socket.emit('getReservationByResCode', urls.params.res_code);
+      socket.on('loadCustomer', customer => {
+        this.setState({ customer });
+      })
+      socket.on('loadReservation', reservation => {
+        this.setState({ reservation });
+      })
+    }
+  }
+
+  render() {
+    const { customer: { name, phone, email }, reservation: { group_size } } = this.state;
+
     return (
       <form onSubmit={this.handleSubmit} >
         <div className='field'>
@@ -139,9 +149,7 @@ export default class BookingForm extends Component {
               required
             />
             <span className='icon is-medium is-left'>
-              <a className='button is-static'>
-                +1
-              </a>
+              <a className='button is-static'>+1</a>
             </span>
             <span className='icon is-medium is-right'>
               <i className='fas fa-check fa-lg'></i>
@@ -194,17 +202,13 @@ export default class BookingForm extends Component {
 
         <div className="field is-centered is-grouped">
           <p className="control">
-          {/*Button rendering depends on if reservation has been created*/}
-            { this.state.reservation.res_code ? (
-              this.updateButton() ):(
-              this.submitButton()
-            )}
+            {/*Button rendering depends on if reservation has been created*/}
+            {this.state.reservation.res_code ?
+              (this.updateButton()) : (this.submitButton())}
           </p>
           <p className="control">
-          { this.state.reservation.res_code ? (
-            this.cancelButton() ):(
-            null
-          )}
+            {this.state.reservation.res_code ?
+              (this.cancelButton()) : (null)}
           </p>
         </div>
       </form>
