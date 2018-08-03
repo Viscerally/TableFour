@@ -24,7 +24,7 @@ export default class MainComponent extends Component {
       res_code: props.res_code,
       currentMenu: {}
     };
-  }
+  } 
 
   setMenu = menu => {
 
@@ -110,6 +110,7 @@ export default class MainComponent extends Component {
   }
 
   render() {
+    console.log("RESERVATIONS", this.state.reservations);    
     const { socket, urls } = this.props;
     const categoriesArray = [];
     let categoryComponents = [];

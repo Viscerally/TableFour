@@ -5,7 +5,7 @@ const rs = require('random-strings');
 // "DO NOT CHANGE" REFERS TO FUNCTIONS CONFIRMED TO BE WORKING
 // GET ALL RESERVATIONS - DO NOT CHANGE
 function getAllReservations(db) {
-  const qItems = 'reservations.id, email, group_size, name, phone, placement_time, res_code, order_id, status';
+  const qItems = 'reservations.id, email, group_size, name, phone, placement_time, res_code, status';
   const q = `SELECT ${qItems} FROM reservations JOIN customers ON customer_id = customers.id WHERE status = 'waiting' ORDER BY placement_time ASC`;
 
   return db.query(q)
@@ -53,11 +53,11 @@ const submitNewReservation = async (db, formData) => {
     group_size
   }
   const reservation = await saveReservation(db, reservationData);
-  //reservation.host = formData.host;
+  
+  const order = {
 
-  //
-  // TODO: INSERT AN ORDER RECORD HERE!
-  //
+
+  }
 
   // text the reservation data
   //smsMsg.resoTextMsg(phone, reservation);
