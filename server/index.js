@@ -1,6 +1,6 @@
 require('dotenv').config();
 const bodyParser = require('body-parser');
-const socketServ = require('../libs/serv-sock-setters.js');
+const setSocketServer = require('../libs/serv-sock-setters.js');
 //PORT for Express Server, Sockets will use the same server and port
 const PORT = process.env.PORT || 3001;
 const ENV = process.env.NODE_ENV || 'development';
@@ -20,10 +20,12 @@ app.use(bodyParser.json());
 massive(connectionString)
   .then(db => {
     console.log('Connection to PSQL established.');
+
     const apiRoutes = require('../routes/api/index')(db);
     app.use('/api', apiRoutes);
 
-    socketServ.setSocketServer(io, db);
+    // SOCKET SERVER FUNCTIONS
+    setSocketServer(io, db);
   })
   .catch(err => {
     console.log(err.stack);
