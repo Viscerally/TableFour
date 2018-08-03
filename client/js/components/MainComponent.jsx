@@ -13,9 +13,10 @@ import { setSocket } from '../../../libs/cli-sock-setters.js';
 export default class MainComponent extends Component {
   constructor(props) {
     super(props);
+    const { blankCustomer, blankReservation } = formHelp;
     this.state = {
-      currentCustomer: formHelp.blankCustomer(),
-      currentReservation: formHelp.blankReservation(),
+      currentCustomer: blankCustomer(),
+      currentReservation: blankReservation(),
       reservations: [],
       orderId: '2',
       menuItemOrders: [],
@@ -33,7 +34,7 @@ export default class MainComponent extends Component {
     this.props.socket.emit('addItemToOrder', menuItem);
   }
 
-///////////////////////////////////
+  ///////////////////////////////////
   placeOrder = (order_id) => {
     const newOrder = {
       orderId: this.state.order_id,
@@ -42,37 +43,64 @@ export default class MainComponent extends Component {
       orderCode: order_id,
     };
 
-  //TODO:
-  //generate new order_id,
-  // price_declared(total),
-  //total_paid - to be inplemented later
-  // payment confirmation (is_paid),
-  // order_code(UUID?)
-  //menu_items_ids,
+    //TODO:
+    //generate new order_id,
+    // price_declared(total),
+    //total_paid - to be inplemented later
+    // payment confirmation (is_paid),
+    // order_code(UUID?)
+    //menu_items_ids,
 
-  //send to db,
-  //send to admin
-  //send via Twillio and as notification to customer on the home page,
-  //generate success message (notification or new page -if statement
-  // add 'cancel' button both on the app page as a link on message on sms from Twillio?
+    //send to db,
+    //send to admin
+    //send via Twillio and as notification to customer on the home page,
+    //generate success message (notification or new page -if statement
+    // add 'cancel' button both on the app page as a link on message on sms from Twillio?
   }
 
-/////////////////////////////////////
+  /////////////////////////////////////
 
-  componentDidMount = () => {
-    let { res_code, socket } = this.props;
-
-    socket = setSocket(this.props.socket, this);
-    socket.emit('getReservations');
-    socket.emit('getItemOrdersWMenuItemInfo');
-    if (this.state.res_code){      
-      socket.emit('getReservationByResCode', this.state.res_code);
-      socket.emit('getCustomerByResCode', this.state.res_code);
+  selectDashboard = state => {
+    const { res_code, reservations, currentReservation, currentCustomer } = state;
+    console.log('state reservations', state.reservations);
+    if (this.props.isAdmin) {
+      // ADMIN DASHBOARD
+      return (
+        <AdminReservationDashboard
+          socket={this.props.socket}
+          reservations={reservations}
+        />
+      );
+    } else {
+      // CUSTOMER DASHBOARD
+      return (
+        <ReservationDashboard
+          res_code={res_code}
+          reservations={reservations}
+          currentReservation={currentReservation}
+          currentCustomer={currentCustomer}
+        />
+      );
     }
   }
 
+  componentDidMount = () => {
+    let { socket } = this.props;
+    const { res_code } = this.state;
+    socket = setSocket(socket, this);
+    if (res_code) {
+      // res_code received as a url param
+      socket.emit('getReservationByResCode', res_code);
+      socket.emit('getCustomerByResCode', res_code);
+    }
+
+    socket.emit('getReservations');
+    socket.emit('getItemOrdersWMenuItemInfo');
+  }
+
   render() {
-    const { formData, reservations } = this.state;
+    const { menuItemOrders, placeOrder } = this.state;
+    const { socket, urls } = this.props;
     return (
       <div className='container is-desktop'>
         <header>
@@ -80,55 +108,45 @@ export default class MainComponent extends Component {
         </header>
         <br />
         <main>
-        <div className='tile is-ancestor top-tile'>
-          <div className='tile is-5 is-parent'>
-            <article className='tile is-child box'>
-              <div className='content'>
-                <span className='title is-4'>BOOK YOUR TABLE</span>
-                <BookingForm
-                  currentReservation={this.state.currentReservation}
-                  currentCustomer={this.state.currentCustomer}
-                  socket={this.props.socket}
-                />
-              </div>
-            </article>
+          <div className='tile is-ancestor top-tile'>
+            <div className='tile is-5 is-parent'>
+              <article className='tile is-child box'>
+                <div className='content'>
+                  <span className='title is-4'>BOOK YOUR TABLE</span>
+                  <BookingForm urls={urls} socket={socket} />
+                </div>
+              </article>
+            </div>
+            <div className='tile is-parent'>
+              <article className='tile is-child box'>
+                <div className='content'>
+                  <p className='title is-4'>RESERVATION STATUS</p>
+                  {this.selectDashboard(this.state)}
+                </div>
+              </article>
+            </div>
           </div>
-          <div className='tile is-parent'>
-            <article className='tile is-child box'>
-              <div className='content'>
-                <p className='title is-4'>RESERVATION STATUS</p>
-                <ReservationDashboard
-                  res_code={this.state.res_code}
-                  reservations={this.state.reservations}
-                  currentReservation={this.state.currentReservation}
-                  currentCustomer={this.state.currentCustomer}
-                />
-                {/*this.selectDashboard(socket, formData, reservations)*/}
-              </div>
-            </article>
+          <div className='columns' >
+            <div className='column is-one-third' />
+            <div className='column is-one-third'>
+              <Menu
+                addToOrder={this.addToOrder}
+              />
+            </div>
+            <div className='column is-one-third' />
           </div>
-        </div>
-        <div className='columns' >
-          <div className='column is-one-third' />
-          <div className='column is-one-third'>
-            <Menu
-              addToOrder={this.addToOrder}
-            />
+          <div className='columns' >
+            <div className='column is-one-third' />
+            <div className='column is-one-third'>
+              <Order
+                orderId="2"
+                orderItems={menuItemOrders}
+                removeFromOrder={this.removeFromOrder}
+                placeOrder={placeOrder}
+              />
+            </div>
+            <div className='column is-one-third' />
           </div>
-          <div className='column is-one-third' />
-        </div>
-        <div className='columns' >
-          <div className='column is-one-third' />
-          <div className='column is-one-third'>
-            <Order
-              orderId="2"
-              orderItems={this.state.menuItemOrders}
-              removeFromOrder={this.removeFromOrder}
-              placeOrder={this.state.placeOrder}
-            />
-          </div>
-          <div className='column is-one-third' />
-        </div>
         </main>
         <footer></footer>
       </div >
