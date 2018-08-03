@@ -23,6 +23,11 @@ function setSocket(socket, react) {
         // we need customer data in reservations. please DON'T remove customer
         const reservations = [...oldState.reservations, { ...customer, ...reservation }];
 
+        // instead of showing new reservation in the root,
+        // it is better to display it in /reservations/:res_code because
+        // so as to prevent each client from receiving other customers' reservations
+        window.location = `/reservations/${reservation.res_code}`;
+
         return {
           currentCustomer: customer,
           currentReservation: reservation,
@@ -62,7 +67,7 @@ function setSocket(socket, react) {
 
     // CANCEL RESERVATION - DO NOT CHANGE
     socket.on('removeCancelledReservation', newData => {
-      const reservations = react.state.reservations.filter(reso => reso.id !== newData[0].id);
+      const reservations = react.state.reservations.filter(reso => reso.id !== newData.id);
       react.setState({
         currentCustomer: formHelp.blankCustomer(),
         currentReservation: formHelp.blankReservation(),
