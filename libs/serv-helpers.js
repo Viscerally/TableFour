@@ -55,10 +55,9 @@ const submitNewReservation = async (db, formData) => {
   const reservation = await saveReservation(db, reservationData);
   
   const order = {
-
-
+    reservation_id: reservation_id
   }
-
+  //await db.insert({id: reservation.id})
   // text the reservation data
   //smsMsg.resoTextMsg(phone, reservation);
   return { customer, reservation, path };
