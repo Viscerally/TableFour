@@ -71,7 +71,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('submitReservation', formData => {
       serv.submitNewReservation(db, formData)
         .then(data => {
-          broadcastData(io, socket, 'loadNewReservation', data, admin);
+          broadcastData(socket, 'loadNewReservation', data, admin, clients);
         })
         .catch(err => { console.log(err) });
     })
@@ -80,7 +80,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('updateReservation', formData => {
       serv.updateReservation(db, formData)
         .then(data => {
-          broadcastData(io, socket, 'loadChangedReservation', data, admin);
+          broadcastData(socket, 'loadChangedReservation', data, admin, clients);
         })
         .catch(err => console.log(err));
     });
@@ -89,7 +89,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('cancelReservation', formData => {
       serv.cancelReservation(db, formData)
         .then(data => {
-          broadcastData(io, socket, 'removeCancelledReservation', data, admin);
+          broadcastData(socket, 'removeCancelledReservation', data, admin, clients);
         });
     })
 

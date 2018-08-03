@@ -2,21 +2,22 @@
 const countClients = ws => Object.keys(ws.sockets.connected).length;
 
 // SET UP BROADCAST LOGIC
-const broadcastData = (io, socket, emitTo, dataToSend, admins) => {
-  // if sender is admin, broadcast message to ALL CLIENTS including the sender
-  if (Object.keys(admins).includes(socket.id)) {
-    io.emit(emitTo, dataToSend);
-  } else {
-    // otherwise, first send data to ALL ADMINS
-    Object.keys(admins).forEach(adminId => {
-      socket.broadcast.to(adminId).emit(emitTo, dataToSend);
-    });
+const broadcastData = (socket, emitTo, dataToSend, admins, clients) => {
+  // https://stackoverflow.com/questions/10058226/send-response-to-all-clients-except-sender
+  // original sender & admins get full data back
+  Object.keys(admins).forEach(adminId => {
+    socket.broadcast.to(adminId).emit(emitTo, dataToSend);
+  });
+  socket.emit(emitTo, dataToSend);
 
-    // then, we want the original sender to be redirected to /reservations/:res_code
-    // add an extra object called "redirectTo" with res_code
-    dataToSend = (emitTo === 'loadNewReservation') && { ...dataToSend, redirectTo: dataToSend.reservation.res_code };
-    socket.emit(emitTo, dataToSend);
-  }
+  // everybody else get everything EXCEPT name & res_code
+  dataToSend.customer.name = '...';
+  dataToSend.reservation.res_code = 'masked';
+  Object.keys(clients).forEach(clientId => {
+    if (clientId !== socket.id) {
+      socket.broadcast.to(clientId).emit(emitTo, dataToSend);
+    }
+  });
 };
 
 module.exports = { countClients, broadcastData };

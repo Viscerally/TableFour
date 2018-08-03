@@ -28,14 +28,15 @@ function setSocket(socket, react) {
         // it is better to display it in /reservations/:res_code in order to prevent customers
         // from receiving other customers' reservations
         // (path !== '/admin') is to prevent redirection from happening when a form is submitted on /admin
-        if (Object.keys(data).includes('redirectTo') && (path !== '/admin')) {
-          window.location = `/reservations/${data.redirectTo}`;
-        }
+        // if (Object.keys(data).includes('redirectTo') && (path !== '/admin')) {
+        //   window.location = `/reservations/${data.redirectTo}`;
+        // }
 
         return {
           currentCustomer: customer,
           currentReservation: reservation,
-          reservations
+          reservations,
+          res_code: reservation.res_code
         }
       })
     });

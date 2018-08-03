@@ -7,6 +7,7 @@ export default class ReservationDashboard extends Component {
     let index = 0;
     let stats = "";
     let options = "";
+
     const cells = reservations.map(reservation => {
       if (reservation.status !== "waiting") {
         return true;
@@ -16,9 +17,9 @@ export default class ReservationDashboard extends Component {
 
       // add the group size
       sizeSum += reservation.group_size;
-
+      console.log(res_code, reservation.res_code, res_code !== 'masked' && res_code === reservation.res_code);
       // current customer's reservation exists in the reservation table
-      if (res_code == reservation.res_code) {
+      if (res_code !== 'masked' && res_code === reservation.res_code) {
         // create stats for the current reservation
         stats = `Your position: #${position} (${sizeSum -
           reservation.group_size} people ahead)`;
@@ -39,7 +40,7 @@ export default class ReservationDashboard extends Component {
       const visibleRowCut = 3;
       let { group_size } = reservation;
       let name = this.props.currentCustomer.name;
-      const klassName = res_code == reservation.res_code ? "is-selected" : "";
+      const klassName = (res_code !== 'masked' && res_code === reservation.res_code) ? "is-selected" : "";
       name = res_code == reservation.res_code ? name : "...";
 
       let row = "";
@@ -78,7 +79,7 @@ export default class ReservationDashboard extends Component {
     if (!res_code) {
       stats = `Total of ${
         reservations.length
-      } groups (${sizeSum} people) waiting..`;
+        } groups (${sizeSum} people) waiting..`;
     }
 
     return (
@@ -101,6 +102,7 @@ export default class ReservationDashboard extends Component {
 
   render() {
     const { res_code, reservations } = this.props;
+    console.log(this.props);
     return (
       <table className="table is-striped is-hoverable is-fullwidth reservation-dashboard">
         {this.makeTable(reservations, res_code)}
