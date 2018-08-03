@@ -102,10 +102,10 @@ export default class ReservationDashboard extends Component {
   };
 
   render() {
-    const { reservations } = this.props;
+    const { res_code, reservations } = this.props;
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-        {this.makeTable(reservations, this.props.res_code)}
+        {this.makeTable(reservations, res_code)}
       </table>
     );
   }
