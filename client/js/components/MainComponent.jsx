@@ -24,7 +24,7 @@ export default class MainComponent extends Component {
       res_code: props.res_code,
       currentMenu: {}
     };
-  } 
+  }
 
   setMenu = menu => {
 
@@ -92,6 +92,29 @@ export default class MainComponent extends Component {
     }
   }
 
+  createCategories = () => {
+    const categoriesArray = [];
+    let categoryComponents = [];
+
+    if (this.state.menu) {
+      for (let cat in this.state.menu) {
+        categoriesArray.push(this.state.menu[cat]);
+      }
+      // console.log('menu', this.state.menu);
+      // console.log('arraylike', Array.from(this.state.menu))
+      // console.log('array', categoriesArray);
+      categoryComponents = categoriesArray.map((category) => {
+        return (
+          <div className="tile is-parent">
+            <article className="tile is-child box">
+              <Category menu={category} setMenu={this.setMenu} />
+            </article>
+          </div>
+        )
+      })
+    }
+  }
+
   componentDidMount = () => {
     let { socket } = this.props;
     const { res_code } = this.state;
@@ -105,32 +128,10 @@ export default class MainComponent extends Component {
     socket.emit('getReservations');
     socket.emit('getItemOrdersWMenuItemInfo');
     socket.emit('getMenu');
-
   }
 
   render() {
-    console.log("RESERVATIONS", this.state.reservations);    
     const { socket, urls } = this.props;
-    const categoriesArray = [];
-    let categoryComponents = [];
-    if (this.state.menu) {
-      for (let cat in this.state.menu) {
-        categoriesArray.push(this.state.menu[cat]);
-      }
-      categoryComponents = categoriesArray.map((category) => {
-        return (
-          <div className="tile is-parent">
-            <article className="tile is-child box">
-              <Category
-                menu={category}
-                setMenu={this.setMenu}
-              />
-
-            </article>
-          </div>
-        )
-      })
-    }
 
     return (
       <div className='container is-desktop'>
@@ -164,7 +165,7 @@ export default class MainComponent extends Component {
 
           <article className="menuCategories">
             <div className="tile is-ancestor">
-              {categoryComponents}
+              {this.createCategories()}
             </div>
           </article>
 
