@@ -8,7 +8,6 @@ function getAllReservations(db) {
   const q = "SELECT * FROM (SELECT reservations.id, placement_time, group_size, status, res_code, customer_id, name, phone, email FROM reservations JOIN customers ON customer_id = customers.id) AS res LEFT JOIN (SELECT price_declared, total_paid, is_paid, order_code, reservation_id FROM orders) AS ord ON res.id = ord.reservation_id WHERE status = 'waiting' ORDER BY placement_time ASC";
   return db.query(q)
     .then(data => {
-      console.log('DATA', data);
       return data;
     })
     .catch(err => { console.log(err); })
