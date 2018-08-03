@@ -26,7 +26,7 @@ function setSocketServer(io, db){
       .then(reso => {
         return serv.getCustomerByReservation(db, reso)
       })
-      .then(custo => {        
+      .then(custo => {
         io.emit('loadCustomer', custo)
       })
       .catch(err => { console.log(err)} );
@@ -71,6 +71,14 @@ function setSocketServer(io, db){
         })
         .catch(err => console.log(err));
     })
+
+    socket.on('removeOrderItem', orderItem => {
+      serv.removeOrderItem(db, orderItem)
+        .then(deletedOrderItem => {
+          io.emit('deletedOrderItem', deletedOrderItem);
+        })
+    })
+
     socket.on('addItemToOrder', status => {
 
       serv.addItemOrderWMenuItem(db, status)

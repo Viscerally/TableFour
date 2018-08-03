@@ -24,8 +24,7 @@ export default class MainComponent extends Component {
   }
 
   removeFromOrder = orderItem => {
-    const menuItemOrders = this.state.menuItemOrders.filter(item => item.id !== orderItem.id);
-    this.setState({ menuItemOrders });
+    this.props.socket.emit('removeOrderItem', (orderItem));    
   }
 
   addToOrder = menuItem => {
@@ -65,7 +64,7 @@ export default class MainComponent extends Component {
     socket = setSocket(this.props.socket, this);
     socket.emit('getReservations');
     socket.emit('getItemOrdersWMenuItemInfo');
-    if (this.state.res_code){      
+    if (this.state.res_code){
       socket.emit('getReservationByResCode', this.state.res_code);
       socket.emit('getCustomerByResCode', this.state.res_code);
     }
