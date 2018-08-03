@@ -21,8 +21,8 @@ const blankCustomer = () => {
   }
 }
 
-const resoData = (state) => {
-  const {customer, reservation} = state;
+const resoData = state => {
+  const { customer, reservation } = state;
   return {
     name: namifyStr(customer.name),
     phone: getOnlyNumbers(customer.phone),
@@ -31,10 +31,4 @@ const resoData = (state) => {
   }
 }
 
-module.exports = {
-  namifyStr,
-  getOnlyNumbers,
-  blankReservation,
-  blankCustomer,
-  resoData
-};
+module.exports = { blankReservation, blankCustomer, resoData };
