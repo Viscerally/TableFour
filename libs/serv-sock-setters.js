@@ -26,12 +26,35 @@ module.exports = function setSocketServer(io, db) {
 
     socket.on('getCustomerByResCode', data => {
       serv.getReservationByResCode(db, data)
-        .then(reso => serv.getCustomerByReservation(db, reso))
-        .then(custo => { io.emit('loadCustomer', custo); })
-        .catch(err => { console.log(err) });
+      .then(reso => {
+        return serv.getCustomerByReservation(db, reso)
+      })
+      .then(custo => {
+        io.emit('loadCustomer', custo)
+      })
+      .catch(err => { console.log(err)} );
     })
 
-    // SUBMIT NEW RESERVATION - DO NOT CHANGE
+/// GET MENU    
+    socket.on('getMenu', () => {
+      serv.getMenu(db)
+        .then(menu => {
+          //Specify which socket if necessary
+          io.emit('returnedMenu', menu);
+        })
+        .catch(err => {console.log(err)});
+    })
+
+    //GET MENU ITEMS BY CATEGORY
+    // socket.on('submitReservation', formData => {
+    //   console.log('Server socket handling submit');
+    //   serv.submitNewReservation(db, formData)
+    //     .then(data => { io.emit('loadNewReservation', data); })
+    //     .catch(err => {console.log(err)});
+    // })
+
+
+    // SUBMIT NEW RESERVATION
     socket.on('submitReservation', formData => {
       serv.submitNewReservation(db, formData)
         .then(data => { io.emit('loadNewReservation', data); })
@@ -68,6 +91,14 @@ module.exports = function setSocketServer(io, db) {
         .then(data => { io.emit('ItemOrdersWMenuItemInfo', data); })
         .catch(err => console.log(err));
     })
+
+    socket.on('removeOrderItem', orderItem => {
+      serv.removeOrderItem(db, orderItem)
+        .then(deletedOrderItem => {
+          io.emit('deletedOrderItem', deletedOrderItem);
+        })
+    })
+
     socket.on('addItemToOrder', status => {
 
       serv.addItemOrderWMenuItem(db, status)

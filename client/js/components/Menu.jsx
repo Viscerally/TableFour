@@ -7,26 +7,12 @@ export default class Menu extends Component {
     super(props);
   }
 
-  componentDidMount(){
-    fetch('/api/menu_items')
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        this.setState({
-          menu_items: data
-        })
-      })
-      .catch(err => {
-        reject(err.stack);
-      })
-  }
-
-
   render() {
-    let menuItems;
-    if (this.state){
-      menuItems = this.state.menu_items.map((menuItem) => {
+    let menuItems = [];
+    let menuItemComponents;
+    if (this.props.currentMenu.menuItems !== undefined){
+      menuItems = this.props.currentMenu.menuItems;      
+      menuItemComponents = menuItems.map((menuItem) => {
         return (
           <div key={menuItem.id} className='carousel-item has-background'>
               <img
@@ -39,11 +25,11 @@ export default class Menu extends Component {
             <div className="title">{menuItem.name}
               <div className="price">{numeral(menuItem.price/100).format('$0.00')}</div>
               <button onClick={(e) => this.props.addToOrder(menuItem)} className="button is-danger">Add to your order</button>
-              </div>
+            </div>
           </div>
         )
       })
-
+      
       const carousels = bulmaCarousel.attach();
 
     }
@@ -51,7 +37,7 @@ export default class Menu extends Component {
     return (
         <div className='carousel carousel-animated carousel-animate-slide' >
           <div className='carousel-container'>
-              {menuItems}
+              {menuItemComponents}
           </div>
           <div className="carousel-navigation">
             <div className="carousel-nav-left">
