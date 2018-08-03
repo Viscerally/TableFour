@@ -97,11 +97,10 @@ function setSocket(socket, react){
         return item.id !== delItem[0].id;
       })      
       react.setState({ menuItemOrders });
-    })
-  
+    })  
+  })
   return socket;
-})
-
+}
   module.exports = {
     setSocket
   }
