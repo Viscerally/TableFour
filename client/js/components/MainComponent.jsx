@@ -40,11 +40,11 @@ export default class MainComponent extends Component {
     this.props.socket.emit('addItemToOrder', menuItem);
   }
 
-  placeOrder = () => {    
+  placeOrder = () => {
     this.props.socket.emit('placeOrder', this.state.currentReservation.order);
   }
 
-  cancelOrder = () => { 
+  cancelOrder = () => {
     this.props.socket.emit('cancelOrder', this.state.currentReservation.order);
   }
 
@@ -81,7 +81,7 @@ export default class MainComponent extends Component {
       }
       categoryComponents = categoriesArray.map((category) => {
         return (
-          <Category menu={category} setMenu={this.setMenu} />          
+          <Category menu={category} setMenu={this.setMenu} />
         )
       })
       return categoryComponents;
@@ -137,10 +137,10 @@ export default class MainComponent extends Component {
             </div>
 
           </div>
-          {/*LOAD THE CATEGORY COMPONENTS*/}
-          
-          {this.createCategories()}          
-
+          {/*LOAD THE CATEGORY COMPONENTS (NOT FOR ADMIN)*/}
+          { !this.props.isAdmin ?
+            this.createCategories()
+            (
           <div className='columns' >
             <div className='column is-one-third' />
             <div className='column is-one-third'>
@@ -152,21 +152,22 @@ export default class MainComponent extends Component {
             </div>
             <div className='column is-one-third' />
           </div>
-
+        ) : null }
+        {this.state.currentReservation && !this.props.isAdmin ?
+          (
           <div className='columns'>
             <div className='column is-one-third' />
             <div className='column is-one-third'>
-            {/* TODO NEED AN IF STATEMENT HERE TO CONDITIONAL RENDER */}
-            {this.state.currentReservation ?
               <Order
                 order={this.state.currentReservation.order}
                 orderItems={this.state.menuItemOrders}
                 removeFromOrder={this.removeFromOrder}
                 placeOrder={this.placeOrder}
                 cancelOrder={this.cancelOrder}
-              /> : (null)}
+              />
             </div>
           </div>
+        ) : (null)}
         </main>
         <footer></footer>
       </div >
