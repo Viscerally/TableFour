@@ -26,9 +26,7 @@ export default class MainComponent extends Component {
   }
 
   setMenu = menu => {
-    this.setState({
-      currentMenu: menu
-    })
+    this.setState({ currentMenu: menu });
   }
 
   removeFromOrder = orderItem => {
@@ -72,22 +70,13 @@ export default class MainComponent extends Component {
   }
 
   createCategories = () => {
-    if (!this.props.isAdmin){
-      const categoriesArray = [];
-      let categoryComponents = [];
-
-      if (this.state.menu) {
-        for (let cat in this.state.menu) {
-          categoriesArray.push(this.state.menu[cat]);
-        }
-        categoryComponents = categoriesArray.map((category) => {
-          return (
-            <Category menu={category} setMenu={this.setMenu} />
-          )
-        })
-        return categoryComponents;
-      }
-    }
+    return Object.values(this.state.menu).map(category => (
+      <div class="tile is-parent">
+        <article class="tile is-child box menuCategories">
+          <Category menu={category} setMenu={this.setMenu} />
+        </article>
+      </div>
+    ));
   }
 
   componentDidMount = () => {
@@ -106,7 +95,6 @@ export default class MainComponent extends Component {
   }
 
   render() {
-
     const { socket, urls } = this.props;
     const { currentReservation } = this.state;
     return (
@@ -116,8 +104,9 @@ export default class MainComponent extends Component {
         </header>
         <br />
         <main>
+          {/* TOP TILE  */}
           <div className='tile is-ancestor top-tile'>
-
+            {/* BOOKING FORM */}
             <div className='tile is-5 is-parent'>
               <article className='tile is-child box'>
                 <div className='content'>
@@ -126,7 +115,8 @@ export default class MainComponent extends Component {
                 </div>
               </article>
             </div>
-
+            {/* BOOKING FORM - END */}
+            {/* RESERVATION DASHBOARD */}
             <div className='tile is-parent'>
               <article className='tile is-child box'>
                 <div className='content'>
@@ -135,23 +125,22 @@ export default class MainComponent extends Component {
                 </div>
               </article>
             </div>
+            {/* RESERVATION DASHBOARD -END */}
+          </div>
+          {/* TOP TILE - END */}
 
+          {/* CATEGORIES */}
+          <div class='tile is-ancestor'>
+            {(this.state.menu) && (this.createCategories())}
           </div>
-          {/*LOAD THE CATEGORY COMPONENTS (NOT FOR ADMIN)*/}
-          {this.createCategories()}
-          { !this.props.isAdmin ? (
-          <div className='columns' >
-            <div className='column is-one-third' />
-            <div className='column is-one-third'>
-              <Menu
-                addToOrder={this.addToOrder}
-                currentMenu={this.state.currentMenu}
-                reservation={this.state.currentReservation}
-              />
-            </div>
-            <div className='column is-one-third' />
-          </div>
-        ) : null }
+          {/* CATEGORIES - END */}
+
+          <Menu
+            addToOrder={this.addToOrder}
+            currentMenu={this.state.currentMenu}
+            reservation={this.state.currentReservation}
+          />
+
         {this.state.currentReservation && !this.props.isAdmin ?
           (
           <div className='columns'>
