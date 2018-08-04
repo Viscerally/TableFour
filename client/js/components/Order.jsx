@@ -6,7 +6,9 @@ export default class Order extends Component {
 
 
   render() {
-    
+    if (this.props.order !== undefined){
+      console.log('NEW ORDER RENDER: ', this.props.order.order_code);
+    }
     let positionCounter = 0;
     let totalPrice = 0;
     const orderItems = this.props.orderItems.map((item,index) => {
@@ -58,7 +60,7 @@ export default class Order extends Component {
               </tr>
             </tfoot>
           </table>          
-          <button className="button is-link" onClick={() => {this.props.placeOrder(orderItems.id)}}>Place your order</button>
+          <button className="button is-link" onClick={() => {this.props.placeOrder()}}>Place your order</button>
         </div>
       </article>
     )

@@ -19,12 +19,11 @@ export default class MainComponent extends Component {
       currentCustomer: blankCustomer(),
       currentReservation: blankReservation(),
       reservations: [],
-      orderId: '2',
       menuItemOrders: [],
       res_code: props.res_code,
       currentMenu: {}
     };
-  } 
+  }
 
   setMenu = menu => {
 
@@ -38,31 +37,29 @@ export default class MainComponent extends Component {
   }
 
   addToOrder = menuItem => {
-    menuItem.orderId = this.state.orderId;
+    menuItem.orderId = this.state.currentReservation.order.id;
     this.props.socket.emit('addItemToOrder', menuItem);
   }
 
-  placeOrder = (order_id) => {
+  placeOrder = (orderItems) => {    
     const newOrder = {
-      orderId: this.state.order_id,
-      priceTotal: this.state.price_declared,
-      paymentConfirmation: this.state.is_paid,
-      orderCode: order_id,
-    };
+      order: this.state.currentReservation.order 
+    }
+    
+    this.props.socket.emit('placeOrder', newOrder);
   }
 
   orderComponent = () => {
     return (<Order
-
-              order={this.state.reservation.order}//Throws an error
+              order={this.state.currentReservation.order}
               orderItems={this.state.menuItemOrders}
               removeFromOrder={this.removeFromOrder}
+              placeOrder={this.placeOrder}
             />)
   }
 
   selectDashboard = state => {
     const { res_code, reservations, currentReservation, currentCustomer } = state;
-    console.log('state reservations', state.reservations);
     if (this.props.isAdmin) {
       // ADMIN DASHBOARD
       return (
@@ -84,6 +81,30 @@ export default class MainComponent extends Component {
     }
   }
 
+  createCategories = () => {
+    const categoriesArray = [];
+    let categoryComponents = [];
+
+    if (this.state.menu) {
+      for (let cat in this.state.menu) {
+        categoriesArray.push(this.state.menu[cat]);
+      }
+      // console.log('menu', this.state.menu);
+      // console.log('arraylike', Array.from(this.state.menu))
+      // console.log('array', categoriesArray);
+      categoryComponents = categoriesArray.map((category) => {
+        return (
+          <div className="tile is-parent">
+            <article className="tile is-child box">
+              <Category menu={category} setMenu={this.setMenu} />
+            </article>
+          </div>
+        )
+      })
+      return categoryComponents;
+    }
+  }
+
   componentDidMount = () => {
     let { socket } = this.props;
     const { res_code } = this.state;
@@ -97,32 +118,12 @@ export default class MainComponent extends Component {
     socket.emit('getReservations');
     socket.emit('getItemOrdersWMenuItemInfo');
     socket.emit('getMenu');
-
   }
 
   render() {
-    console.log("RESERVATIONS", this.state.currentReservation);
-    const { socket, urls } = this.props;
-    const categoriesArray = [];
-    let categoryComponents = [];
-    if (this.state.menu) {
-      for (let cat in this.state.menu) {
-        categoriesArray.push(this.state.menu[cat]);
-      }
-      categoryComponents = categoriesArray.map((category) => {
-        return (
-          <div className="tile is-parent">
-            <article className="tile is-child box">
-              <Category
-                menu={category}
-                setMenu={this.setMenu}
-              />
 
-            </article>
-          </div>
-        )
-      })
-    }
+    console.log("RESERVATION", this.state.currentReservation.order);
+    const { socket, urls } = this.props;
 
     return (
       <div className='container is-desktop'>
@@ -156,7 +157,7 @@ export default class MainComponent extends Component {
 
           <article className="menuCategories">
             <div className="tile is-ancestor">
-              {categoryComponents}
+              {this.createCategories()}
             </div>
           </article>
 
@@ -176,7 +177,12 @@ export default class MainComponent extends Component {
             <div className='column is-one-third'>
             {/* TODO NEED AN IF STATEMENT HERE TO CONDITIONAL RENDER */}
             {this.state.currentReservation ?
-              (this.orderComponent()) : (null)}
+              <Order
+                order={this.state.currentReservation.order}
+                orderItems={this.state.menuItemOrders}
+                removeFromOrder={this.removeFromOrder}
+                placeOrder={this.placeOrder}
+              /> : (null)}
             </div>
           </div>
         </main>

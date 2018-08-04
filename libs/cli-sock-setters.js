@@ -17,18 +17,12 @@ function setSocket(socket, react) {
     });
 
     // LOAD NEW RESERVATION - DO NOT CHANGE
-    socket.on('loadNewReservation', ({ customer, reservation, path }) => {
+    socket.on('loadNewReservation', data => {
+      const { customer, reservation, path } = data;
       //Make sure that this gets called from MainComponent
       react.setState(oldState => {
         // we need customer data in reservations. please DON'T remove customer
         const reservations = [...oldState.reservations, { ...customer, ...reservation }];
-
-        // instead of showing new reservation in the root,
-        // it is better to display it in /reservations/:res_code because
-        // so as to prevent each client from receiving other customers' reservations
-        if (path !== '/admin') {
-          window.location = `/reservations/${reservation.res_code}`;
-        }
 
         return {
           currentCustomer: customer,
@@ -87,6 +81,7 @@ function setSocket(socket, react) {
     })
 
     socket.on('ItemOrdersWMenuItemInfo', menuItemOrders => {
+      console.log('MENU ITEM ORDERS: ', menuItemOrders);      
       react.setState({ menuItemOrders });
     });
 
@@ -103,12 +98,27 @@ function setSocket(socket, react) {
         menu: menu
       })
     })
-    
+
     socket.on('deletedOrderItem', delItem => {
       const menuItemOrders = react.state.menuItemOrders.filter(item => {
         return item.id !== delItem[0].id;
       })
       react.setState({ menuItemOrders });
+    })
+
+    socket.on('orderPlaced', data => {
+
+      react.setState((prevState, props) => {
+        // SET THE this.state.reservation.order to be equal to the data parameter
+        console.log('PREVSTATE: ', prevState);
+        console.log('DATA: ', data);
+        const reservation = prevState.currentReservation;
+        reservation.order = data; 
+        return {
+          currentReservation: reservation
+        }        // TEST IF IT WORKS
+      })
+      
     })
   })
   return socket;

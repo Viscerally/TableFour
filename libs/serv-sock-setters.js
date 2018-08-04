@@ -1,9 +1,9 @@
 const serv = require('./serv-helpers.js');
-const { countClients } = require('./socket-helpers.js');
+const { countClients, broadcastData } = require('./socket-helpers.js');
 
 // create empty objects to store socket client id and url
 // from which requests were made. save admin data in a separate object
-const clients = {}, admin = {};
+const clients = {}, admins = {};
 
 module.exports = function setSocketServer(io, db) {
   // HANDLE SOCKET CONNECTION
@@ -15,15 +15,16 @@ module.exports = function setSocketServer(io, db) {
       console.log(`${countClients(io)} CLIENT(S) CONNECTED`);
     });
 
-    // deconstruct socket object and save id and path (referer without origin)
+    // KEEP TRACK OF WEBSOCKET CLIENT ID AND FROM WHICH WHERE THEY CAME FROM
+    // deconstruct socket object and save id and (referer without origin)
     const { id, request: { headers: { origin, referer } } } = socket;
     const path = referer.replace(origin, '');
-    // if client is admin, save id and path to "admin"
+    // if client is admin, save id and to "admin"
     if (path === '/admin') {
-      admin[id] = { id, path };
+      admins[id] = { id };
     } else {
       // otherwise save it to "clients"
-      clients[id] = { id, path };
+      clients[id] = { id };
     }
 
     // LOAD INITIAL RESERVATIONS
@@ -44,9 +45,7 @@ module.exports = function setSocketServer(io, db) {
         .then(reso => {
           return serv.getCustomerByReservation(db, reso)
         })
-        .then(custo => {
-          io.emit('loadCustomer', custo)
-        })
+        .then(custo => { io.emit('loadCustomer', custo); })
         .catch(err => { console.log(err) });
     })
 
@@ -61,20 +60,21 @@ module.exports = function setSocketServer(io, db) {
     })
 
 
+    //GET MENU ITEMS BY CATEGORY
+    // socket.on('submitReservation', formData => {
+    //   console.log('Server socket handling submit');
+    //   serv.submitNewReservation(db, formData)
+    //     .then(data => { io.emit('loadNewReservation', data); })
+    //     .catch(err => {console.log(err)});
+    // })
+
     // SUBMIT NEW RESERVATION
     socket.on('submitReservation', formData => {
+      console.log('SUBMITTING RESERVATION FROM SOCKET SERVER')
       serv.submitNewReservation(db, formData)
-        .then(data => {
-          // if sender is admin, broadcast message to all clients including the sender
-          if (Object.keys(admin).includes(socket.id)) {
-            io.emit('loadNewReservation', data);
-          } else {
-            // otherwise, broadcast message to the original sender and admin(s)
-            socket.emit('loadNewReservation', data);
-            Object.keys(admin).forEach(adminId => {
-              socket.broadcast.to(adminId).emit('loadNewReservation', data);
-            })
-          }
+        .then(data => {          
+          io.to(socket.id).emit('loadNewReservation', data);
+          //NEED TO SEND A MESSAGE TO THE ADMIN NAMESPACE AS WELL
         })
         .catch(err => { console.log(err) });
     })
@@ -83,16 +83,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('updateReservation', formData => {
       serv.updateReservation(db, formData)
         .then(data => {
-          // if sender is admin, broadcast message to all clients including the sender
-          if (Object.keys(admin).includes(socket.id)) {
-            io.emit('loadChangedReservation', data);
-          } else {
-            // otherwise, broadcast message to the original sender and admin(s)
-            socket.emit('loadChangedReservation', data);
-            Object.keys(admin).forEach(adminId => {
-              socket.broadcast.to(adminId).emit('loadChangedReservation', data);
-            })
-          }
+          broadcastData(socket, 'loadChangedReservation', data, admins, clients);
         })
         .catch(err => console.log(err));
     });
@@ -101,23 +92,15 @@ module.exports = function setSocketServer(io, db) {
     socket.on('cancelReservation', formData => {
       serv.cancelReservation(db, formData)
         .then(data => {
-          // if sender is admin, broadcast message to all clients including the sender
-          if (Object.keys(admin).includes(socket.id)) {
-            io.emit('removeCancelledReservation', data);
-          } else {
-            // otherwise, broadcast message to the original sender and admin(s)
-            socket.emit('removeCancelledReservation', data);
-            Object.keys(admin).forEach(adminId => {
-              socket.broadcast.to(adminId).emit('removeCancelledReservation', data);
-            })
-          }
+          broadcastData(socket, 'removeCancelledReservation', data, admins, clients);
         });
     })
 
     // UPDATE RESERVATION STATUS BY ADMIN
     socket.on('updateReservationStatus', status => {
       serv.updateReservationStatus(db, status)
-        .then(data => { io.emit('changeReservationStatus', data); });
+        .then(data => { io.emit('changeReservationStatus', data); })
+        .catch(err => console.log(err));
     })
 
     socket.on('getAllMenuItemOrders', status => {
@@ -128,7 +111,7 @@ module.exports = function setSocketServer(io, db) {
 
     socket.on('getItemOrdersWMenuItemInfo', status => {
       serv.getItemOrdersWMenuItemInfo(db)
-        .then(data => { io.emit('ItemOrdersWMenuItemInfo', data); })
+        .then(data => { io.to(socket.id).emit('ItemOrdersWMenuItemInfo', data) })
         .catch(err => console.log(err));
     })
 
@@ -140,10 +123,19 @@ module.exports = function setSocketServer(io, db) {
     })
 
     socket.on('addItemToOrder', status => {
-
       serv.addItemOrderWMenuItem(db, status)
-        .then(data => { io.emit('newOrderAdded', data); })
+        .then(data => { io.to(socket.id).emit('newOrderAdded', data); })
         .catch(err => console.log(err));
+    })
+
+    socket.on('placeOrder', order => {
+      serv.updateOrderStatus(db, order)
+        .then(data => { 
+          console.log("SOCKSERV DATA: ", data);
+          io.to(socket.id).emit('orderPlaced', data[0]);
+          // TODO NEEDS TO SEND MESSAGE TO ADMIN TOO  
+        })
+        .catch(err => { console.log(err) })
     })
   })
 };

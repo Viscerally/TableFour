@@ -5,11 +5,11 @@ const rs = require('random-strings');
 // "DO NOT CHANGE" REFERS TO FUNCTIONS CONFIRMED TO BE WORKING
 // GET ALL RESERVATIONS - DO NOT CHANGE
 function getAllReservations(db) {
-  const qItems = 'reservations.id, email, group_size, name, phone, placement_time, res_code, status';
-  const q = `SELECT ${qItems} FROM reservations JOIN customers ON customer_id = customers.id WHERE status = 'waiting' ORDER BY placement_time ASC`;
-
+  const q = "SELECT * FROM (SELECT reservations.id, placement_time, group_size, status, res_code, customer_id, name, phone, email FROM reservations JOIN customers ON customer_id = customers.id) AS res LEFT JOIN (SELECT price_declared, total_paid, is_paid, order_code, reservation_id FROM orders) AS ord ON res.id = ord.reservation_id WHERE status = 'waiting' ORDER BY placement_time ASC";
   return db.query(q)
-    .then(data => data)
+    .then(data => {
+      return data;
+    })
     .catch(err => { console.log(err); })
 }
 // GET ALL RESERVATIONS - END
@@ -53,12 +53,13 @@ const submitNewReservation = async (db, formData) => {
     group_size
   }
   const reservation = await saveReservation(db, reservationData);
-  
-  const orderData = {
+  orderData = {
+    order_code: 'nonce',
     reservation_id: reservation.id
   }
-  const order = await db.orders.save({id: reservation.id})
+  const order = await db.orders.insert(orderData);
   reservation.order = order;
+
   // text the reservation data
   //smsMsg.resoTextMsg(phone, reservation);
   return { customer, reservation, path };
@@ -147,14 +148,11 @@ const getAllMenuItemOrders = db => {
     })
 }
 
-const getItemOrdersWMenuItemInfo = db => {
-  let qStr =
-    `SELECT menu_items_orders.id, img_url, menu_item_id, order_id, name, description, price, category_id
-    FROM menu_items_orders
-    INNER JOIN menu_items
-    ON menu_items_orders.menu_item_id = menu_items.id`;
-
-  return db.query(qStr)
+const getItemOrdersWMenuItemInfo = (db, orderId) => {
+  
+  return db.menu_items_orders.find({
+    order_id: orderId
+  })
     .then(data => data)
     .catch(err => {
       console.log(err);
@@ -202,31 +200,44 @@ const addItemToOrder = (db, menuItemOrder) => {
     })
 }
 
+// UPDATES THE **RESERVATION'S** ORDER STATUS
+const updateOrderStatus = (db, reservation) => {  
+  return db.orders.update(
+    {reservation_id: reservation.order.reservation_id},
+    {order_code: 'ORDERED'},
+    result => {
+      return result;
+    })
+  .then(order => {
+    return order;
+  })
+}
+
 const getMenu = (db) => {
   let allCats;
 
   return db.categories.find()
-  .then(allCategories => {
-    allCats = allCategories;
-    return db.menu_items.find()
-  })
-  .then(allMenuItems => {
-    // console.log(allCats[0]);
-    const processedMenu = processMenu(allCats, allMenuItems);
-    return processedMenu;
-  })
-  .catch(err => {
-    console.log(err)
-  })
+    .then(allCategories => {
+      allCats = allCategories;
+      return db.menu_items.find()
+    })
+    .then(allMenuItems => {
+      // console.log(allCats[0]);
+      const processedMenu = processMenu(allCats, allMenuItems);
+      return processedMenu;
+    })
+    .catch(err => {
+      console.log(err)
+    })
 }
 
-const processMenu = function(categories, menuItems){
+const processMenu = function (categories, menuItems) {
   const menu = {};
-  for (category of categories){    
-    menu[category.id] = category;   
+  for (category of categories) {
+    menu[category.id] = category;
   }
-  for (menuItem of menuItems){ 
-    if (!menu[menuItem.category_id].menuItems){
+  for (menuItem of menuItems) {
+    if (!menu[menuItem.category_id].menuItems) {
       menu[menuItem.category_id].menuItems = [];
     }
     menu[menuItem.category_id].menuItems.push(menuItem);
@@ -236,7 +247,7 @@ const processMenu = function(categories, menuItems){
 
 const removeOrderItem = (db, orderItem) => {
   return db.menu_items_orders.destroy(
-    {id: orderItem.id},
+    { id: orderItem.id },
     (err, res) => {
       return res;
     })
@@ -257,5 +268,6 @@ module.exports = {
   getReservationByResCode,
   getCustomerByReservation,
   getMenu,
-  removeOrderItem
+  removeOrderItem,
+  updateOrderStatus
 }
