@@ -24,14 +24,6 @@ function setSocket(socket, react) {
         // we need customer data in reservations. please DON'T remove customer
         const reservations = [...oldState.reservations, { ...customer, ...reservation }];
 
-        // instead of showing new reservation in the root,
-        // it is better to display it in /reservations/:res_code in order to prevent customers
-        // from receiving other customers' reservations
-        // (path !== '/admin') is to prevent redirection from happening when a form is submitted on /admin
-        // if (Object.keys(data).includes('redirectTo') && (path !== '/admin')) {
-        //   window.location = `/reservations/${data.redirectTo}`;
-        // }
-
         return {
           currentCustomer: customer,
           currentReservation: reservation,
