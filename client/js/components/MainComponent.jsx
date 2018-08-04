@@ -79,16 +79,9 @@ export default class MainComponent extends Component {
       for (let cat in this.state.menu) {
         categoriesArray.push(this.state.menu[cat]);
       }
-      // console.log('menu', this.state.menu);
-      // console.log('arraylike', Array.from(this.state.menu))
-      // console.log('array', categoriesArray);
       categoryComponents = categoriesArray.map((category) => {
         return (
-          <div className="tile is-parent">
-            <article className="tile is-child box">
-              <Category menu={category} setMenu={this.setMenu} />
-            </article>
-          </div>
+          <Category menu={category} setMenu={this.setMenu} />          
         )
       })
       return categoryComponents;
@@ -145,12 +138,8 @@ export default class MainComponent extends Component {
 
           </div>
           {/*LOAD THE CATEGORY COMPONENTS*/}
-
-          <article className="menuCategories">
-            <div className="tile is-ancestor">
-              {this.createCategories()}
-            </div>
-          </article>
+          
+          {this.createCategories()}          
 
           <div className='columns' >
             <div className='column is-one-third' />
