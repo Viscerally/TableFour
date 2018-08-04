@@ -7,6 +7,27 @@ export default class Menu extends Component {
     super(props);
   }
 
+  generateButton(){
+    if (this.props.reservation.id === undefined){
+      return (
+        <button 
+          onClick={(e) => this.props.addToOrder(menuItem)} 
+          className="button is-danger"
+          disabled  
+        >Add to your order
+        </button>
+      )
+    }else{
+      return (
+        <button 
+          onClick={(e) => this.props.addToOrder(menuItem)} 
+          className="button is-danger"            
+        >Add to your order
+        </button>
+      )
+    }
+  }
+  
   render() {
     let menuItems = [];
     let menuItemComponents;
@@ -22,9 +43,9 @@ export default class Menu extends Component {
                 width="250"
                 height="250"
                 />
-            <div className="title">{menuItem.name}
+            <div className="title">{menuItem.name}            
               <div className="price">{numeral(menuItem.price/100).format('$0.00')}</div>
-              <button onClick={(e) => this.props.addToOrder(menuItem)} className="button is-danger">Add to your order</button>
+              {this.generateButton()}              
             </div>
           </div>
         )

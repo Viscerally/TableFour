@@ -200,10 +200,10 @@ const addItemToOrder = (db, menuItemOrder) => {
     })
 }
 
-// UPDATES THE **RESERVATION'S** ORDER STATUS
-const updateOrderStatus = (db, reservation) => {  
+const updateOrderStatus = (db, order) => {
+  console.log(order)  
   return db.orders.update(
-    {reservation_id: reservation.order.reservation_id},
+    {reservation_id: order.reservation_id},
     {order_code: 'ORDERED'},
     result => {
       return result;
@@ -212,6 +212,19 @@ const updateOrderStatus = (db, reservation) => {
     return order;
   })
 }
+
+const cancelOrder = (db, order) => {
+  return db.orders.update(
+    {reservation_id: order.reservation_id},
+    {order_code: 'CANCELLED'},
+    result => {
+      return result;
+    })
+  .then(order => {
+    return order;
+  })
+}
+
 
 const getMenu = (db) => {
   let allCats;
@@ -269,5 +282,6 @@ module.exports = {
   getCustomerByReservation,
   getMenu,
   removeOrderItem,
-  updateOrderStatus
+  updateOrderStatus,
+  cancelOrder
 }

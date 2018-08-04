@@ -40,21 +40,12 @@ export default class MainComponent extends Component {
     this.props.socket.emit('addItemToOrder', menuItem);
   }
 
-  placeOrder = (orderItems) => {    
-    const newOrder = {
-      order: this.state.currentReservation.order 
-    }
-    
-    this.props.socket.emit('placeOrder', newOrder);
+  placeOrder = () => {    
+    this.props.socket.emit('placeOrder', this.state.currentReservation.order);
   }
 
-  orderComponent = () => {
-    return (<Order
-              order={this.state.currentReservation.order}
-              orderItems={this.state.menuItemOrders}
-              removeFromOrder={this.removeFromOrder}
-              placeOrder={this.placeOrder}
-            />)
+  cancelOrder = () => { 
+    this.props.socket.emit('cancelOrder', this.state.currentReservation.order);
   }
 
   selectDashboard = state => {
@@ -88,16 +79,9 @@ export default class MainComponent extends Component {
       for (let cat in this.state.menu) {
         categoriesArray.push(this.state.menu[cat]);
       }
-      // console.log('menu', this.state.menu);
-      // console.log('arraylike', Array.from(this.state.menu))
-      // console.log('array', categoriesArray);
       categoryComponents = categoriesArray.map((category) => {
         return (
-          <div className="tile is-parent">
-            <article className="tile is-child box">
-              <Category menu={category} setMenu={this.setMenu} />
-            </article>
-          </div>
+          <Category menu={category} setMenu={this.setMenu} />          
         )
       })
       return categoryComponents;
@@ -154,12 +138,8 @@ export default class MainComponent extends Component {
 
           </div>
           {/*LOAD THE CATEGORY COMPONENTS*/}
-
-          <article className="menuCategories">
-            <div className="tile is-ancestor">
-              {this.createCategories()}
-            </div>
-          </article>
+          
+          {this.createCategories()}          
 
           <div className='columns' >
             <div className='column is-one-third' />
@@ -167,6 +147,7 @@ export default class MainComponent extends Component {
               <Menu
                 addToOrder={this.addToOrder}
                 currentMenu={this.state.currentMenu}
+                reservation={this.state.currentReservation}
               />
             </div>
             <div className='column is-one-third' />
@@ -182,6 +163,7 @@ export default class MainComponent extends Component {
                 orderItems={this.state.menuItemOrders}
                 removeFromOrder={this.removeFromOrder}
                 placeOrder={this.placeOrder}
+                cancelOrder={this.cancelOrder}
               /> : (null)}
             </div>
           </div>

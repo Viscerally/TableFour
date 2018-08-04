@@ -109,18 +109,28 @@ function setSocket(socket, react) {
     socket.on('orderPlaced', data => {
 
       react.setState((prevState, props) => {
-        // SET THE this.state.reservation.order to be equal to the data parameter
-        console.log('PREVSTATE: ', prevState);
-        console.log('DATA: ', data);
         const reservation = prevState.currentReservation;
         reservation.order = data; 
         return {
           currentReservation: reservation
-        }        // TEST IF IT WORKS
+        }       
       })
       
     })
+
+    socket.on("orderCancelled", data => {
+      react.setState((prevState, props) => {
+        const reservation = prevState.currentReservation;
+        reservation.order = data; 
+        return {
+          currentReservation: reservation
+        }
+      })
+    })
+
   })
+
+  
   return socket;
 }
 
