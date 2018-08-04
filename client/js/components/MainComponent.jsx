@@ -72,21 +72,22 @@ export default class MainComponent extends Component {
   }
 
   createCategories = () => {
-    const categoriesArray = [];
-    let categoryComponents = [];
+    if (!this.props.isAdmin){
+      const categoriesArray = [];
+      let categoryComponents = [];
 
-    if (this.state.menu) {
-      for (let cat in this.state.menu) {
-        categoriesArray.push(this.state.menu[cat]);
+      if (this.state.menu) {
+        for (let cat in this.state.menu) {
+          categoriesArray.push(this.state.menu[cat]);
+        }
+        categoryComponents = categoriesArray.map((category) => {
+          return (
+            <Category menu={category} setMenu={this.setMenu} />
+          )
+        })
+        return categoryComponents;
       }
-      categoryComponents = categoriesArray.map((category) => {
-        return (
-          <Category menu={category} setMenu={this.setMenu} />
-        )
-      })
-      return categoryComponents;
     }
-    return categoryComponents;
   }
 
   componentDidMount = () => {
@@ -106,7 +107,6 @@ export default class MainComponent extends Component {
 
   render() {
 
-    console.log("RESERVATION", this.state.currentReservation.order);
     const { socket, urls } = this.props;
     const { currentReservation } = this.state;
     return (
@@ -137,10 +137,9 @@ export default class MainComponent extends Component {
             </div>
 
           </div>
-          {/*LOAD THE CATEGORY COMPONENTS*/}
-
+          {/*LOAD THE CATEGORY COMPONENTS (NOT FOR ADMIN)*/}
           {this.createCategories()}
-
+          { !this.props.isAdmin ? (
           <div className='columns' >
             <div className='column is-one-third' />
             <div className='column is-one-third'>
@@ -152,21 +151,22 @@ export default class MainComponent extends Component {
             </div>
             <div className='column is-one-third' />
           </div>
-
+        ) : null }
+        {this.state.currentReservation && !this.props.isAdmin ?
+          (
           <div className='columns'>
             <div className='column is-one-third' />
             <div className='column is-one-third'>
-              {/* TODO NEED AN IF STATEMENT HERE TO CONDITIONAL RENDER */}
-              {this.state.currentReservation ?
-                <Order
-                  order={this.state.currentReservation.order}
-                  orderItems={this.state.menuItemOrders}
-                  removeFromOrder={this.removeFromOrder}
-                  placeOrder={this.placeOrder}
-                  cancelOrder={this.cancelOrder}
-                /> : (null)}
+              <Order
+                order={this.state.currentReservation.order}
+                orderItems={this.state.menuItemOrders}
+                removeFromOrder={this.removeFromOrder}
+                placeOrder={this.placeOrder}
+                cancelOrder={this.cancelOrder}
+              />
             </div>
           </div>
+        ) : (null)}
         </main>
         <footer></footer>
       </div >

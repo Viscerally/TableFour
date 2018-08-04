@@ -17,7 +17,7 @@ export default class Order extends Component {
           <td><span className="listItemName">{item.name}</span></td>
           <td>{integerToCurrency}</td>
           <td className='remove-from-order'>
-          { this.props.order.order_code !== 'ORDERED' ? 
+          { this.props.order.order_code !== 'ORDERED' ?
             <a className='button is-danger is-outlined is-small' onClick={() => {this.props.removeFromOrder(item)}}>
               <span>Remove</span>
               <span className='icon is-small'>
@@ -25,16 +25,11 @@ export default class Order extends Component {
               </span>
             </a> : null
           }
-            
+
           </td>
         </tr>
       )
     });
-
-    if (this.props.order !== undefined){
-      console.log('ORDERRRR: ', this.props.order.order_code);
-      console.log('ISEQUALTO: ', this.props.order.order_code === 'ORDERED');
-    }
 
     return (
       <article className='tile is-12 box'>
@@ -62,7 +57,7 @@ export default class Order extends Component {
             </tfoot>
           </table>
            {this.props.order && this.props.order.order_code === 'ORDERED' ?
-              <button className="button is-danger" onClick={() => {this.props.cancelOrder()}}>Cancel order</button> : 
+              <button className="button is-danger" onClick={() => {this.props.cancelOrder()}}>Cancel order</button> :
               <button className="button is-link" onClick={() => {this.props.placeOrder()}}>Place your order</button> }
           </div>
       </article>

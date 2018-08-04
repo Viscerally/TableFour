@@ -85,7 +85,6 @@ export default class ReservationDashboard extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(this.props.res_code, prevProps.res_code);
     // ONCE RES_CODE IN YOUR STATE IS ASSIGNED TO A RES_CODE, THEN DON'T UPDATE IT ANY MORE.
     if (this.props.res_code && prevProps.res_code === null) {
       this.setState({ res_code: this.props.res_code });

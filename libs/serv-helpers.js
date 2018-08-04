@@ -202,7 +202,6 @@ const addItemToOrder = (db, menuItemOrder) => {
 }
 
 const updateOrderStatus = (db, order) => {
-  console.log(order)
   return db.orders.update(
     { reservation_id: order.reservation_id },
     { order_code: 'ORDERED' },
