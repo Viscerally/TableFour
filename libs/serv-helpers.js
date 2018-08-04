@@ -53,8 +53,13 @@ const submitNewReservation = async (db, formData) => {
     group_size
   }
   const reservation = await saveReservation(db, reservationData);
+  orderData = {
+    order_code: 'nonce',
+    reservation_id: reservation.id
+  }
+  const order = await db.orders.insert(orderData);
+  reservation.order = order;
 
-  //await db.insert({id: reservation.id})
   // text the reservation data
   //smsMsg.resoTextMsg(phone, reservation);
   return { customer, reservation, path };
@@ -143,14 +148,11 @@ const getAllMenuItemOrders = db => {
     })
 }
 
-const getItemOrdersWMenuItemInfo = db => {
-  let qStr =
-    `SELECT menu_items_orders.id, img_url, menu_item_id, order_id, name, description, price, category_id
-    FROM menu_items_orders
-    INNER JOIN menu_items
-    ON menu_items_orders.menu_item_id = menu_items.id`;
-
-  return db.query(qStr)
+const getItemOrdersWMenuItemInfo = (db, orderId) => {
+  
+  return db.menu_items_orders.find({
+    order_id: orderId
+  })
     .then(data => data)
     .catch(err => {
       console.log(err);
@@ -196,6 +198,19 @@ const addItemToOrder = (db, menuItemOrder) => {
     .catch(err => {
       console.log(err);
     })
+}
+
+// UPDATES THE **RESERVATION'S** ORDER STATUS
+const updateOrderStatus = (db, reservation) => {  
+  return db.orders.update(
+    {reservation_id: reservation.order.reservation_id},
+    {order_code: 'ORDERED'},
+    result => {
+      return result;
+    })
+  .then(order => {
+    return order;
+  })
 }
 
 const getMenu = (db) => {
@@ -253,5 +268,6 @@ module.exports = {
   getReservationByResCode,
   getCustomerByReservation,
   getMenu,
-  removeOrderItem
+  removeOrderItem,
+  updateOrderStatus
 }

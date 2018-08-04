@@ -19,7 +19,6 @@ export default class MainComponent extends Component {
       currentCustomer: blankCustomer(),
       currentReservation: blankReservation(),
       reservations: [],
-      orderId: '2',
       menuItemOrders: [],
       res_code: props.res_code,
       currentMenu: {}
@@ -38,36 +37,26 @@ export default class MainComponent extends Component {
   }
 
   addToOrder = menuItem => {
-    menuItem.orderId = this.state.orderId;
+    menuItem.orderId = this.state.currentReservation.order.id;
     this.props.socket.emit('addItemToOrder', menuItem);
   }
 
-  placeOrder = (order_id) => {
+  placeOrder = (orderItems) => {    
     const newOrder = {
-      orderId: this.state.order_id,
-      priceTotal: this.state.price_declared,
-      paymentConfirmation: this.state.is_paid,
-      orderCode: order_id,
-    };
-
-
-    ///////////////////////////////////
-    //TODO:
-    //generate new order_id,
-    // price_declared(total),
-    //total_paid - to be inplemented later
-    // payment confirmation (is_paid),
-    // order_code(UUID?)
-    //menu_items_ids,
-
-    //send to db,
-    //send to admin
-    //send via Twillio and as notification to customer on the home page,
-    //generate success message (notification or new page -if statement
-    // add 'cancel' button both on the app page as a link on message on sms from Twillio?
+      order: this.state.currentReservation.order 
+    }
+    
+    this.props.socket.emit('placeOrder', newOrder);
   }
 
-  /////////////////////////////////////
+  orderComponent = () => {
+    return (<Order
+              order={this.state.currentReservation.order}
+              orderItems={this.state.menuItemOrders}
+              removeFromOrder={this.removeFromOrder}
+              placeOrder={this.placeOrder}
+            />)
+  }
 
   selectDashboard = state => {
     const { res_code, reservations, currentReservation, currentCustomer } = state;
@@ -132,6 +121,8 @@ export default class MainComponent extends Component {
   }
 
   render() {
+
+    console.log("RESERVATION", this.state.currentReservation.order);
     const { socket, urls } = this.props;
 
     return (
@@ -184,12 +175,14 @@ export default class MainComponent extends Component {
           <div className='columns'>
             <div className='column is-one-third' />
             <div className='column is-one-third'>
+            {/* TODO NEED AN IF STATEMENT HERE TO CONDITIONAL RENDER */}
+            {this.state.currentReservation ?
               <Order
-                orderId="2"
+                order={this.state.currentReservation.order}
                 orderItems={this.state.menuItemOrders}
                 removeFromOrder={this.removeFromOrder}
-                placeOrder={this.state.placeOrder}
-              />
+                placeOrder={this.placeOrder}
+              /> : (null)}
             </div>
           </div>
         </main>

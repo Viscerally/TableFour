@@ -81,6 +81,7 @@ function setSocket(socket, react) {
     })
 
     socket.on('ItemOrdersWMenuItemInfo', menuItemOrders => {
+      console.log('MENU ITEM ORDERS: ', menuItemOrders);      
       react.setState({ menuItemOrders });
     });
 
@@ -103,6 +104,21 @@ function setSocket(socket, react) {
         return item.id !== delItem[0].id;
       })
       react.setState({ menuItemOrders });
+    })
+
+    socket.on('orderPlaced', data => {
+
+      react.setState((prevState, props) => {
+        // SET THE this.state.reservation.order to be equal to the data parameter
+        console.log('PREVSTATE: ', prevState);
+        console.log('DATA: ', data);
+        const reservation = prevState.currentReservation;
+        reservation.order = data; 
+        return {
+          currentReservation: reservation
+        }        // TEST IF IT WORKS
+      })
+      
     })
   })
   return socket;

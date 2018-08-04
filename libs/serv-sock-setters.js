@@ -59,6 +59,7 @@ module.exports = function setSocketServer(io, db) {
         .catch(err => { console.log(err) });
     })
 
+
     //GET MENU ITEMS BY CATEGORY
     // socket.on('submitReservation', formData => {
     //   console.log('Server socket handling submit');
@@ -69,9 +70,11 @@ module.exports = function setSocketServer(io, db) {
 
     // SUBMIT NEW RESERVATION
     socket.on('submitReservation', formData => {
+      console.log('SUBMITTING RESERVATION FROM SOCKET SERVER')
       serv.submitNewReservation(db, formData)
-        .then(data => {
-          broadcastData(socket, 'loadNewReservation', data, admins, clients);
+        .then(data => {          
+          io.to(socket.id).emit('loadNewReservation', data);
+          //NEED TO SEND A MESSAGE TO THE ADMIN NAMESPACE AS WELL
         })
         .catch(err => { console.log(err) });
     })
@@ -108,7 +111,7 @@ module.exports = function setSocketServer(io, db) {
 
     socket.on('getItemOrdersWMenuItemInfo', status => {
       serv.getItemOrdersWMenuItemInfo(db)
-        .then(data => { io.emit('ItemOrdersWMenuItemInfo', data); })
+        .then(data => { io.to(socket.id).emit('ItemOrdersWMenuItemInfo', data) })
         .catch(err => console.log(err));
     })
 
@@ -120,10 +123,19 @@ module.exports = function setSocketServer(io, db) {
     })
 
     socket.on('addItemToOrder', status => {
-
       serv.addItemOrderWMenuItem(db, status)
-        .then(data => { io.emit('newOrderAdded', data); })
+        .then(data => { io.to(socket.id).emit('newOrderAdded', data); })
         .catch(err => console.log(err));
+    })
+
+    socket.on('placeOrder', order => {
+      serv.updateOrderStatus(db, order)
+        .then(data => { 
+          console.log("SOCKSERV DATA: ", data);
+          io.to(socket.id).emit('orderPlaced', data[0]);
+          // TODO NEEDS TO SEND MESSAGE TO ADMIN TOO  
+        })
+        .catch(err => { console.log(err) })
     })
   })
 };

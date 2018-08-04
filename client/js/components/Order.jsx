@@ -6,7 +6,6 @@ export default class Order extends Component {
 
 
   render() {
-
     let positionCounter = 0;
     let totalPrice = 0;
     const orderItems = this.props.orderItems.map((item,index) => {
@@ -29,6 +28,9 @@ export default class Order extends Component {
       )
     });
 
+    if (this.props.order !== undefined){
+      console.log(this.props.order);
+    }
 
     return (
       <article className='tile is-12 box'>
@@ -54,8 +56,8 @@ export default class Order extends Component {
                 <th></th>
               </tr>
             </tfoot>
-          </table>
-          <button className="button is-link" onClick={() => {this.props.placeOrder(orderItems.id)}}>Place your order</button>
+          </table>          
+          <button className="button is-link" onClick={() => {this.props.placeOrder()}}>Place your order</button>
         </div>
       </article>
     )
