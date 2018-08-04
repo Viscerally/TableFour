@@ -3,7 +3,7 @@ const { countClients, broadcastData } = require('./socket-helpers.js');
 
 // create empty objects to store socket client id and url
 // from which requests were made. save admin data in a separate object
-const clients = {}, admin = {};
+const clients = {}, admins = {};
 
 module.exports = function setSocketServer(io, db) {
   // HANDLE SOCKET CONNECTION
@@ -15,16 +15,16 @@ module.exports = function setSocketServer(io, db) {
       console.log(`${countClients(io)} CLIENT(S) CONNECTED`);
     });
 
-    // KEEP TRACK OF WEBSOCKET CLIENT ID AND PATH FROM WHICH WHERE THEY CAME FROM
-    // deconstruct socket object and save id and path (referer without origin)
+    // KEEP TRACK OF WEBSOCKET CLIENT ID AND FROM WHICH WHERE THEY CAME FROM
+    // deconstruct socket object and save id and (referer without origin)
     const { id, request: { headers: { origin, referer } } } = socket;
     const path = referer.replace(origin, '');
-    // if client is admin, save id and path to "admin"
+    // if client is admin, save id and to "admin"
     if (path === '/admin') {
-      admin[id] = { id, path };
+      admins[id] = { id };
     } else {
       // otherwise save it to "clients"
-      clients[id] = { id, path };
+      clients[id] = { id };
     }
 
     // LOAD INITIAL RESERVATIONS
@@ -71,7 +71,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('submitReservation', formData => {
       serv.submitNewReservation(db, formData)
         .then(data => {
-          broadcastData(socket, 'loadNewReservation', data, admin, clients);
+          broadcastData(socket, 'loadNewReservation', data, admins, clients);
         })
         .catch(err => { console.log(err) });
     })
@@ -80,7 +80,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('updateReservation', formData => {
       serv.updateReservation(db, formData)
         .then(data => {
-          broadcastData(socket, 'loadChangedReservation', data, admin, clients);
+          broadcastData(socket, 'loadChangedReservation', data, admins, clients);
         })
         .catch(err => console.log(err));
     });
@@ -89,14 +89,15 @@ module.exports = function setSocketServer(io, db) {
     socket.on('cancelReservation', formData => {
       serv.cancelReservation(db, formData)
         .then(data => {
-          broadcastData(socket, 'removeCancelledReservation', data, admin, clients);
+          broadcastData(socket, 'removeCancelledReservation', data, admins, clients);
         });
     })
 
     // UPDATE RESERVATION STATUS BY ADMIN
     socket.on('updateReservationStatus', status => {
       serv.updateReservationStatus(db, status)
-        .then(data => { io.emit('changeReservationStatus', data); });
+        .then(data => { io.emit('changeReservationStatus', data); })
+        .catch(err => console.log(err));
     })
 
     socket.on('getAllMenuItemOrders', status => {
