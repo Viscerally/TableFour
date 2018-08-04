@@ -87,7 +87,6 @@ export default class MainComponent extends Component {
         })
         return categoryComponents;
       }
-      return categoryComponents;
     }
   }
 
@@ -109,7 +108,7 @@ export default class MainComponent extends Component {
   render() {
 
     const { socket, urls } = this.props;
-
+    const { currentReservation } = this.state;
     return (
       <div className='container is-desktop'>
         <header>
@@ -123,7 +122,7 @@ export default class MainComponent extends Component {
               <article className='tile is-child box'>
                 <div className='content'>
                   <span className='title is-4'>BOOK YOUR TABLE</span>
-                  <BookingForm urls={urls} socket={socket} />
+                  <BookingForm reservation={currentReservation} urls={urls} socket={socket} />
                 </div>
               </article>
             </div>

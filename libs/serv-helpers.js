@@ -52,7 +52,9 @@ const submitNewReservation = async (db, formData) => {
     res_code: rs.alphaNumUpper(6),
     group_size
   }
+
   const reservation = await saveReservation(db, reservationData);
+
   orderData = {
     order_code: 'nonce',
     reservation_id: reservation.id
@@ -112,7 +114,6 @@ const cancelReservation = async (db, formData) => {
   const { id } = reservationRecord;
   const reservationData = { id, status: 'cancelled' };
   const reservation = await saveReservation(db, reservationData);
-
   return reservation;
 }
 // CANCEL RESERVATION - END
@@ -202,26 +203,26 @@ const addItemToOrder = (db, menuItemOrder) => {
 
 const updateOrderStatus = (db, order) => {
   return db.orders.update(
-    {reservation_id: order.reservation_id},
-    {order_code: 'ORDERED'},
+    { reservation_id: order.reservation_id },
+    { order_code: 'ORDERED' },
     result => {
       return result;
     })
-  .then(order => {
-    return order;
-  })
+    .then(order => {
+      return order;
+    })
 }
 
 const cancelOrder = (db, order) => {
   return db.orders.update(
-    {reservation_id: order.reservation_id},
-    {order_code: 'CANCELLED'},
+    { reservation_id: order.reservation_id },
+    { order_code: 'CANCELLED' },
     result => {
       return result;
     })
-  .then(order => {
-    return order;
-  })
+    .then(order => {
+      return order;
+    })
 }
 
 

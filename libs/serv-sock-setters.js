@@ -1,5 +1,5 @@
 const serv = require('./serv-helpers.js');
-const { countClients, broadcastData } = require('./socket-helpers.js');
+const { countClients, broadcastResos } = require('./socket-helpers.js');
 
 // create empty objects to store socket client id and url
 // from which requests were made. save admin data in a separate object
@@ -70,11 +70,14 @@ module.exports = function setSocketServer(io, db) {
 
     // SUBMIT NEW RESERVATION
     socket.on('submitReservation', formData => {
-      console.log('SUBMITTING RESERVATION FROM SOCKET SERVER')
       serv.submitNewReservation(db, formData)
         .then(data => {
-          io.to(socket.id).emit('loadNewReservation', data);
-          //NEED TO SEND A MESSAGE TO THE ADMIN NAMESPACE AS WELL
+          // CHECK WHO SUBMITTED A FORM
+          const fromAdmin = Object.keys(admins).includes(socket.id);
+          // IF CUSTOMER SUBMITS A FORM,
+          // BROADCAST NEW RESERVATION TO THE SENDER AND ALL ADMINS (LAST PARAM => FALSE)
+          // IF ADMIN SUBMITS A FORM, BROADCAST NEW RESERVATION TO EVERYBODY (LAST PARAM => TRUE)
+          broadcastResos(io, socket, 'loadNewReservation', data, admins, fromAdmin);
         })
         .catch(err => { console.log(err) });
     })
@@ -83,7 +86,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('updateReservation', formData => {
       serv.updateReservation(db, formData)
         .then(data => {
-          broadcastData(socket, 'loadChangedReservation', data, admins, clients);
+          broadcastResos(io, socket, 'loadChangedReservation', data, admins, false);
         })
         .catch(err => console.log(err));
     });
@@ -92,7 +95,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('cancelReservation', formData => {
       serv.cancelReservation(db, formData)
         .then(data => {
-          broadcastData(socket, 'removeCancelledReservation', data, admins, clients);
+          broadcastResos(io, socket, 'removeCancelledReservation', data, admins, true);
         });
     })
 
@@ -130,7 +133,7 @@ module.exports = function setSocketServer(io, db) {
 
     socket.on('placeOrder', order => {
       serv.updateOrderStatus(db, order)
-        .then(data => {           
+        .then(data => {
           io.to(socket.id).emit('orderPlaced', data[0]);
           // TODO NEEDS TO SEND MESSAGE TO ADMIN TOO
         })
@@ -139,7 +142,7 @@ module.exports = function setSocketServer(io, db) {
 
 
     socket.on("cancelOrder", order => {
-      serv.cancelOrder(db,order)
+      serv.cancelOrder(db, order)
         .then(data => {
           io.to(socket.id).emit('orderCancelled', data[0]);
           // TODO NEEDS TO SEND MESSAGE TO ADMIN TOO

@@ -27,7 +27,7 @@ export default class BookingForm extends Component {
   // CANCEL RESERVATION - DO NOT CHANGE
   cancelReservation = event => {
     event.preventDefault();
-    const { res_code } = this.state.reservation;
+    const { res_code } = this.props.reservation;
     this.props.socket.emit('cancelReservation', { res_code });
   }
 
@@ -111,7 +111,6 @@ export default class BookingForm extends Component {
 
   render() {
     const { customer: { name, phone, email }, reservation: { group_size } } = this.state;
-
     return (
       <form onSubmit={this.handleSubmit} >
         <div className='field'>
@@ -203,11 +202,11 @@ export default class BookingForm extends Component {
         <div className="field is-centered is-grouped">
           <p className="control">
             {/*Button rendering depends on if reservation has been created*/}
-            {this.state.reservation.res_code ?
+            {this.props.reservation.res_code ?
               (this.updateButton()) : (this.submitButton())}
           </p>
           <p className="control">
-            {this.state.reservation.res_code ?
+            {this.props.reservation.res_code ?
               (this.cancelButton()) : (null)}
           </p>
         </div>
