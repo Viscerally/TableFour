@@ -18,7 +18,7 @@ function setSocket(socket, react) {
 
     // LOAD NEW RESERVATION - DO NOT CHANGE
     socket.on('loadNewReservation', data => {
-      const { customer, reservation, path } = data;
+      const { customer, reservation } = data;
       //Make sure that this gets called from MainComponent
       react.setState(oldState => {
         // we need customer data in reservations. please DON'T remove customer
