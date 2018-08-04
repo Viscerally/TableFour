@@ -40,21 +40,12 @@ export default class MainComponent extends Component {
     this.props.socket.emit('addItemToOrder', menuItem);
   }
 
-  placeOrder = (orderItems) => {    
-    const newOrder = {
-      order: this.state.currentReservation.order 
-    }
-    
-    this.props.socket.emit('placeOrder', newOrder);
+  placeOrder = () => {    
+    this.props.socket.emit('placeOrder', this.state.currentReservation.order);
   }
 
-  orderComponent = () => {
-    return (<Order
-              order={this.state.currentReservation.order}
-              orderItems={this.state.menuItemOrders}
-              removeFromOrder={this.removeFromOrder}
-              placeOrder={this.placeOrder}
-            />)
+  cancelOrder = () => { 
+    this.props.socket.emit('cancelOrder', this.state.currentReservation.order);
   }
 
   selectDashboard = state => {
@@ -182,6 +173,7 @@ export default class MainComponent extends Component {
                 orderItems={this.state.menuItemOrders}
                 removeFromOrder={this.removeFromOrder}
                 placeOrder={this.placeOrder}
+                cancelOrder={this.cancelOrder}
               /> : (null)}
             </div>
           </div>

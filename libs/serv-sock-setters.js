@@ -137,5 +137,17 @@ module.exports = function setSocketServer(io, db) {
         })
         .catch(err => { console.log(err) })
     })
+
+    
+    socket.on("cancelOrder", order => {
+      serv.cancelOrder(db,order)
+        .then(data => {
+          io.to(socket.id).emit('orderCancelled', data[0]);
+          // TODO NEEDS TO SEND MESSAGE TO ADMIN TOO
+        })
+        .catch(err => { console.log(err) })
+    })
+
+
   })
 };
