@@ -7,7 +7,7 @@ export default class Menu extends Component {
     super(props);
   }
 
-  generateButton(){
+  generateButton(menuItem){
     if (this.props.reservation.id === undefined){
       return (
         <button 
@@ -45,7 +45,7 @@ export default class Menu extends Component {
                 />
             <div className="title">{menuItem.name}            
               <div className="price">{numeral(menuItem.price/100).format('$0.00')}</div>
-              {this.generateButton()}              
+              {this.generateButton(menuItem)}              
             </div>
           </div>
         )
