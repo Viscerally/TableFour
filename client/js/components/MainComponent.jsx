@@ -147,6 +147,7 @@ export default class MainComponent extends Component {
               <Menu
                 addToOrder={this.addToOrder}
                 currentMenu={this.state.currentMenu}
+                reservation={this.state.currentReservation}
               />
             </div>
             <div className='column is-one-third' />
