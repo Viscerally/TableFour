@@ -12,7 +12,7 @@ const broadcastData = (socket, emitTo, dataToSend, admins, clients) => {
 
   // everybody else get everything EXCEPT name & res_code
   dataToSend.customer.name = '...';
-  dataToSend.reservation.res_code = 'masked';
+  dataToSend.reservation.isViewable = false;
   Object.keys(clients).forEach(clientId => {
     if (clientId !== socket.id) {
       socket.broadcast.to(clientId).emit(emitTo, dataToSend);
