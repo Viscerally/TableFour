@@ -134,7 +134,6 @@ module.exports = function setSocketServer(io, db) {
     socket.on('placeOrder', order => {
       serv.updateOrderStatus(db, order)
         .then(data => {
-          console.log("SOCKSERV DATA: ", data);
           io.to(socket.id).emit('orderPlaced', data[0]);
           // TODO NEEDS TO SEND MESSAGE TO ADMIN TOO
         })

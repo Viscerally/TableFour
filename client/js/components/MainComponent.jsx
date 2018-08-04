@@ -140,29 +140,22 @@ export default class MainComponent extends Component {
             currentMenu={this.state.currentMenu}
             reservation={this.state.currentReservation}
           />
-          <div className='columns' >
+
+        {this.state.currentReservation && !this.props.isAdmin ?
+          (
+          <div className='columns'>
             <div className='column is-one-third' />
             <div className='column is-one-third'>
+              <Order
+                order={this.state.currentReservation.order}
+                orderItems={this.state.menuItemOrders}
+                removeFromOrder={this.removeFromOrder}
+                placeOrder={this.placeOrder}
+                cancelOrder={this.cancelOrder}
+              />
             </div>
-            <div className='column is-one-third' />
           </div>
-
-
-          {/* TODO NEED AN IF STATEMENT HERE TO CONDITIONAL RENDER */}
-          {/* <div className='columns'>
-            <div className='column is-one-third' />
-            <div className='column is-one-third'>
-              {this.state.currentReservation ?
-                <Order
-                  order={this.state.currentReservation.order}
-                  orderItems={this.state.menuItemOrders}
-                  removeFromOrder={this.removeFromOrder}
-                  placeOrder={this.placeOrder}
-                  cancelOrder={this.cancelOrder}
-                /> : (null)}
-            </div>
-          </div> */}
-
+        ) : (null)}
         </main>
         <footer></footer>
       </div >

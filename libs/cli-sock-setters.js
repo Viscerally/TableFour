@@ -80,8 +80,7 @@ function setSocket(socket, react) {
       react.setState({ currentCustomer: data });
     })
 
-    socket.on('ItemOrdersWMenuItemInfo', menuItemOrders => {
-      console.log('MENU ITEM ORDERS: ', menuItemOrders);      
+    socket.on('ItemOrdersWMenuItemInfo', menuItemOrders => {      
       react.setState({ menuItemOrders });
     });
 
@@ -110,18 +109,18 @@ function setSocket(socket, react) {
 
       react.setState((prevState, props) => {
         const reservation = prevState.currentReservation;
-        reservation.order = data; 
+        reservation.order = data;
         return {
           currentReservation: reservation
-        }       
+        }
       })
-      
+
     })
 
     socket.on("orderCancelled", data => {
       react.setState((prevState, props) => {
         const reservation = prevState.currentReservation;
-        reservation.order = data; 
+        reservation.order = data;
         return {
           currentReservation: reservation
         }
@@ -130,7 +129,7 @@ function setSocket(socket, react) {
 
   })
 
-  
+
   return socket;
 }
 
