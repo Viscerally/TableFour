@@ -27,7 +27,6 @@ export default class MainComponent extends Component {
   }
 
   setMenu = menu => {
-
     this.setState({
       currentMenu: menu
     })
@@ -113,6 +112,7 @@ export default class MainComponent extends Component {
         )
       })
     }
+    return categoryComponents;
   }
 
   componentDidMount = () => {
