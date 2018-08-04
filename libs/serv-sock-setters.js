@@ -72,7 +72,12 @@ module.exports = function setSocketServer(io, db) {
     socket.on('submitReservation', formData => {
       serv.submitNewReservation(db, formData)
         .then(data => {
-          broadcastResos(io, socket, 'loadNewReservation', data, admins, false);
+          // CHECK WHO SUBMITTED A FORM
+          const fromAdmin = Object.keys(admins).includes(socket.id);
+          // IF CUSTOMER SUBMITS A FORM,
+          // BROADCAST NEW RESERVATION TO THE SENDER AND ALL ADMINS (LAST PARAM => FALSE)
+          // IF ADMIN SUBMITS A FORM, BROADCAST NEW RESERVATION TO EVERYBODY (LAST PARAM => TRUE)
+          broadcastResos(io, socket, 'loadNewReservation', data, admins, fromAdmin);
         })
         .catch(err => { console.log(err) });
     })
