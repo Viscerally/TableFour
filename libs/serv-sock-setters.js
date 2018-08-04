@@ -72,7 +72,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('submitReservation', formData => {
       console.log('SUBMITTING RESERVATION FROM SOCKET SERVER')
       serv.submitNewReservation(db, formData)
-        .then(data => {          
+        .then(data => {
           io.to(socket.id).emit('loadNewReservation', data);
           //NEED TO SEND A MESSAGE TO THE ADMIN NAMESPACE AS WELL
         })
@@ -130,15 +130,14 @@ module.exports = function setSocketServer(io, db) {
 
     socket.on('placeOrder', order => {
       serv.updateOrderStatus(db, order)
-        .then(data => { 
-          console.log("SOCKSERV DATA: ", data);
+        .then(data => {           
           io.to(socket.id).emit('orderPlaced', data[0]);
-          // TODO NEEDS TO SEND MESSAGE TO ADMIN TOO  
+          // TODO NEEDS TO SEND MESSAGE TO ADMIN TOO
         })
         .catch(err => { console.log(err) })
     })
 
-    
+
     socket.on("cancelOrder", order => {
       serv.cancelOrder(db,order)
         .then(data => {

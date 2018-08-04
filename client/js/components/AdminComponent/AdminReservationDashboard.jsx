@@ -28,8 +28,7 @@ export default class AdminReservationDashboard extends Component {
     let index = 0;
 
     // loop through table rows
-    const cells = reservations.map(reservation => {
-      console.log('RESERVATION', reservation);
+    const cells = reservations.map(reservation => {      
       if (reservation.status !== 'waiting') {
         return true;
       }

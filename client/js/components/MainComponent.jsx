@@ -72,21 +72,23 @@ export default class MainComponent extends Component {
   }
 
   createCategories = () => {
-    const categoriesArray = [];
-    let categoryComponents = [];
+    if (!this.props.isAdmin){
+      const categoriesArray = [];
+      let categoryComponents = [];
 
-    if (this.state.menu) {
-      for (let cat in this.state.menu) {
-        categoriesArray.push(this.state.menu[cat]);
+      if (this.state.menu) {
+        for (let cat in this.state.menu) {
+          categoriesArray.push(this.state.menu[cat]);
+        }
+        categoryComponents = categoriesArray.map((category) => {
+          return (
+            <Category menu={category} setMenu={this.setMenu} />
+          )
+        })
+        return categoryComponents;
       }
-      categoryComponents = categoriesArray.map((category) => {
-        return (
-          <Category menu={category} setMenu={this.setMenu} />
-        )
-      })
       return categoryComponents;
     }
-    return categoryComponents;
   }
 
   componentDidMount = () => {
@@ -106,7 +108,6 @@ export default class MainComponent extends Component {
 
   render() {
 
-    console.log("RESERVATION", this.state.currentReservation.order);
     const { socket, urls } = this.props;
 
     return (
@@ -138,9 +139,8 @@ export default class MainComponent extends Component {
 
           </div>
           {/*LOAD THE CATEGORY COMPONENTS (NOT FOR ADMIN)*/}
-          { !this.props.isAdmin ?
-            this.createCategories()
-            (
+          {this.createCategories()}
+          { !this.props.isAdmin ? (
           <div className='columns' >
             <div className='column is-one-third' />
             <div className='column is-one-third'>
