@@ -6,9 +6,6 @@ export default class Order extends Component {
 
 
   render() {
-    if (this.props.order !== undefined){
-      console.log('NEW ORDER RENDER: ', this.props.order.order_code);
-    }
     let positionCounter = 0;
     let totalPrice = 0;
     const orderItems = this.props.orderItems.map((item,index) => {
