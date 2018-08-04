@@ -26,9 +26,7 @@ export default class MainComponent extends Component {
   }
 
   setMenu = menu => {
-    this.setState({
-      currentMenu: menu
-    })
+    this.setState({ currentMenu: menu });
   }
 
   removeFromOrder = orderItem => {
@@ -72,21 +70,13 @@ export default class MainComponent extends Component {
   }
 
   createCategories = () => {
-    const categoriesArray = [];
-    let categoryComponents = [];
-
-    if (this.state.menu) {
-      for (let cat in this.state.menu) {
-        categoriesArray.push(this.state.menu[cat]);
-      }
-      categoryComponents = categoriesArray.map((category) => {
-        return (
+    return Object.values(this.state.menu).map(category => (
+      <div class="tile is-parent">
+        <article class="tile is-child box menuCategories">
           <Category menu={category} setMenu={this.setMenu} />
-        )
-      })
-      return categoryComponents;
-    }
-    return categoryComponents;
+        </article>
+      </div>
+    ));
   }
 
   componentDidMount = () => {
@@ -105,8 +95,6 @@ export default class MainComponent extends Component {
   }
 
   render() {
-
-    console.log("RESERVATION", this.state.currentReservation.order);
     const { socket, urls } = this.props;
     const { currentReservation } = this.state;
     return (
@@ -116,8 +104,9 @@ export default class MainComponent extends Component {
         </header>
         <br />
         <main>
+          {/* TOP TILE  */}
           <div className='tile is-ancestor top-tile'>
-
+            {/* BOOKING FORM */}
             <div className='tile is-5 is-parent'>
               <article className='tile is-child box'>
                 <div className='content'>
@@ -126,7 +115,8 @@ export default class MainComponent extends Component {
                 </div>
               </article>
             </div>
-
+            {/* BOOKING FORM - END */}
+            {/* RESERVATION DASHBOARD */}
             <div className='tile is-parent'>
               <article className='tile is-child box'>
                 <div className='content'>
@@ -135,28 +125,33 @@ export default class MainComponent extends Component {
                 </div>
               </article>
             </div>
-
+            {/* RESERVATION DASHBOARD -END */}
           </div>
-          {/*LOAD THE CATEGORY COMPONENTS*/}
+          {/* TOP TILE - END */}
 
-          {this.createCategories()}
+          {/* CATEGORIES */}
+          <div class='tile is-ancestor'>
+            {(this.state.menu) && (this.createCategories())}
+          </div>
+          {/* CATEGORIES - END */}
 
+          <Menu
+            addToOrder={this.addToOrder}
+            currentMenu={this.state.currentMenu}
+            reservation={this.state.currentReservation}
+          />
           <div className='columns' >
             <div className='column is-one-third' />
             <div className='column is-one-third'>
-              <Menu
-                addToOrder={this.addToOrder}
-                currentMenu={this.state.currentMenu}
-                reservation={this.state.currentReservation}
-              />
             </div>
             <div className='column is-one-third' />
           </div>
 
-          <div className='columns'>
+
+          {/* TODO NEED AN IF STATEMENT HERE TO CONDITIONAL RENDER */}
+          {/* <div className='columns'>
             <div className='column is-one-third' />
             <div className='column is-one-third'>
-              {/* TODO NEED AN IF STATEMENT HERE TO CONDITIONAL RENDER */}
               {this.state.currentReservation ?
                 <Order
                   order={this.state.currentReservation.order}
@@ -166,7 +161,8 @@ export default class MainComponent extends Component {
                   cancelOrder={this.cancelOrder}
                 /> : (null)}
             </div>
-          </div>
+          </div> */}
+
         </main>
         <footer></footer>
       </div >
