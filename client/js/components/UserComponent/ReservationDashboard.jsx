@@ -1,115 +1,102 @@
 import React, { Component, Fragment } from "react";
 
+const createTHead = statistics => {
+  return (
+    <Fragment>
+      <tr>
+        <th colSpan="3">{statistics}</th>
+      </tr>
+      <tr>
+        <th>#</th>
+        <th>NAME</th>
+        <th>SIZE</th>
+      </tr>
+    </Fragment>
+  );
+};
+
 export default class ReservationDashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { res_code: '' };
+  }
   makeTable = (reservations, res_code) => {
-    // set sizeSum to 0 before calculating how many people are ahead of the current customer
-    let sizeSum = 0;
-    let index = 0;
-    let stats = "";
-    let options = "";
+    // FIRST OF ALL, FILTER RESERVATIONS WITH STATUS OTHER THAN 'WAITING'
+    reservations = reservations.filter(reso => reso.status === 'waiting');
 
-    const cells = reservations.map(reservation => {
-      // don't show reservations with status other than 'waiting'
-      if (reservation.status !== "waiting") {
-        return true;
-      }
+    // CURRENT RESERVATION
+    // GET INDEX OF CURRENT RESERVATION
+    const myResoIndex = reservations.findIndex(reso => reso.res_code === res_code);
+    // SAVE THE CURRENT RESERVATION ARRAY ITEM AS A VAR
+    const myReso = reservations[myResoIndex];
+    // IF RES_CODE EXISTS, THEN CREATE DOM FOR THE CURRENT RESERVATION
+    const myResoCell = (myResoIndex !== -1) && (
+      <tr key={myResoIndex + 1} className='is-selected'>
+        <td>{myResoIndex + 1}</td>
+        <td>{myReso.name}</td>
+        <td>{myReso.group_size}</td>
+      </tr>
+    );
+    // CURRENT RESERVATION - END
 
-      // define whether each row is viewable
-      if (reservation.isViewable === undefined) {
-        reservation.isViewable = true;
-      }
+    // ALL OTHER RESERVATIONS
+    // GET TOP 3 OF ALL OTHER RESERVATIONS (EXCEPT FOR THE CURRENT RESERVATION)
+    const allOtherTop3 = reservations.filter(reso => reso.res_code !== res_code).slice(0, 3);
+    // CREATE DOM FOR ALL THE OTHER RESERVATIONS
+    const allOtherTop3Cells = allOtherTop3.map((reso, index) => {
+      const position = (myResoIndex === -1 || myResoIndex > index) ? index + 1 : index + 2;
 
-      // define each row position
-      const position = index + 1;
-
-      // add the group size
-      sizeSum += reservation.group_size;
-
-      // current customer's reservation exists in the reservation table
-      if (reservation.isViewable && res_code === reservation.res_code) {
-        // create stats for the current reservation
-        stats = `Your position: #${position} (${sizeSum - reservation.group_size} people ahead)`;
-
-        // option for the selected reservation
-        options = (
-          <a className="button is-link is-rounded is-small">
-            <span>Place Order</span>
-            <span className="icon is-small">
-              <i className="fas fa-cart-arrow-down" />
-            </span>
-          </a>
-        );
-      } else {
-        options = "";
-      }
-
-      // only show the first 3 rows to save space, then the current customer's reservation.
-      const visibleRowCut = 3;
-      let { group_size } = reservation;
-      let name = this.props.currentCustomer.name;
-      const klassName = (reservation.isViewable && res_code === reservation.res_code) ? "is-selected" : "";
-      name = res_code == reservation.res_code ? name : "...";
-
-      let row = "";
-      if (index < visibleRowCut) {
-        // first 3 rows
-        row = (
-          <tr key={reservation.id} className={klassName}>
-            <td>{position}</td>
-            <td>{name}</td>
-            <td>{group_size}</td>
-            <td>{options}</td>
-          </tr>
-        );
-      } else if (res_code == reservation.res_code) {
-        // current customer's reservation row
-        row = (
-          <tr key={reservation.id} className={klassName}>
-            <td>{position}</td>
-            <td>{name}</td>
-            <td>{group_size}</td>
-            <td>{options}</td>
-          </tr>
-        );
-      } else if (index == visibleRowCut) {
-        row = (
-          <tr key="empty_row">
-            <td colSpan="4">...</td>
-          </tr>
-        );
-      }
-
-      index++;
-      return row;
+      return (
+        <tr key={position} className=''>
+          <td>{position}</td>
+          <td>{reso.name}</td>
+          <td>{reso.group_size}</td>
+        </tr>
+      );
     });
 
-    if (!res_code) {
-      stats = `Total of ${reservations.length} groups (${sizeSum} people) waiting..`;
+    // SINCE WE'RE SHOWING THE TOP 3 AND THE CURRENT RESERVATION, ADD A ROW SHOWING "..."
+    // TO LET CUSTOMERS SHOW THERE ARE OMITTED ROWS
+    if (myResoIndex !== 3 && reservations.length > 3) {
+      allOtherTop3Cells.push(
+        <tr key='filler' className=''>
+          <td colSpan='3'>. . . . . . . . . . .</td>
+        </tr>
+      );
     }
+
+    // PUT THE CURRENT RESERVATION BACK TO THE OTHER RESERVATION DOM ARRAY
+    allOtherTop3Cells.splice(myResoIndex, 0, myResoCell);
+
+    // CREATE STATISTICS
+    const sizeSum = reservations.reduce((prev, curr) => prev + curr.group_size, 0);
+    const stats = (res_code) ? `You are in Position: #${myResoIndex + 1}` : `Total of ${reservations.length} groups (${sizeSum} people) waiting..`;
 
     return (
       <Fragment>
         <thead>
-          <tr>
-            <th colSpan="4">{stats}</th>
-          </tr>
-          <tr>
-            <th>#</th>
-            <th>NAME</th>
-            <th>SIZE</th>
-            <th />
-          </tr>
+          {createTHead(stats)}
         </thead>
-        <tbody>{cells}</tbody>
+        <tbody>
+          {allOtherTop3Cells}
+        </tbody>
       </Fragment>
     );
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    console.log(this.props.res_code, prevProps.res_code);
+    // ONCE RES_CODE IN YOUR STATE IS ASSIGNED TO A RES_CODE, THEN DON'T UPDATE IT ANY MORE.
+    if (this.props.res_code && prevProps.res_code === null) {
+      this.setState({ res_code: this.props.res_code });
+    }
+  }
+
   render() {
-    const { res_code, reservations } = this.props;
+    const { reservations } = this.props;
     return (
       <table className="table is-striped is-hoverable is-fullwidth reservation-dashboard">
-        {this.makeTable(reservations, res_code)}
+        {reservations.length > 0 && this.makeTable(reservations, this.state.res_code)}
       </table>
     );
   }
