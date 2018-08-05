@@ -28,7 +28,7 @@ const resoData = state => {
     phone: getOnlyNumbers(customer.phone),
     group_size: reservation.group_size,
     email: customer.email,
-    path
+    res_code: reservation.res_code
   }
 }
 

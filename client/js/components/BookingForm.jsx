@@ -6,10 +6,8 @@ export default class BookingForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      reservation: blankReservation(),
       customer: blankCustomer(),
-      // path refers to where the form was submitted (customer or admin)
-      path: ''
+      reservation: blankReservation()
     }
   }
 
@@ -21,20 +19,21 @@ export default class BookingForm extends Component {
   // UPDATE EXISTING RESERVATION - DO NOT CHANGE
   updateReservation = () => {
     const { customer, reservation } = this.state;
-    this.props.socket.emit('updateReservation', { ...customer, ...reservation });
+    reservation.res_code = this.props.res_code;
+    this.props.socket.emit('updateReservation', resoData({ customer, reservation }));
   }
 
   // CANCEL RESERVATION - DO NOT CHANGE
   cancelReservation = event => {
     event.preventDefault();
-    const { res_code } = this.props.reservation;
+    const { res_code } = this.props;
     this.props.socket.emit('cancelReservation', { res_code });
   }
 
   // FORM SUBMISSION - DO NOT CHANGE
   handleSubmit = event => {
     event.preventDefault();
-    const { res_code } = this.state.reservation;
+    const { res_code } = this.props;
 
     if (res_code) {
       this.updateReservation();
@@ -181,9 +180,9 @@ export default class BookingForm extends Component {
         <div className="buttons is-centered is-grouped">
           <p className="control">
             {/*Button rendering depends on if reservation has been created*/}
-            {this.props.reservation.res_code ?
+            {this.props.res_code ?
               (this.updateButton()) : (this.submitButton())}
-            {this.props.reservation.res_code ?
+            {this.props.res_code ?
               (this.cancelButton()) : (null)}
           </p>
         </div>

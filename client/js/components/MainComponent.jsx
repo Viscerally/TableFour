@@ -56,7 +56,7 @@ export default class MainComponent extends Component {
             </span>
             <span className='title is-5'>BOOK YOUR TABLE</span>
             <BookingForm
-              reservation={state.currentReservation}
+              res_code={state.res_code}
               urls={props.urls}
               socket={props.socket}
             />
