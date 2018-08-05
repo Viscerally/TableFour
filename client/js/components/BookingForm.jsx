@@ -112,9 +112,9 @@ export default class BookingForm extends Component {
   render() {
     const { customer: { name, phone, email }, reservation: { group_size } } = this.state;
     return (
-      <form onSubmit={this.handleSubmit} >
+      <form className='booking-form' onSubmit={this.handleSubmit} >
         <div className='field'>
-          <label className='label'>Name*</label>
+          <label className='label'>Name (<i>required</i>)</label>
           <div className='control has-icons-left has-icons-right'>
             <input
               className='input'
@@ -135,7 +135,7 @@ export default class BookingForm extends Component {
         </div>
 
         <div className='field'>
-          <label className='label'>Phone*</label>
+          <label className='label'>Phone (<i>required</i>)</label>
           <div className='control has-icons-left has-icons-right'>
             <NumberFormat
               className='input'
@@ -148,7 +148,7 @@ export default class BookingForm extends Component {
               required
             />
             <span className='icon is-left'>
-              <a className='button is-static'>+1</a>
+              <i class="fas fa-phone"></i>
             </span>
             <span className='icon is-right'>
               <i className='fas fa-check fa-lg'></i>
@@ -157,7 +157,7 @@ export default class BookingForm extends Component {
         </div>
 
         <div className='field'>
-          <label className='label'>Group Size*</label>
+          <label className='label'>Group Size (<i>required</i>)</label>
           <div className='control has-icons-left has-icons-right'>
             <input
               className='input'
@@ -180,7 +180,7 @@ export default class BookingForm extends Component {
         </div>
 
         <div className='field'>
-          <label className='label'>Email (optional)</label>
+          <label className='label'>Email</label>
           <div className='control has-icons-left has-icons-right'>
             <input
               className='input'
@@ -199,13 +199,11 @@ export default class BookingForm extends Component {
           </div>
         </div>
 
-        <div className="field is-centered is-grouped">
+        <div className="buttons is-centered is-grouped">
           <p className="control">
             {/*Button rendering depends on if reservation has been created*/}
             {this.props.reservation.res_code ?
               (this.updateButton()) : (this.submitButton())}
-          </p>
-          <p className="control">
             {this.props.reservation.res_code ?
               (this.cancelButton()) : (null)}
           </p>

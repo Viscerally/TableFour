@@ -25,3 +25,31 @@ body {
   font-family: $theme-font;
   height: 100vh;
 }
+
+.icon.floaty-icon {
+  & {
+    color: white;
+    font-weight: bold;
+    font-size: 25px;
+  }
+  position: relative;
+  padding: 30px;
+  top: -10px;
+  transform: translateY(-50%);
+  border-radius: 3px;
+  background-color: #999;
+  background: linear-gradient(60deg, #ec407a, #d81b60);
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14),
+  0 7px 10px -5px rgba(233, 30, 99, 0.4);
+}
+
+.title.is-4 {
+  padding-left: 12px;
+}
+
+.button {
+  font-size: 15px;
+  text-transform: uppercase;
+  background-color: #999; // background: linear-gradient(60deg, #ec407a, #d81b60);
+  box-shadow: 0 4px 20px 0px lightgrey, 0 7px 10px -5px lightgrey;
+}
