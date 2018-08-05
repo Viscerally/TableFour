@@ -148,7 +148,7 @@ export default class BookingForm extends Component {
               required
             />
             <span className='icon is-left'>
-              <i class="fas fa-phone"></i>
+              <i className="fas fa-phone"></i>
             </span>
             <span className='icon is-right'>
               <i className='fas fa-check fa-lg'></i>
