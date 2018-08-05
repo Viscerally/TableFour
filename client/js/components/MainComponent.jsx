@@ -157,8 +157,8 @@ export default class MainComponent extends Component {
           {this.state.currentReservation && !this.props.isAdmin ?
             (
               <div className='columns'>
-                <div className='column is-one-third' />
-                <div className='column is-one-third'>
+                <div className='column'></div>
+                <div className='column is-6'>
                   <Order
                     order={this.state.currentReservation.order}
                     orderItems={this.state.menuItemOrders}
@@ -167,6 +167,7 @@ export default class MainComponent extends Component {
                     cancelOrder={this.cancelOrder}
                   />
                 </div>
+                <div className='column'></div>
               </div>
             ) : (null)}
         </main>

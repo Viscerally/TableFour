@@ -32,34 +32,40 @@ export default class Order extends Component {
     });
 
     return (
-      <article className='tile is-12 box'>
-       <div className='content'>
-          <p className='title is-4'>ORDER LIST</p>
-          <table className="orderTable">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {orderItems}
-            </tbody>
-            <tfoot>
-              <tr>
-                <th><abbr title="Position"></abbr></th>
-                <th className='totalDescription'>Total to pay</th>
-                <th>{numeral(totalPrice/100).format('$0.00')}</th>
-                <th></th>
-              </tr>
-            </tfoot>
-          </table>
+      <article className='tile is-12 box is-vcentered'>
+        <div className='content is-12 is-vcentered'>
+          <span className='icon floaty-icon'>
+            <i class="fas fa-utensils"></i>
+          </span>
+          <div className="order-list-text">
+            <p className='title is-5'>ORDER LIST</p>
+              <table className="orderTable table is-striped is-hoverable is-fullwidth">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>NAME</th>
+                    <th>PRICE</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orderItems}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th><abbr title="Position"></abbr></th>
+                    <th className='totalDescription'>Total to pay</th>
+                    <th>{numeral(totalPrice/100).format('$0.00')}</th>
+                    <th></th>
+                  </tr>
+                </tfoot>
+              </table>
+          </div>
            {this.props.order && this.props.order.order_code === 'ORDERED' ?
-              <button className="button is-danger" onClick={() => {this.props.cancelOrder()}}>Cancel order</button> :
+              <button className="button is-danger " onClick={() => {this.props.cancelOrder()}}>Cancel your order</button> :
               <button className="button is-link" onClick={() => {this.props.placeOrder()}}>Place your order</button> }
           </div>
+        
       </article>
     )
   }
