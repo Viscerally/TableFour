@@ -48,7 +48,7 @@ export default class MainComponent extends Component {
 
   createBookingForm = (props, state) => {
     return (
-      <div className='tile is-5 is-parent'>
+      <div className='tile is-4 is-parent'>
         <article className='tile is-child box'>
           <div className='content'>
             <span className='icon floaty-icon'>
