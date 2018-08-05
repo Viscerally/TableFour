@@ -46,19 +46,31 @@ export default class MainComponent extends Component {
     this.props.socket.emit('cancelOrder', this.state.currentReservation.order);
   }
 
-  selectDashboard = state => {
+  createBookingForm = (props, state) => {
+    return (
+      <div className='tile is-5 is-parent'>
+        <article className='tile is-child box'>
+          <div className='content'>
+            <span className='title is-4'>BOOK YOUR TABLE</span>
+            <BookingForm
+              reservation={state.currentReservation}
+              urls={props.urls}
+              socket={props.socket}
+            />
+          </div>
+        </article>
+      </div>
+    );
+  }
+
+  createDashboard = state => {
     const { res_code, reservations, currentReservation, currentCustomer } = state;
-    if (this.props.isAdmin) {
-      // ADMIN DASHBOARD
-      return (
-        <AdminReservationDashboard
-          socket={this.props.socket}
-          reservations={reservations}
-        />
-      );
-    } else {
-      // CUSTOMER DASHBOARD
-      return (
+    const dashBoard = (this.props.isAdmin) ? (
+      <AdminReservationDashboard
+        socket={this.props.socket}
+        reservations={reservations}
+      />
+    ) : (
         <ReservationDashboard
           res_code={res_code}
           reservations={reservations}
@@ -66,17 +78,37 @@ export default class MainComponent extends Component {
           currentCustomer={currentCustomer}
         />
       );
-    }
+
+    return (
+      <div className='tile is-parent'>
+        <article className='tile is-child box'>
+          <div className='content'>
+            <p className='title is-4'>RESERVATION STATUS</p>
+            {dashBoard}
+          </div>
+        </article>
+      </div>
+    );
   }
 
   createCategories = () => {
     return Object.values(this.state.menu).map(category => (
-      <div class="tile is-parent">
-        <article class="tile is-child box menuCategories">
-          <Category menu={category} setMenu={this.setMenu} />
-        </article>
-      </div>
+      <Category key={category.id} menu={category} setMenu={this.setMenu} />
     ));
+  }
+
+  createMenu = state => {
+    return (
+      <article className='tile is-parent'>
+        <div className='tile is-child box columns'>
+            <Menu
+              addToOrder={this.addToOrder}
+              currentMenu={state.currentMenu}
+              reservation={state.currentReservation}
+            />
+        </div>
+      </article>
+    );
   }
 
   componentDidMount = () => {
@@ -95,8 +127,6 @@ export default class MainComponent extends Component {
   }
 
   render() {
-    const { socket, urls } = this.props;
-    const { currentReservation } = this.state;
     return (
       <div className='container is-desktop'>
         <header>
@@ -104,58 +134,35 @@ export default class MainComponent extends Component {
         </header>
         <br />
         <main>
-          {/* TOP TILE  */}
           <div className='tile is-ancestor top-tile'>
-            {/* BOOKING FORM */}
-            <div className='tile is-5 is-parent'>
-              <article className='tile is-child box'>
-                <div className='content'>
-                  <span className='title is-4'>BOOK YOUR TABLE</span>
-                  <BookingForm reservation={currentReservation} urls={urls} socket={socket} />
-                </div>
-              </article>
-            </div>
-            {/* BOOKING FORM - END */}
-            {/* RESERVATION DASHBOARD */}
-            <div className='tile is-parent'>
-              <article className='tile is-child box'>
-                <div className='content'>
-                  <p className='title is-4'>RESERVATION STATUS</p>
-                  {this.selectDashboard(this.state)}
-                </div>
-              </article>
-            </div>
-            {/* RESERVATION DASHBOARD -END */}
+            {this.createBookingForm(this.props, this.state)}
+            {this.createDashboard(this.state)}
           </div>
-          {/* TOP TILE - END */}
 
-          {/* CATEGORIES */}
-          <div class='tile is-ancestor'>
+          <div className='tile is-ancestor'>
             {(this.state.menu) && (this.createCategories())}
           </div>
-          {/* CATEGORIES - END */}
 
-          <Menu
-            addToOrder={this.addToOrder}
-            currentMenu={this.state.currentMenu}
-            reservation={this.state.currentReservation}
-          />
-
-        {this.state.currentReservation && !this.props.isAdmin ?
-          (
-          <div className='columns'>
-            <div className='column is-one-third' />
-            <div className='column is-one-third'>
-              <Order
-                order={this.state.currentReservation.order}
-                orderItems={this.state.menuItemOrders}
-                removeFromOrder={this.removeFromOrder}
-                placeOrder={this.placeOrder}
-                cancelOrder={this.cancelOrder}
-              />
-            </div>
+          <div className='tile is-ancestor'>
+            {(Object.keys(this.state.currentMenu).length > 0) &&
+              this.createMenu(this.state)}
           </div>
-        ) : (null)}
+
+          {this.state.currentReservation && !this.props.isAdmin ?
+            (
+              <div className='columns'>
+                <div className='column is-one-third' />
+                <div className='column is-one-third'>
+                  <Order
+                    order={this.state.currentReservation.order}
+                    orderItems={this.state.menuItemOrders}
+                    removeFromOrder={this.removeFromOrder}
+                    placeOrder={this.placeOrder}
+                    cancelOrder={this.cancelOrder}
+                  />
+                </div>
+              </div>
+            ) : (null)}
         </main>
         <footer></footer>
       </div >
