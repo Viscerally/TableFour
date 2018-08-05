@@ -6,7 +6,7 @@ export default class Category extends Component {
     return (
       <a onClick={() => setMenu(menu)} className="tile is-parent">
         <article className="tile is-child box menuCategories has-text-centered">
-          <span className="title is-4">
+          <span className="title is-5">
             {menu.name}
           </span>
         </article>
