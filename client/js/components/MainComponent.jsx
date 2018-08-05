@@ -52,7 +52,7 @@ export default class MainComponent extends Component {
         <article className='tile is-child box'>
           <div className='content'>
             <span className='icon floaty-icon'>
-              <i class="far fa-file-alt"></i>
+              <i className="far fa-file-alt"></i>
             </span>
             <span className='title is-5'>BOOK YOUR TABLE</span>
             <BookingForm
@@ -87,7 +87,7 @@ export default class MainComponent extends Component {
         <article className='tile is-child box'>
           <div className='content'>
             <div className='icon floaty-icon'>
-              <i class="far fa-clock"></i>
+              <i className="far fa-clock"></i>
             </div>
             <span className='title is-5'>RESERVATION STATUS</span>
             {dashBoard}
