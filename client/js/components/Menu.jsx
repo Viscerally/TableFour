@@ -1,13 +1,7 @@
-import React, { Component } from 'react';
-import bulmaCarousel from 'bulma-carousel/dist/js/bulma-carousel.js';
+import React, { Component, Fragment } from 'react';
 import numeral from 'numeral';
-import Slider from 'react-slick';
 
 export default class Menu extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   generateButton = menuItem => {
     return (
       <button
@@ -20,50 +14,31 @@ export default class Menu extends Component {
   }
 
   generateMenu = () => {
-    let menuItems = [];
-    let menuItemComponents;
-    if (this.props.currentMenu.menuItems !== undefined) {
-      menuItems = this.props.currentMenu.menuItems;
-      menuItemComponents = menuItems.map((menuItem) => {
-        return (
-          <div key={menuItem.id} className='carousel-item has-background'>
-            <figure>
-              <img
-                className="is-background"
-                src={menuItem.img_url}
-                alt="item-description"
-                width="250"
-                height="250"
-              />
-            </figure>
-            <div className="title">{menuItem.name}
-              <div className="price">
-                {numeral(menuItem.price / 100).format('$0.00')}
-              </div>
+    const { menuItems } = this.props.currentMenu;
+    return menuItems.map(menuItem => {
+      return (
+        <section key={menuItem.id} className='card tile is-child box'>
+          <main className="card-image">
+            <img src={menuItem.img_url} alt={menuItem.name} />
+          </main>
+          <footer className="card-content">
+            <p className="title is-6 has-text-centered">
+              {menuItem.name} ({numeral(menuItem.price / 100).format('$0.00')})
+            </p>
+            <div className="content has-text-centered">
               {this.generateButton(menuItem)}
             </div>
-          </div>
-        )
-      })
-      return menuItemComponents;
-    }
+          </footer>
+        </section>
+      );
+    })
   }
 
   render() {
-    const settings = {
-      dots: true,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 3,
-      slidesToScroll: 1
-    };
     return (
-      <div>
-        <h2> Single Item</h2>
-        <Slider {...settings}>
+      <Fragment>
           {this.generateMenu()}
-        </Slider>
-      </div>
+      </Fragment>
     );
   }
 }

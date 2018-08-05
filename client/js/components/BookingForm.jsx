@@ -114,31 +114,31 @@ export default class BookingForm extends Component {
     return (
       <form onSubmit={this.handleSubmit} >
         <div className='field'>
-          <label className='label is-medium'>Name*</label>
+          <label className='label'>Name*</label>
           <div className='control has-icons-left has-icons-right'>
             <input
-              className='input is-medium'
+              className='input'
               value={name}
               onChange={this.handleCustomerChange}
               name='name'
               type='text'
-              placeholder='Your name'
+              placeholder='Name'
               required
             />
-            <span className='icon is-medium is-left'>
+            <span className='icon is-left'>
               <i className='fas fa-user-alt'></i>
             </span>
-            <span className='icon is-medium is-right'>
+            <span className='icon is-right'>
               <i className='fas fa-check fa-lg'></i>
             </span>
           </div>
         </div>
 
         <div className='field'>
-          <label className='label is-medium'>Phone*</label>
+          <label className='label'>Phone*</label>
           <div className='control has-icons-left has-icons-right'>
             <NumberFormat
-              className='input is-medium'
+              className='input'
               format='(###) ###-####'
               value={phone}
               onChange={this.handleCustomerChange}
@@ -147,20 +147,20 @@ export default class BookingForm extends Component {
               placeholder='(778) 123-4567'
               required
             />
-            <span className='icon is-medium is-left'>
+            <span className='icon is-left'>
               <a className='button is-static'>+1</a>
             </span>
-            <span className='icon is-medium is-right'>
+            <span className='icon is-right'>
               <i className='fas fa-check fa-lg'></i>
             </span>
           </div>
         </div>
 
         <div className='field'>
-          <label className='label is-medium'>Group Size*</label>
+          <label className='label'>Group Size*</label>
           <div className='control has-icons-left has-icons-right'>
             <input
-              className='input is-medium'
+              className='input'
               value={group_size}
               onChange={this.handleReservationChange}
               name='group_size'
@@ -170,30 +170,30 @@ export default class BookingForm extends Component {
               placeholder='e.g. 2'
               required
             />
-            <span className='icon is-medium is-left'>
+            <span className='icon is-left'>
               <i className='fas fa-user-alt'></i>
             </span>
-            <span className='icon is-medium is-right'>
+            <span className='icon is-right'>
               <i className='fas fa-check fa-lg'></i>
             </span>
           </div>
         </div>
 
         <div className='field'>
-          <label className='label is-medium'>Email (optional)</label>
+          <label className='label'>Email (optional)</label>
           <div className='control has-icons-left has-icons-right'>
             <input
-              className='input is-medium'
+              className='input'
               value={email}
               onChange={this.handleCustomerChange}
               name='email'
               type='email'
               placeholder='example@gmail.com'
             />
-            <span className='icon is-medium is-left'>
+            <span className='icon is-left'>
               <i className='fas fa-envelope'></i>
             </span>
-            <span className='icon is-medium is-right'>
+            <span className='icon is-right'>
               <i className='fas fa-check fa-lg'></i>
             </span>
           </div>
