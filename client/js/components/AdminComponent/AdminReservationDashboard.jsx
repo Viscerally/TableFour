@@ -16,13 +16,13 @@ const createDefaultHeader = () => {
 
 const showOrderStatus = orderCode => {
   return (
-    (orderCode) ? (
-      <span className="icon has-text-success">
-        <i className="fas fa-check-square"></i>
+    (orderCode === 'nonce' || orderCode === undefined) ? (
+      <span className="icon has-text-danger">
+        <i className="fas fa-times"></i>
       </span>
     ) : (
-        <span className="icon has-text-danger">
-          <i className="fas fa-times"></i>
+        <span className="icon has-text-success">
+          <i className="fas fa-check-square"></i>
         </span>
       )
   );
@@ -44,7 +44,6 @@ export default class AdminReservationDashboard extends Component {
     // LOOP THROUGH ROWS
     const cells = reservations.map((reservation, index) => {
       const { id, group_size, name, order_code, status } = reservation;
-
       return (
         <tr key={id}>
           <td>{index + 1}</td>
