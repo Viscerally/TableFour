@@ -1,5 +1,24 @@
-.orderTable {
-  .totalDescription {
-    text-align: right;
+
+div.column.is-6 {
+  
+  article.tile.is-12.box {
+    vertical-align: middle;
+  
+    div.content {
+    
+
+      p.title.is-4 {
+        text-align: left;
+      }
+
+      th.totalDescription {
+        text-align: right;
+      }
+    }
   }
 }
+
+
+
+
+
