@@ -7,16 +7,13 @@ export default class StatusButton extends Component {
 
   createBtns = () => {
     const btnConfig = [
-      { status: 'waiting', colorClass: 'is-warning' },
-      { status: 'seated', colorClass: 'is-success' },
-      { status: 'cancelled', colorClass: 'is-danger' },
+      { status: 'WAITING', colorClass: 'is-warning is-selected' },
+      { status: 'CHECK-IN', colorClass: 'is-success is-selected' },
+      { status: 'CANCEL', colorClass: 'is-danger is-selected' },
     ];
 
     const btnGroup = btnConfig.map((config, index) => {
-      let btnClass = 'button is-small';
-      if (this.props.status === config.status) {
-        btnClass += ` ${config.colorClass} is-selected`;
-      }
+      const btnClass = `button is-small is-selected ${config.colorClass}`;
       return (
         <span
           key={index}

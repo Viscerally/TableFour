@@ -44,32 +44,11 @@ export default class BookingForm extends Component {
   }
 
   // CREATE BUTTONS - DO NOT CHANGE
-  submitButton = () => {
-    return (
-      <button
-        type='submit'
-        className="button is-link"
-      >SUBMIT</button>
-    )
-  }
+  submitButton = () => <button type='submit' className="button is-link" >SUBMIT</button>
 
-  updateButton = () => {
-    return (
-      <button
-        type='submit'
-        className="button is-success"
-      >UPDATE</button>
-    )
-  }
+  updateButton = () => <button type='submit' className="button is-success">UPDATE</button>
 
-  cancelButton = () => {
-    return (
-      <button
-        onClick={this.cancelReservation}
-        className="button is-danger"
-      >CANCEL</button>
-    )
-  }
+  cancelButton = () => <button onClick={this.cancelReservation} className="button is-danger">CANCEL</button>
   // CREATE BUTTONS - END
 
   // HANDLE CUSTOMER INPUTS - DO NOT CHANGE
@@ -148,7 +127,7 @@ export default class BookingForm extends Component {
               required
             />
             <span className='icon is-left'>
-              <i class="fas fa-phone"></i>
+              <i className="fas fa-phone"></i>
             </span>
             <span className='icon is-right'>
               <i className='fas fa-check fa-lg'></i>

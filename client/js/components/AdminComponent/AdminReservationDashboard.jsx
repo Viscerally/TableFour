@@ -14,6 +14,20 @@ const createDefaultHeader = () => {
   );
 };
 
+const showOrderStatus = orderCode => {
+  return (
+    (orderCode === 'nonce' || orderCode === undefined) ? (
+      <span className="icon has-text-danger">
+        <i className="fas fa-times"></i>
+      </span>
+    ) : (
+        <span className="icon has-text-success">
+          <i className="fas fa-check-square"></i>
+        </span>
+      )
+  );
+}
+
 export default class AdminReservationDashboard extends Component {
   selectBtn = (event, status) => {
     // get value of 'data-key' which is === primary key of reservation
@@ -24,36 +38,18 @@ export default class AdminReservationDashboard extends Component {
   }
 
   makeTable = reservations => {
-    let sizeSum = 0;
-    let index = 0;
+    // FIRST OF ALL, FILTER RESERVATIONS WITH STATUS OTHER THAN 'WAITING'
+    reservations = reservations.filter(reso => reso.status === 'waiting');
 
-    // loop through table rows
-    const cells = reservations.map(reservation => {      
-      if (reservation.status !== 'waiting') {
-        return true;
-      }
-
-      const position = index + 1;
-
-      // add the group size
-      sizeSum += reservation.group_size;
+    // LOOP THROUGH ROWS
+    const cells = reservations.map((reservation, index) => {
       const { id, group_size, name, order_code, status } = reservation;
-      const orderStatus = (order_code) ? (
-        <span className="icon has-text-success">
-          <i className="fas fa-check-square"></i>
-        </span>
-      ) : (
-          <span className="icon has-text-danger">
-            <i className="fas fa-times"></i>
-          </span>
-        );
-
       return (
         <tr key={id}>
-          <td>{position}</td>
+          <td>{index + 1}</td>
           <td>{group_size}</td>
           <td>{name}</td>
-          <td>{orderStatus}</td>
+          <td>{showOrderStatus(order_code)}</td>
           <td>
             <StatusButton id={id} status={status} selectBtn={this.selectBtn} />
           </td>
@@ -61,7 +57,9 @@ export default class AdminReservationDashboard extends Component {
       )
     });
 
-    let stats = `Total of ${reservations.length} groups (${sizeSum} people) waiting..`;
+    // CREATE STATISTICS
+    const sizeSum = reservations.reduce((prev, curr) => prev + curr.group_size, 0);
+    const stats = `Total of ${reservations.length} groups (${sizeSum} people) waiting..`;
 
     return (
       <Fragment>
