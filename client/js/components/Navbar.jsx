@@ -4,9 +4,7 @@ const NavbarBrand = () => {
   return (
     <div className='navbar-brand'>
       <a className='navbar-item' href='/'>
-        <div className='navbar-logo'>
-          <img src="/images/logo_1.png" alt="Table For Me"/>
-        </div>
+        <img className='navbar-logo' id="nav-logo-size" src="/images/logo_1.png" alt="Table For Me"/>
       </a>
     </div>
   );

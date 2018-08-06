@@ -32,8 +32,10 @@ export default class Order extends Component {
     });
 
     return (
-      <article className='tile is-12 box is-vcentered'>
-        <div className='content is-12 is-vcentered'>
+      <article className='tile is-12 box is-centered'>
+        <div className='column is-1'></div>
+        <div className='column is-10'>
+        <div className='content is-12'>
           <span className='icon floaty-icon'>
             <i class="fas fa-utensils"></i>
           </span>
@@ -61,11 +63,14 @@ export default class Order extends Component {
                 </tfoot>
               </table>
           </div>
+          <div id="align-for-button">
            {this.props.order && this.props.order.order_code === 'ORDERED' ?
-              <button className="button is-danger " onClick={() => {this.props.cancelOrder()}}>Cancel your order</button> :
-              <button className="button is-link " onClick={() => {this.props.placeOrder()}}>Place your order</button> }
+              <button className="button is-danger" onClick={() => {this.props.cancelOrder()}}>Cancel your order</button> :
+              <button className="button is-link" onClick={() => {this.props.placeOrder()}}>Place your order</button> }
           </div>
-        
+        </div>
+        </div>
+        <div className='column is-1'></div>
       </article>
     )
   }

@@ -5,7 +5,7 @@ div.column.is-6 {
     vertical-align: middle;
     margin: 5px 0px 29px;
   
-    div.content {
+    .content {
     
 
       p.title.is-4 {
@@ -14,6 +14,12 @@ div.column.is-6 {
 
       th.totalDescription {
         text-align: right;
+      }
+
+      #align-for-button {
+        display: flex;
+        justify-content: center;
+        margin: 10px;
       }
     }
   }

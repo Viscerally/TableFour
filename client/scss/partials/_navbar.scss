@@ -2,19 +2,20 @@
 
 nav.navbar {
   background-color: #eee;
+  
+  .navbar-brand {
+  display: inline;
 
-  a.navbar-item {
-    
-    div.navbar-logo {
-    
-      img {
-      max-height: 20%;
-      }
+  .navbar-item {
 
-    }
+    #nav-logo-size {
+        
+          max-height: none;
+          margin-bottom: 20px;
+
+    } 
   }
 
-
-
+  }
 }
 
