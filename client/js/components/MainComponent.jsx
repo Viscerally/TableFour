@@ -134,6 +134,7 @@ export default class MainComponent extends Component {
 
   render() {
     return (
+      <div  className='container-page'>
       <div className='container is-desktop'>
         <header>
           <Navbar />
@@ -145,8 +146,10 @@ export default class MainComponent extends Component {
             {this.createDashboard(this.state)}
           </div>
 
-          <div className='tile is-ancestor'>
-            {(this.state.menu) && (this.createCategories())}
+          <div className='categories-row'>
+            <div className='tile is-ancestor'>
+              {(this.state.menu) && (this.createCategories())}
+            </div>
           </div>
 
           <div className='tile is-ancestor'>
@@ -171,8 +174,11 @@ export default class MainComponent extends Component {
               </div>
             ) : (null)}
         </main>
-        <footer></footer>
+        <footer>
+          <div className='footer-styling'></div>
+        </footer>
       </div >
+      </div>
     );
   }
 }
