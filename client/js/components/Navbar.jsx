@@ -4,7 +4,9 @@ const NavbarBrand = () => {
   return (
     <div className='navbar-brand'>
       <a className='navbar-item' href='/'>
-        <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" />
+        <div className='navbar-logo'>
+          <img src="/images/logo_1.png" alt="Table For Me"/>
+        </div>
       </a>
     </div>
   );
@@ -15,7 +17,7 @@ const NavbarMenu = () => {
       <div className='navbar-start'>
         <div className='navbar-item'>
           <p className='control'>
-            <span>Welcome to "Restaurant Name"!</span>
+            <span className='nav-quote'></span>
           </p>
         </div>
       </div>
@@ -23,7 +25,7 @@ const NavbarMenu = () => {
         <div className='navbar-item'>
           <div className='field is-grouped'>
             <p className='control'>
-              <a className='button is-danger' href='/admin'>
+              <a className='button is-info' href='/admin'>
                 <span className='icon'>
                   <i className="fas fa-user" aria-hidden="true"></i>
                 </span>
