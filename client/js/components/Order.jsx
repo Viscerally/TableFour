@@ -38,7 +38,7 @@ export default class Order extends Component {
             <i class="fas fa-utensils"></i>
           </span>
           <div className="order-list-text">
-            <p className='title is-5'>ORDER LIST</p>
+            <p className='order-list title is-4'>ORDER LIST</p>
               <table className="orderTable table is-striped is-hoverable is-fullwidth">
                 <thead>
                   <tr>
@@ -63,7 +63,7 @@ export default class Order extends Component {
           </div>
            {this.props.order && this.props.order.order_code === 'ORDERED' ?
               <button className="button is-danger " onClick={() => {this.props.cancelOrder()}}>Cancel your order</button> :
-              <button className="button is-link" onClick={() => {this.props.placeOrder()}}>Place your order</button> }
+              <button className="button is-link " onClick={() => {this.props.placeOrder()}}>Place your order</button> }
           </div>
         
       </article>

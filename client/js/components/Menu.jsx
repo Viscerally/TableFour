@@ -6,7 +6,7 @@ export default class Menu extends Component {
     return (
       <button
         onClick={event => this.props.addToOrder(menuItem)}
-        className="button is-danger"
+        className="button is-link"
         disabled={!this.props.reservation.id}
       >Add to your order
     </button>
