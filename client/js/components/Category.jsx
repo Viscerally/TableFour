@@ -5,7 +5,8 @@ export default class Category extends Component {
     const { menu, setMenu } = this.props;
     return (
       <a onClick={() => setMenu(menu)} className="tile is-parent">
-        <article className="tile is-child box menuCategories has-text-centered">
+      
+        <article className="tile is-child box has-text-centered">
           <span className="title is-5">
             {menu.name}
           </span>
