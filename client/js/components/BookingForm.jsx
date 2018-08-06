@@ -45,7 +45,7 @@ export default class BookingForm extends Component {
   // CREATE BUTTONS - DO NOT CHANGE
   submitButton = () => <button type='submit' className="button is-link" >SUBMIT</button>
 
-  updateButton = () => <button type='submit' className="button is-success">UPDATE</button>
+  updateButton = () => <button type='submit' className="button is-info">UPDATE</button>
 
   cancelButton = () => <button onClick={this.cancelReservation} className="button is-danger">CANCEL</button>
   // CREATE BUTTONS - END
