@@ -79,6 +79,24 @@ const getReservationByResCode = (db, res_code) => {
     .catch(err => { console.log(err) })
 }
 
+const getReservationByResCodeWithOrder = (db, res_code) => {
+  let reso;
+  return db.reservations.findOne({ res_code })
+    .then(res => {
+
+      reso = res;
+      return db.orders.findOne({
+        reservation_id:  res.id
+      })
+    })
+    .then(ord => {
+      reso.order = ord;
+      return reso;
+    })
+    .catch(err => { console.log(err) })
+
+}
+
 const getCustomerByReservation = (db, reso) => {
   return db.customers.findOne({
     'id': reso.customer_id
@@ -169,6 +187,27 @@ const getItemOrdersWMenuItemInfo = (db, orderId) => {
     })
 }
 
+const getItemOrdersWMenuItemByResCode = (db, res_code) => {
+  console.log('ResCode:', res_code);
+  return db.reservations.findOne({ res_code })
+    .then(reso => {
+      console.log('Reso: ', reso)
+      return db.orders.findOne({
+        reservation_id: reso.id})
+      })
+    .then(ord => {
+      return db.menu_items_orders.find({
+        order_id: ord.id
+      })
+    })
+    .then(itemOrders => {
+      console.log('ItemOrders: ', itemOrders)
+      return itemOrders;
+    })
+    .catch(err => {console.log(err)})
+
+}
+
 const getMenuItemByItemOrder = (db, menuItemOrder) => {
   return db.menu_items.findOne({
     id: menuItemOrder.menu_item_id
@@ -211,30 +250,34 @@ const addItemToOrder = (db, menuItemOrder) => {
 }
 
 const updateOrderStatus = (db, order) => {
+  let newOrder;
   return db.orders.update(
     { reservation_id: order.reservation_id },
     { order_code: rs.alphaNumUpper(6) },
     result => result)
-    .then(newOrder => {
+    .then(updOrder => {
+      newOrder = updOrder;
       const customerQ = `SELECT * FROM (SELECT customer_id FROM reservations WHERE id = ${newOrder[0].reservation_id}) AS tb1 LEFT JOIN customers ON customer_id = id;`;
-      return db.query(customerQ)
-        .then(customer => {
-          return { newOrder, customer };
-        });
-    });
+      return db.query(customerQ);
+    })
+    .then(customer => {
+      return { newOrder, customer };
+    })
 }
 
 const cancelOrder = (db, order) => {
+  let newOrder;
   return db.orders.update(
     { reservation_id: order.reservation_id },
     { order_code: 'nonce' },
     result => result)
-    .then(newOrder => {
-      const customerQ = `SELECT * FROM (SELECT customer_id FROM reservations WHERE id = ${newOrder[0].reservation_id}) AS tb1 LEFT JOIN customers ON customer_id = id;`;
+    .then(updOrder => {
+      newOrder = updOrder;
+      const customerQ = `SELECT * FROM (SELECT customer_id FROM reservations WHERE id = ${updOrder[0].reservation_id}) AS tb1 LEFT JOIN customers ON customer_id = id;`;
       return db.query(customerQ)
-        .then(customer => {
-          return { newOrder, customer };
-        });
+    })
+    .then(customer => {
+      return { newOrder, customer };
     });
 }
 
@@ -296,5 +339,7 @@ module.exports = {
   getMenu,
   removeOrderItem,
   updateOrderStatus,
-  cancelOrder
+  cancelOrder,
+  getReservationByResCodeWithOrder,
+  getItemOrdersWMenuItemByResCode
 }

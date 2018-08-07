@@ -118,17 +118,21 @@ export default class MainComponent extends Component {
   }
 
   componentDidMount = () => {
+
     let { socket } = this.props;
     const { res_code } = this.state;
     socket = setSocket(socket, this);
-    if (res_code) {
+    if (this.props.res_code){      
+      socket.emit('getReservationByResCodeWithOrder', this.props.res_code);
+      socket.emit('getItemOrdersWMenuItemByResCode', this.props.res_code);
+    }else{
       // res_code received as a url param
       socket.emit('getReservationByResCode', res_code);
       socket.emit('getCustomerByResCode', res_code);
     }
 
     socket.emit('getReservations');
-    socket.emit('getItemOrdersWMenuItemInfo');
+
     socket.emit('getMenu');
   }
 

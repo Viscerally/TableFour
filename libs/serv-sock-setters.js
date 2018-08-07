@@ -40,6 +40,13 @@ module.exports = function setSocketServer(io, db) {
         .catch(err => { console.log(err) });
     })
 
+    socket.on('getReservationByResCodeWithOrder', data => {
+      serv.getReservationByResCodeWithOrder(db, data)
+        .then(data => {
+          io.emit('loadReservationWOrder', data)
+        })
+    })
+
     socket.on('getCustomerByResCode', data => {
       serv.getReservationByResCode(db, data)
         .then(reso => {
@@ -115,6 +122,12 @@ module.exports = function setSocketServer(io, db) {
     socket.on('getItemOrdersWMenuItemInfo', status => {
       serv.getItemOrdersWMenuItemInfo(db)
         .then(data => { io.to(socket.id).emit('ItemOrdersWMenuItemInfo', data) })
+        .catch(err => console.log(err));
+    })
+
+    socket.on('getItemOrdersWMenuItemByResCode', status => {
+      serv.getItemOrdersWMenuItemByResCode(db, status)
+        .then(data => { io.to(socket.id).emit('itemOrdersWMenuItemByResCode', data) })
         .catch(err => console.log(err));
     })
 

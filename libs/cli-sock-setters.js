@@ -77,6 +77,15 @@ function setSocket(socket, react) {
       react.setState({ currentReservation: data });
     })
 
+    socket.on('loadReservationWOrder', data => {
+      console.log('GETTING:', data);
+      react.setState({ currentReservation: data });
+    })
+
+    socket.on('itemOrdersWMenuItemByResCode', data => {
+      react.setState({ menuItemOrders: data});
+    })
+
     socket.on('loadCustomer', data => {
       react.setState({ currentCustomer: data });
     })
