@@ -62,11 +62,11 @@ export default class Order extends Component {
           </div>
           {this.props.order && this.props.order.order_code === 'nonce' ?
             <button
-              className="button is-link "
+              className="button is-link"
               onClick={() => { this.props.placeOrder() }}
             >Place your order</button> :
             <button
-              className="button is-danger "
+              className="button is-danger"
               onClick={() => { this.props.cancelOrder() }}
             >Cancel your order</button>}
         </div>
