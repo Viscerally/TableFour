@@ -100,7 +100,6 @@ export default class AdminReservationDashboard extends Component {
   }
 
   render() {
-    console.log(this.state.tableLoading);
     const { reservations } = this.props;
     return (
       <Fragment>
