@@ -80,7 +80,7 @@ function setSocket(socket, react) {
       react.setState({ currentCustomer: data });
     })
 
-    socket.on('ItemOrdersWMenuItemInfo', menuItemOrders => {      
+    socket.on('ItemOrdersWMenuItemInfo', menuItemOrders => {
       react.setState({ menuItemOrders });
     });
 
@@ -106,23 +106,40 @@ function setSocket(socket, react) {
     })
 
     socket.on('orderPlaced', data => {
-
+      const { newOrder, customer } = data;
       react.setState((prevState, props) => {
         const reservation = prevState.currentReservation;
-        reservation.order = data;
+        reservation.order = newOrder[0];
+        const newResList = prevState.reservations.map(prevReso => {
+          if (prevReso.id === reservation.id) {
+            return { ...reservation, ...customer[0] };
+          }
+          return prevReso;
+        });
+
         return {
-          currentReservation: reservation
+          currentReservation: reservation,
+          reservations: newResList
         }
       })
 
     })
 
     socket.on("orderCancelled", data => {
+      const { newOrder, customer } = data;
       react.setState((prevState, props) => {
         const reservation = prevState.currentReservation;
-        reservation.order = data;
+        reservation.order = newOrder[0];
+        const newResList = prevState.reservations.map(prevReso => {
+          if (prevReso.id === reservation.id) {
+            return { ...reservation, ...customer[0] };
+          }
+          return prevReso;
+        });
+
         return {
-          currentReservation: reservation
+          currentReservation: reservation,
+          reservations: newResList
         }
       })
     })
