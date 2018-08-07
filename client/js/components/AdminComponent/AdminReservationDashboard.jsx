@@ -92,7 +92,15 @@ export default class AdminReservationDashboard extends Component {
     );
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    // CHANGE THE TABLE LOADING STATUS
+    if (this.props.tableLoading !== prevProps.tableLoading) {
+      this.setState({ tableLoading: this.props.tableLoading });
+    }
+  }
+
   render() {
+    console.log(this.state.tableLoading);
     const { reservations } = this.props;
     return (
       <Fragment>
