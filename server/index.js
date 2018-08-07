@@ -10,7 +10,7 @@ const ENV = process.env.NODE_ENV || 'development';
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const io = require('socket.io').listen(server);
 
 const massive = require('massive');
 const connectionString = process.env.DATABASE_URL;
@@ -32,12 +32,11 @@ massive(connectionString)
     app.get('*', (req, res) => {
       res.sendFile(path.join(__dirname + '/../build/index.html'));
     });
+    server.listen(PORT, () => {
+      console.log(`Express server listening on port ${PORT} in ${ENV} mode.`);
+    });
 
   })
   .catch(err => {
     console.log(err.stack);
   });
-
-server.listen(PORT, () => {
-  console.log(`Express server listening on port ${PORT} in ${ENV} mode.`);
-});
