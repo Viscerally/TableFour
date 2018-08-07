@@ -90,7 +90,7 @@ export default class BookingForm extends Component {
   render() {
     const { customer: { name, phone, email }, reservation: { group_size } } = this.state;
     return (
-      <form className='booking-form' onSubmit={this.handleSubmit} >
+      <form className='booking-form' onSubmit={this.handleSubmit}>
         <div className='field'>
           <label className='label'>Name (<i>required</i>)</label>
           <div className='control has-icons-left has-icons-right'>
@@ -183,7 +183,7 @@ export default class BookingForm extends Component {
             {this.props.res_code ?
               (this.updateButton()) : (this.submitButton())}
             {this.props.res_code ?
-              (this.cancelButton()) : (null)}
+              (this.cancelButton()) : null}
           </p>
         </div>
       </form>

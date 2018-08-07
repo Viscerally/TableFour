@@ -1,17 +1,14 @@
 require('dotenv').config()
 
-
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require("twilio")(accountSid, authToken);
-
-
 
 module.exports = {
 
   resoTextMsg: function (phone, reservation) {
     const { res_code, host } = reservation;
-    const url = `${host}/home/reservations/${res_code}`;
+    const url = `${host}/reservations/${res_code}`;
     console.log(url);
     return client.messages.create({
       to: phone,

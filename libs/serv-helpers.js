@@ -31,18 +31,6 @@ function getAllReservations(db) {
 }
 // GET ALL RESERVATIONS - END
 
-const insertCustmer = (db, customerData) => {
-  return db.customers.insert(customerData)
-    .then(result => result)
-    .catch(err => { console.log(err) })
-}
-
-const insertReservation = (db, reservationData) => {
-  return db.reservations.insert(reservationData)
-    .then(result => result)
-    .catch(err => { console.log(err) })
-}
-
 // DO NOT CHANGE
 const saveCustomer = (db, customerData) => {
   return db.customers.save(customerData)
@@ -55,7 +43,7 @@ const saveReservation = (db, reservationData) => {
   return db.reservations.save(reservationData)
     .then(result => result)
     .catch(err => { console.log(err) })
-}
+};
 
 // SUBMIT NEW RESERVATION - DO NOT CHANGE
 const submitNewReservation = async (db, formData) => {
@@ -68,7 +56,7 @@ const submitNewReservation = async (db, formData) => {
     customer_id: customer.id,
     res_code: rs.alphaNumUpper(6),
     group_size
-  }
+  };
 
   const reservation = await saveReservation(db, reservationData);
 
@@ -80,7 +68,7 @@ const submitNewReservation = async (db, formData) => {
   reservation.order = order;
 
   // text the reservation data
-  //smsMsg.resoTextMsg(phone, reservation);
+  smsMsg.resoTextMsg(phone, reservation);
   return { customer, reservation, path };
 }
 // SUBMIT NEW RESERVATION - END
@@ -111,7 +99,7 @@ const findReservation = (db, param) => {
 const updateReservation = async (db, formData) => {
   const { name, phone, group_size, email, res_code } = formData;
 
-  // find the reservation record by res_code
+  // FIND RESERVATION RECORD BY res_code
   const reservationRecord = await findReservation(db, { res_code });
 
   const { id, customer_id } = reservationRecord;
@@ -120,6 +108,10 @@ const updateReservation = async (db, formData) => {
 
   const reservationData = { id, group_size };
   const reservation = await saveReservation(db, reservationData);
+
+  const order = await db.orders.findOne({ reservation_id: reservation.id });
+  reservation.order = order;
+
   return { customer, reservation };
 }
 // SUBMIT NEW RESERVATION - END
