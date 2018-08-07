@@ -14,9 +14,15 @@ const createDefaultHeader = () => {
   );
 };
 
-const showOrderStatus = orderCode => {
+const showOrderStatus = order => {
+  // ERROR HANDLING
+  // IN CASE 'order' KEY DOESN'T EXIST IN RESERVATION, SKIP THIS FUNCTION RATHER THAN
+  // MAKING THE WHOLE APP TO CRASH
+  if (!order) {
+    return true;
+  }
   return (
-    (orderCode === 'nonce') ? (
+    (order.orderCode === 'nonce') ? (
       <span className="icon has-text-danger">N</span>
     ) : (
         <span className="icon has-text-success">Y</span>
@@ -38,13 +44,13 @@ export default class AdminReservationDashboard extends Component {
     reservations = reservations.filter(reso => reso.status === 'waiting');
     // LOOP THROUGH ROWS
     const cells = reservations.map((reservation, index) => {
-      const { id, group_size, name, order: { order_code }, status } = reservation;
+      const { id, group_size, name, order, status } = reservation;
       return (
         <tr key={id}>
           <td>{index + 1}</td>
           <td>{group_size}</td>
           <td>{name}</td>
-          <td>{showOrderStatus(order_code)}</td>
+          <td>{showOrderStatus(order)}</td>
           <td>
             <StatusButton id={id} status={status} selectBtn={this.selectBtn} />
           </td>
