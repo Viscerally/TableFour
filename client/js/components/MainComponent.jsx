@@ -83,7 +83,7 @@ export default class MainComponent extends Component {
       );
 
     return (
-      <div className='tile is-parent'>
+      <div id="reservation-container" className='tile is-parent'>
         <article className='tile is-child box'>
           <div className='content'>
             <div className='icon floaty-icon'>

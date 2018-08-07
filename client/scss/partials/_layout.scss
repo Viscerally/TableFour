@@ -17,10 +17,17 @@ html {
 /*
  * Global layout stuff
  */
+
+
  
  div#react-root {
    background-color: #eee;
  }
+
+
+.container-page {
+  padding: 5px 20px 20px;
+
 
 body {
   margin: 0;
@@ -35,6 +42,7 @@ body {
     color: white;
     font-weight: bold;
     font-size: 25px;
+    position: relative;
   }
   position: relative;
   padding: 30px;
@@ -54,5 +62,7 @@ body {
 .button {
   font-size: 15px;
   text-transform: uppercase;
+}
+
 }
 

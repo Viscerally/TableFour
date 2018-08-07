@@ -2,11 +2,9 @@
 div.column.is-6 {
   
   article.tile.is-12.box {
-    vertical-align: middle;
-    margin: 5px 0px 29px;
-  
+   
+
     .content {
-    
 
       p.title.is-4 {
         text-align: left;
@@ -16,12 +14,17 @@ div.column.is-6 {
         text-align: right;
       }
 
+      
       #align-for-button {
         display: flex;
         justify-content: center;
         margin: 10px;
       }
     }
+    
+      #order-list-inner {
+        padding: 8% 0% 5% 8%;
+      }
   }
 }
 
