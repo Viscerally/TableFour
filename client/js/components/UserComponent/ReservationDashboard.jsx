@@ -23,6 +23,7 @@ export default class ReservationDashboard extends Component {
       tableLoading: true
     };
   }
+
   makeTable = (reservations, res_code) => {
     // FIRST OF ALL, FILTER RESERVATIONS WITH STATUS OTHER THAN 'WAITING'
     reservations = reservations.filter(reso => reso.status === 'waiting');
@@ -87,6 +88,9 @@ export default class ReservationDashboard extends Component {
     );
   };
 
+  // ANNOUNCEMENT WHEN THERE IS NO ONE WAITING
+  makeAnnouncement = () => <thead><tr><th>Book now and be our first customer!</th></tr></thead>
+
   addSpinner = () => {
     return (
       (this.state.tableLoading) && (
@@ -116,7 +120,7 @@ export default class ReservationDashboard extends Component {
       <Fragment>
         {this.addSpinner()}
         <table className="table is-striped is-hoverable is-fullwidth reservation-dashboard">
-          {reservations.length > 0 && this.makeTable(reservations, this.state.res_code)}
+          {reservations.length === 0 ? this.makeAnnouncement() : this.makeTable(reservations, this.state.res_code)}
         </table>
       </Fragment>
     );
