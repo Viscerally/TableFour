@@ -13,7 +13,11 @@ function setSocket(socket, react) {
         currentReservation = reservations.filter(reservation => res_code === reservation.res_code);
       }
       formData = (currentReservation.length === 0) ? react.state.formData : currentReservation[0];
-      react.setState({ formData, reservations });
+      react.setState({
+        formData,
+        reservations,
+        tableLoading: false
+      });
     });
 
     // LOAD NEW RESERVATION - DO NOT CHANGE
