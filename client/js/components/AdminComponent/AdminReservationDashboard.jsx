@@ -31,6 +31,11 @@ const showOrderStatus = order => {
 }
 
 export default class AdminReservationDashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { tableLoading: true };
+  }
+
   selectBtn = (event, status) => {
     // get value of 'data-key' which is === primary key of reservation
     const id = event.target.getAttribute('data-key');
@@ -75,12 +80,35 @@ export default class AdminReservationDashboard extends Component {
     );
   };
 
+  addSpinner = () => {
+    return (
+      (this.state.tableLoading) && (
+        <div className='has-text-centered'>
+          <span>
+            <i className="spinner fas fa-utensils fa-spin fa-2x"></i>  Loading table...
+          </span>
+        </div>
+      )
+    );
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // CHANGE THE TABLE LOADING STATUS
+    if (this.props.tableLoading !== prevProps.tableLoading) {
+      this.setState({ tableLoading: this.props.tableLoading });
+    }
+  }
+
   render() {
+    console.log(this.state.tableLoading);
     const { reservations } = this.props;
     return (
-      <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-        {(reservations.length > 0) && this.makeTable(reservations)}
-      </table>
+      <Fragment>
+        {this.addSpinner()}
+        <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
+          {(reservations.length > 0) && this.makeTable(reservations)}
+        </table>
+      </Fragment>
     );
   }
 }
