@@ -23,12 +23,16 @@ div.column.is-6 {
     }
     
       #order-list-inner {
-        padding: 8% 0% 5% 8%;
+        padding: 10% 20%;
       }
-  }
+    }
+    
+    @media screen and (max-width: 320px) {
+      #order-list-inner {
+        font-size: 12px;
+      }
+    }
 }
-
-
 
 
 
