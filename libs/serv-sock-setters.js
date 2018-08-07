@@ -134,8 +134,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('placeOrder', order => {
       serv.updateOrderStatus(db, order)
         .then(data => {
-          io.to(socket.id).emit('orderPlaced', data[0]);
-          // TODO NEEDS TO SEND MESSAGE TO ADMIN TOO
+          broadcastResos(io, socket, 'orderPlaced', data, admins, true);
         })
         .catch(err => { console.log(err) })
     })
@@ -144,8 +143,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on("cancelOrder", order => {
       serv.cancelOrder(db, order)
         .then(data => {
-          io.to(socket.id).emit('orderCancelled', data[0]);
-          // TODO NEEDS TO SEND MESSAGE TO ADMIN TOO
+          broadcastResos(io, socket, 'orderCancelled', data, admins, true);
         })
         .catch(err => { console.log(err) })
     })
