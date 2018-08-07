@@ -22,6 +22,7 @@ export default class MainComponent extends Component {
       currentMenu: {},
       menuItemOrders: [],
       res_code: props.res_code,
+      tableLoading: true,
       err: {}
     };
   }
@@ -69,7 +70,7 @@ export default class MainComponent extends Component {
   }
 
   createDashboard = state => {
-    const { res_code, reservations, currentReservation, currentCustomer } = state;
+    const { res_code, reservations, currentReservation, currentCustomer, tableLoading } = state;
     const dashBoard = (this.props.isAdmin) ? (
       <AdminReservationDashboard
         socket={this.props.socket}
@@ -81,6 +82,7 @@ export default class MainComponent extends Component {
           reservations={reservations}
           currentReservation={currentReservation}
           currentCustomer={currentCustomer}
+          tableLoading={tableLoading}
         />
       );
 
