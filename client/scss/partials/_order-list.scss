@@ -2,24 +2,26 @@
 div.column.is-6 {
   
   article.tile.is-12.box {
-    vertical-align: middle;
-    margin: 5px 0px 29px;
+   
   
     .content {
-    
 
-      p.title.is-4 {
-        text-align: left;
-      }
+      #order-list-inner {
+      display: flex;
+      justify-content: center;
 
-      th.totalDescription {
-        text-align: right;
-      }
+        p.title.is-4 {
+          text-align: left;
+        }
 
-      #align-for-button {
-        display: flex;
-        justify-content: center;
-        margin: 10px;
+        th.totalDescription {
+          text-align: right;
+        }
+
+        #align-for-button {
+     
+          margin: 10px;
+        }
       }
     }
   }

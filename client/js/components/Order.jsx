@@ -33,44 +33,40 @@ export default class Order extends Component {
 
     return (
       <article className='tile is-12 box is-centered'>
-        <div className='column is-1'></div>
-        <div className='column is-10'>
-        <div className='content is-12'>
-          <span className='icon floaty-icon'>
+          <div className='icon floaty-icon'>
             <i class="fas fa-utensils"></i>
-          </span>
-          <div className="order-list-text">
-            <p className='order-list title is-4'>ORDER LIST</p>
-              <table className="orderTable table is-striped is-hoverable is-fullwidth">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>NAME</th>
-                    <th>PRICE</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orderItems}
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <th><abbr title="Position"></abbr></th>
-                    <th className='totalDescription'>Total to pay</th>
-                    <th>{numeral(totalPrice/100).format('$0.00')}</th>
-                    <th></th>
-                  </tr>
-                </tfoot>
-              </table>
           </div>
+        <div id="order-list-inner" className='content'>
+            <p className='order-list title is-4'>ORDER LIST</p>
+            <div className="order-list-text">
+                <table className="orderTable table is-striped is-hoverable is-fullwidth">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>NAME</th>
+                      <th>PRICE</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orderItems}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th><abbr title="Position"></abbr></th>
+                      <th className='totalDescription'>Total to pay</th>
+                      <th>{numeral(totalPrice/100).format('$0.00')}</th>
+                      <th></th>
+                    </tr>
+                  </tfoot>
+                </table>
+            </div>
           <div id="align-for-button">
            {this.props.order && this.props.order.order_code === 'ORDERED' ?
               <button className="button is-danger" onClick={() => {this.props.cancelOrder()}}>Cancel your order</button> :
               <button className="button is-link" onClick={() => {this.props.placeOrder()}}>Place your order</button> }
           </div>
         </div>
-        </div>
-        <div className='column is-1'></div>
       </article>
     )
   }
