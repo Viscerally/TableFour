@@ -32,11 +32,11 @@ export default class Order extends Component {
     });
     return (
       <article className='tile is-12 box'>
-          <div className='content is-12'>
-            <span className='icon floaty-icon'>
-              <i className="fas fa-utensils"></i>
-            </span>
-            <div id="order-list-inner" className='content'>
+        <div className='content is-12'>
+          <span className='icon floaty-icon'>
+            <i className="fas fa-utensils"></i>
+          </span>
+          <div id="order-list-inner" className='content'>
             <div className="order-list-text">
               <p className='order-list title is-4'>ORDER LIST</p>
               <table className="orderTable table is-striped is-hoverable is-fullwidth">
@@ -69,7 +69,9 @@ export default class Order extends Component {
               <button
                 className="button is-danger"
                 onClick={() => { this.props.cancelOrder() }}
-              >Cancel your order</button>}  
+              >Cancel your order</button>}
+          </div>
+        </div>
       </article>
     )
   }
