@@ -19,9 +19,10 @@ export default class MainComponent extends Component {
       currentCustomer: blankCustomer(),
       currentReservation: blankReservation(),
       reservations: [],
+      currentMenu: {},
       menuItemOrders: [],
       res_code: props.res_code,
-      currentMenu: {}
+      err: {}
     };
   }
 
@@ -59,6 +60,7 @@ export default class MainComponent extends Component {
               res_code={state.res_code}
               urls={props.urls}
               socket={props.socket}
+              err={state.err}
             />
           </div>
         </article>
@@ -138,50 +140,50 @@ export default class MainComponent extends Component {
 
   render() {
     return (
-      <div  className='container-page'>
-      <div className='container is-desktop'>
-        <header>
-          <Navbar />
-        </header>
-        <br />
-        <main>
-          <div className='tile is-ancestor top-tile'>
-            {this.createBookingForm(this.props, this.state)}
-            {this.createDashboard(this.state)}
-          </div>
-
-          <div className='categories-row'>
-            <div className='tile is-ancestor'>
-              {(this.state.menu) && (this.createCategories())}
+      <div className='container-page'>
+        <div className='container is-desktop'>
+          <header>
+            <Navbar />
+          </header>
+          <br />
+          <main>
+            <div className='tile is-ancestor top-tile'>
+              {this.createBookingForm(this.props, this.state)}
+              {this.createDashboard(this.state)}
             </div>
-          </div>
 
-          <div className='tile is-ancestor'>
-            {(Object.keys(this.state.currentMenu).length > 0) &&
-              this.createMenu(this.state)}
-          </div>
-
-          {this.state.currentReservation && !this.props.isAdmin ?
-            (
-              <div className='columns'>
-                <div className='column'></div>
-                <div className='column is-6'>
-                  <Order
-                    order={this.state.currentReservation.order}
-                    orderItems={this.state.menuItemOrders}
-                    removeFromOrder={this.removeFromOrder}
-                    placeOrder={this.placeOrder}
-                    cancelOrder={this.cancelOrder}
-                  />
-                </div>
-                <div className='column'></div>
+            <div className='categories-row'>
+              <div className='tile is-ancestor'>
+                {(this.state.menu) && (this.createCategories())}
               </div>
-            ) : (null)}
-        </main>
-        <footer>
-          <div className='footer-styling'></div>
-        </footer>
-      </div >
+            </div>
+
+            <div className='tile is-ancestor'>
+              {(Object.keys(this.state.currentMenu).length > 0) &&
+                this.createMenu(this.state)}
+            </div>
+
+            {this.state.currentReservation && !this.props.isAdmin ?
+              (
+                <div className='columns'>
+                  <div className='column'></div>
+                  <div className='column is-6'>
+                    <Order
+                      order={this.state.currentReservation.order}
+                      orderItems={this.state.menuItemOrders}
+                      removeFromOrder={this.removeFromOrder}
+                      placeOrder={this.placeOrder}
+                      cancelOrder={this.cancelOrder}
+                    />
+                  </div>
+                  <div className='column'></div>
+                </div>
+              ) : (null)}
+          </main>
+          <footer>
+            <div className='footer-styling'></div>
+          </footer>
+        </div >
       </div>
     );
   }

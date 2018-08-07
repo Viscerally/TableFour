@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import NumberFormat from 'react-number-format';
 import { blankReservation, blankCustomer, resoData } from '../../libs/form-helper-func.js';
 
@@ -68,10 +68,137 @@ export default class BookingForm extends Component {
     })
   }
 
+  createEmailField = myEmail => {
+    const emailIcons = (
+      <Fragment>
+        <span className='icon is-left'>
+          <i className='fas fa-envelope'></i>
+        </span>
+        <span className='icon is-right'>
+          <i className='fas fa-check fa-lg'></i>
+        </span>
+      </Fragment>
+    );
+
+    return (
+      <Fragment>
+        <label className='label'>Email</label>
+        <div className='control has-icons-left has-icons-right'>
+          <input
+            className='input'
+            value={myEmail}
+            onChange={this.handleCustomerChange}
+            name='email'
+            type='email'
+            placeholder='example@gmail.com'
+          />
+          {emailIcons}
+        </div>
+      </Fragment>
+    );
+  }
+
+  createGroupSizeField = myGroupSize => {
+    const groupSizeIcons = (
+      <Fragment>
+        <span className='icon is-left'>
+          <i className='fas fa-user-alt'></i>
+        </span>
+        <span className='icon is-right'>
+          <i className='fas fa-check fa-lg'></i>
+        </span>
+      </Fragment>
+    );
+    return (
+      <Fragment>
+        <label className='label'>Group Size (<i>required</i>)</label>
+        <div className='control has-icons-left has-icons-right'>
+          <input
+            className='input'
+            value={myGroupSize}
+            onChange={this.handleReservationChange}
+            name='group_size'
+            type='number'
+            min='1'
+            max='10'
+            placeholder='e.g. 2'
+            required
+          />
+          {groupSizeIcons}
+        </div>
+      </Fragment>
+    );
+  }
+
+  createPhoneField = myPhone => {
+    const phoneIcons = (
+      <Fragment>
+        <span className='icon is-left'>
+          <i className="fas fa-phone"></i>
+        </span>
+        <span className='icon is-right'>
+          <i className='fas fa-check fa-lg'></i>
+        </span>
+      </Fragment>
+    );
+    return (
+      <Fragment>
+        <label className='label'>Phone (<i>required</i>)</label>
+        <div className='control has-icons-left has-icons-right'>
+          <NumberFormat
+            className='input'
+            format='(###) ###-####'
+            value={myPhone}
+            onChange={this.handleCustomerChange}
+            name='phone'
+            type='tel'
+            placeholder='(778) 123-4567'
+            required
+          />
+          {phoneIcons}
+        </div>
+        <p className="help is-danger">
+          {(this.props.err.code == 21211) && this.props.err.message}
+        </p>
+      </Fragment>
+    );
+  }
+
+  createNameField = myName => {
+    const nameIcons = (
+      <Fragment>
+        <span className='icon is-left'>
+          <i className='fas fa-user-alt'></i>
+        </span>
+        <span className='icon is-right'>
+          <i className='fas fa-check fa-lg'></i>
+        </span>
+      </Fragment>
+    );
+
+    return (
+      <Fragment>
+        <label className='label'>Name (<i>required</i>)</label>
+        <div className='control has-icons-left has-icons-right'>
+          <input
+            className='input'
+            value={myName}
+            onChange={this.handleCustomerChange}
+            name='name'
+            type='text'
+            placeholder='Name'
+            required
+          />
+          {nameIcons}
+        </div>
+      </Fragment>
+    );
+  }
+
   // DO NOT CHANGE
   componentDidMount() {
     const { socket, urls } = this.props;
-    this.setState({ path: urls.path });
+
     // check the url path
     if (urls.path === '/reservations/:res_code') {
       // if res_code is given as a url param, request customer and reservation
@@ -92,98 +219,22 @@ export default class BookingForm extends Component {
     return (
       <form className='booking-form' onSubmit={this.handleSubmit}>
         <div className='field'>
-          <label className='label'>Name (<i>required</i>)</label>
-          <div className='control has-icons-left has-icons-right'>
-            <input
-              className='input'
-              value={name}
-              onChange={this.handleCustomerChange}
-              name='name'
-              type='text'
-              placeholder='Name'
-              required
-            />
-            <span className='icon is-left'>
-              <i className='fas fa-user-alt'></i>
-            </span>
-            <span className='icon is-right'>
-              <i className='fas fa-check fa-lg'></i>
-            </span>
-          </div>
+          {this.createNameField(name)}
         </div>
-
         <div className='field'>
-          <label className='label'>Phone (<i>required</i>)</label>
-          <div className='control has-icons-left has-icons-right'>
-            <NumberFormat
-              className='input'
-              format='(###) ###-####'
-              value={phone}
-              onChange={this.handleCustomerChange}
-              name='phone'
-              type='tel'
-              placeholder='(778) 123-4567'
-              required
-            />
-            <span className='icon is-left'>
-              <i className="fas fa-phone"></i>
-            </span>
-            <span className='icon is-right'>
-              <i className='fas fa-check fa-lg'></i>
-            </span>
-          </div>
+          {this.createPhoneField(phone)}
         </div>
-
         <div className='field'>
-          <label className='label'>Group Size (<i>required</i>)</label>
-          <div className='control has-icons-left has-icons-right'>
-            <input
-              className='input'
-              value={group_size}
-              onChange={this.handleReservationChange}
-              name='group_size'
-              type='number'
-              min='1'
-              max='10'
-              placeholder='e.g. 2'
-              required
-            />
-            <span className='icon is-left'>
-              <i className='fas fa-user-alt'></i>
-            </span>
-            <span className='icon is-right'>
-              <i className='fas fa-check fa-lg'></i>
-            </span>
-          </div>
+          {this.createGroupSizeField(group_size)}
         </div>
-
         <div className='field'>
-          <label className='label'>Email</label>
-          <div className='control has-icons-left has-icons-right'>
-            <input
-              className='input'
-              value={email}
-              onChange={this.handleCustomerChange}
-              name='email'
-              type='email'
-              placeholder='example@gmail.com'
-            />
-            <span className='icon is-left'>
-              <i className='fas fa-envelope'></i>
-            </span>
-            <span className='icon is-right'>
-              <i className='fas fa-check fa-lg'></i>
-            </span>
-          </div>
+          {this.createEmailField(email)}
         </div>
-
         <div className="buttons is-centered is-grouped">
           <p className="control">
             {/*Button rendering depends on if reservation has been created*/}
-            {this.props.res_code ?
-              (this.updateButton()) : (this.submitButton())}
-            {this.props.res_code ?
-              (this.cancelButton()) : null}
+            {this.props.res_code ? (this.updateButton()) : (this.submitButton())}
+            {this.props.res_code && (this.cancelButton())}
           </p>
         </div>
       </form>

@@ -47,9 +47,10 @@ const saveReservation = (db, reservationData) => {
 
 // SUBMIT NEW RESERVATION - DO NOT CHANGE
 const submitNewReservation = async (db, formData) => {
-  const { name, phone, group_size, email, path } = formData;
+  const { name, phone, group_size, email } = formData;
   const customer = await saveCustomer(db, { name, phone, email });
 
+  // ADD RESERVATION
   const reservationData = {
     placement_time: new Date(),
     status: 'waiting',
@@ -57,9 +58,9 @@ const submitNewReservation = async (db, formData) => {
     res_code: rs.alphaNumUpper(6),
     group_size
   };
-
   const reservation = await saveReservation(db, reservationData);
 
+  // ADD ORDER (EMPTY ROW BECAUSE CUSTOMER DIDN'T PLACE ANY ORDER YET)
   orderData = {
     order_code: 'nonce',
     reservation_id: reservation.id
@@ -67,9 +68,14 @@ const submitNewReservation = async (db, formData) => {
   const order = await db.orders.insert(orderData);
   reservation.order = order;
 
-  // text the reservation data
-  smsMsg.resoTextMsg(phone, reservation);
-  return { customer, reservation, path };
+  // TEXT RESERVATION DATA
+  return smsMsg.resoTextMsg(phone, reservation)
+    .then(() => {
+      return { customer, reservation, err: { code: '', message: '' } };
+    })
+    .catch(err => {
+      return { customer, reservation, err: { code: err.code, message: err.message } };
+    });
 }
 // SUBMIT NEW RESERVATION - END
 
