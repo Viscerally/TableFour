@@ -92,7 +92,7 @@ export default class ReservationDashboard extends Component {
       (this.state.tableLoading) && (
         <div className='has-text-centered'>
           <span>
-            <i className="fas fa-spinner fa-spin"></i> Loading table...
+            <i className="spinner fas fa-utensils fa-spin fa-2x"></i>  Loading table...
           </span>
         </div>
       )
