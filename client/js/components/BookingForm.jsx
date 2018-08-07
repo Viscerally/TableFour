@@ -200,7 +200,7 @@ export default class BookingForm extends Component {
     const { socket, urls } = this.props;
 
     // check the url path
-    if (urls.path === '/reservations/:res_code') {
+    if (urls.path === '/:res_code') {
       // if res_code is given as a url param, request customer and reservation
       // associated with the res_code and save them in state
       socket.emit('getCustomerByResCode', urls.params.res_code);
