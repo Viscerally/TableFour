@@ -67,7 +67,8 @@ function setSocket(socket, react) {
       react.setState({
         currentCustomer: formHelp.blankCustomer(),
         currentReservation: formHelp.blankReservation(),
-        reservations
+        reservations,
+        res_code: null
       });
     });
 
