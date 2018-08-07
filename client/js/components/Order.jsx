@@ -32,10 +32,10 @@ export default class Order extends Component {
     });
 
     return (
-      <article className='tile is-12 box is-centered'>
-          <div className='icon floaty-icon'>
-            <i class="fas fa-utensils"></i>
-          </div>
+      <article className='tile is-12 box'>
+        <span className='icon floaty-icon'>
+          <i class="fas fa-utensils"></i>
+        </span>
         <div id="order-list-inner" className='content'>
             <p className='order-list title is-4'>ORDER LIST</p>
             <div className="order-list-text">

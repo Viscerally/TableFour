@@ -1,7 +1,16 @@
-table.reservation-dashboard {  
-  th,
-  td {
-    text-align: center;
-    vertical-align: middle;
+@media screen and (max-width: 425px) {
+  #reservation-container {
+    margin-top: 20px;
   }
+
+  
 }
+    table.reservation-dashboard {
+      th,
+      td {
+        text-align: center;
+        vertical-align: middle;
+      }
+      
+      
+    }

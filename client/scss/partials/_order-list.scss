@@ -3,27 +3,28 @@ div.column.is-6 {
   
   article.tile.is-12.box {
    
-  
+
     .content {
 
-      #order-list-inner {
-      display: flex;
-      justify-content: center;
+      p.title.is-4 {
+        text-align: left;
+      }
 
-        p.title.is-4 {
-          text-align: left;
-        }
+      th.totalDescription {
+        text-align: right;
+      }
 
-        th.totalDescription {
-          text-align: right;
-        }
-
-        #align-for-button {
-     
-          margin: 10px;
-        }
+      
+      #align-for-button {
+        display: flex;
+        justify-content: center;
+        margin: 10px;
       }
     }
+    
+      #order-list-inner {
+        padding: 8% 0% 5% 8%;
+      }
   }
 }
 
