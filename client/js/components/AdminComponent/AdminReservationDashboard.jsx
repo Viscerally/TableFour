@@ -16,14 +16,10 @@ const createDefaultHeader = () => {
 
 const showOrderStatus = orderCode => {
   return (
-    (orderCode === 'nonce' || orderCode === undefined) ? (
-      <span className="icon has-text-danger">
-        <i className="fas fa-times"></i>
-      </span>
+    (orderCode === 'nonce') ? (
+      <span className="icon has-text-danger">N</span>
     ) : (
-        <span className="icon has-text-success">
-          <i className="fas fa-check-square"></i>
-        </span>
+        <span className="icon has-text-success">Y</span>
       )
   );
 }
@@ -40,10 +36,9 @@ export default class AdminReservationDashboard extends Component {
   makeTable = reservations => {
     // FIRST OF ALL, FILTER RESERVATIONS WITH STATUS OTHER THAN 'WAITING'
     reservations = reservations.filter(reso => reso.status === 'waiting');
-
     // LOOP THROUGH ROWS
     const cells = reservations.map((reservation, index) => {
-      const { id, group_size, name, order_code, status } = reservation;
+      const { id, group_size, name, order: { order_code }, status } = reservation;
       return (
         <tr key={id}>
           <td>{index + 1}</td>
@@ -75,9 +70,10 @@ export default class AdminReservationDashboard extends Component {
   };
 
   render() {
+    const { reservations } = this.props;
     return (
       <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-        {this.makeTable(this.props.reservations)}
+        {(reservations.length > 0) && this.makeTable(reservations)}
       </table>
     );
   }
