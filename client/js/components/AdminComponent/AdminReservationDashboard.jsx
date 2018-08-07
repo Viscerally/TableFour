@@ -31,6 +31,11 @@ const showOrderStatus = order => {
 }
 
 export default class AdminReservationDashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { tableLoading: true };
+  }
+
   selectBtn = (event, status) => {
     // get value of 'data-key' which is === primary key of reservation
     const id = event.target.getAttribute('data-key');

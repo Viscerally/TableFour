@@ -75,6 +75,7 @@ export default class MainComponent extends Component {
       <AdminReservationDashboard
         socket={this.props.socket}
         reservations={reservations}
+        tableLoading={tableLoading}
       />
     ) : (
         <ReservationDashboard
