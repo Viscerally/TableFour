@@ -31,8 +31,10 @@ export default class Order extends Component {
       )
     });
     return (
-      <article className='tile is-12 box is-vcentered'>
-        <div className='content is-12 is-vcentered'>
+      <article className='tile is-12 box is-centered'>
+        <div className='column is-1'></div>
+        <div className='column is-10'>
+        <div className='content is-12'>
           <span className='icon floaty-icon'>
             <i className="fas fa-utensils"></i>
           </span>
@@ -70,7 +72,6 @@ export default class Order extends Component {
               onClick={() => { this.props.cancelOrder() }}
             >Cancel your order</button>}
         </div>
-
       </article>
     )
   }
