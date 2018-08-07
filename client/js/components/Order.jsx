@@ -25,7 +25,7 @@ export default class Order extends Component {
   }
 
   createItemCancelBtn = orderItem => {
-    const { order_code, removeFromOrder } = this.props;
+    const { order: { order_code }, removeFromOrder } = this.props;
     return (
       (order_code === 'nonce') && (
         <a
