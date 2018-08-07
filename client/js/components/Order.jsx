@@ -41,6 +41,7 @@ export default class Order extends Component {
   }
 
   makeTBody = orderItems => {
+    console.log(orderItems);
     return orderItems.map((item, index) => {
       const integerToCurrency = numeral(item.price / 100).format('$0.00');
       return (
