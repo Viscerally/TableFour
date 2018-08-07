@@ -75,12 +75,27 @@ export default class AdminReservationDashboard extends Component {
     );
   };
 
+  addSpinner = () => {
+    return (
+      (this.state.tableLoading) && (
+        <div className='has-text-centered'>
+          <span>
+            <i className="spinner fas fa-utensils fa-spin fa-2x"></i>  Loading table...
+          </span>
+        </div>
+      )
+    );
+  }
+
   render() {
     const { reservations } = this.props;
     return (
-      <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-        {(reservations.length > 0) && this.makeTable(reservations)}
-      </table>
+      <Fragment>
+        {this.addSpinner()}
+        <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
+          {(reservations.length > 0) && this.makeTable(reservations)}
+        </table>
+      </Fragment>
     );
   }
 }
