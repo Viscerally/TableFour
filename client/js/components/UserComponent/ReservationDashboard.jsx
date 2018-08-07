@@ -18,7 +18,10 @@ const createTHead = statistics => {
 export default class ReservationDashboard extends Component {
   constructor(props) {
     super(props);
-    this.state = { res_code: '' };
+    this.state = {
+      res_code: '',
+      tableLoading: true
+    };
   }
   makeTable = (reservations, res_code) => {
     // FIRST OF ALL, FILTER RESERVATIONS WITH STATUS OTHER THAN 'WAITING'
@@ -84,19 +87,38 @@ export default class ReservationDashboard extends Component {
     );
   };
 
+  addSpinner = () => {
+    return (
+      (this.state.tableLoading) && (
+        <div className='has-text-centered'>
+          <span>
+            <i className="fas fa-spinner fa-spin"></i> Loading table...
+          </span>
+        </div>
+      )
+    );
+  }
+
   componentDidUpdate(prevProps, prevState) {
     // ONCE RES_CODE IN YOUR STATE IS ASSIGNED TO A RES_CODE, THEN DON'T UPDATE IT ANY MORE.
     if (this.props.res_code && prevProps.res_code === null) {
       this.setState({ res_code: this.props.res_code });
+    }
+    // CHANGE THE TABLE LOADING STATUS
+    if (this.props.tableLoading !== prevProps.tableLoading) {
+      this.setState({ tableLoading: this.props.tableLoading });
     }
   }
 
   render() {
     const { reservations } = this.props;
     return (
-      <table className="table is-striped is-hoverable is-fullwidth reservation-dashboard">
-        {reservations.length > 0 && this.makeTable(reservations, this.state.res_code)}
-      </table>
+      <Fragment>
+        {this.addSpinner()}
+        <table className="table is-striped is-hoverable is-fullwidth reservation-dashboard">
+          {reservations.length > 0 && this.makeTable(reservations, this.state.res_code)}
+        </table>
+      </Fragment>
     );
   }
 }
