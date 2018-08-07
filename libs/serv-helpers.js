@@ -5,10 +5,27 @@ const rs = require('random-strings');
 // "DO NOT CHANGE" REFERS TO FUNCTIONS CONFIRMED TO BE WORKING
 // GET ALL RESERVATIONS - DO NOT CHANGE
 function getAllReservations(db) {
-  const q = "SELECT * FROM (SELECT reservations.id, placement_time, group_size, status, res_code, customer_id, name, phone, email FROM reservations JOIN customers ON customer_id = customers.id) AS res LEFT JOIN (SELECT price_declared, total_paid, is_paid, order_code, reservation_id FROM orders) AS ord ON res.id = ord.reservation_id WHERE status = 'waiting' ORDER BY placement_time ASC";
-  return db.query(q)
-    .then(data => {
-      return data;
+  const resoQ = "SELECT * FROM (SELECT reservations.id, placement_time, group_size, status, res_code, customer_id, name, phone, email FROM reservations JOIN customers ON customer_id = customers.id) AS res WHERE status = 'waiting' ORDER BY placement_time ASC";
+  return db.query(resoQ)
+    .then(reservations => {
+      if (!reservations.length) {
+        return [];
+      }
+
+      // GET INNER JOIN TABLE OF RESERVATIONS AND CUSTOMERS
+      const resoId = reservations.map(reso => reso.id);
+      const orderQ = `SELECT * FROM orders where reservation_id = ${resoId.join(' OR reservation_id = ')}`;
+      // THEN GET THE CORRESPONDING ORDERS
+      return db.query(orderQ)
+        .then(orders => {
+          reservations = reservations.map(reservation => {
+            // ADD ORDERS AS A NESTED OBJECT IN RESERVATIONS
+            reservation.order = orders.find(o => o.reservation_id === reservation.id);
+            return reservation;
+          })
+          return reservations;
+        })
+        .catch(err => { console.log(err); })
     })
     .catch(err => { console.log(err); })
 }
@@ -204,25 +221,29 @@ const addItemToOrder = (db, menuItemOrder) => {
 const updateOrderStatus = (db, order) => {
   return db.orders.update(
     { reservation_id: order.reservation_id },
-    { order_code: 'ORDERED' },
-    result => {
-      return result;
-    })
-    .then(order => {
-      return order;
-    })
+    { order_code: rs.alphaNumUpper(6) },
+    result => result)
+    .then(newOrder => {
+      const customerQ = `SELECT * FROM (SELECT customer_id FROM reservations WHERE id = ${newOrder[0].reservation_id}) AS tb1 LEFT JOIN customers ON customer_id = id;`;
+      return db.query(customerQ)
+        .then(customer => {
+          return { newOrder, customer };
+        });
+    });
 }
 
 const cancelOrder = (db, order) => {
   return db.orders.update(
     { reservation_id: order.reservation_id },
-    { order_code: 'CANCELLED' },
-    result => {
-      return result;
-    })
-    .then(order => {
-      return order;
-    })
+    { order_code: 'nonce' },
+    result => result)
+    .then(newOrder => {
+      const customerQ = `SELECT * FROM (SELECT customer_id FROM reservations WHERE id = ${newOrder[0].reservation_id}) AS tb1 LEFT JOIN customers ON customer_id = id;`;
+      return db.query(customerQ)
+        .then(customer => {
+          return { newOrder, customer };
+        });
+    });
 }
 
 
