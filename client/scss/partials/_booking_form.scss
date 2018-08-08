@@ -1,11 +1,11 @@
-form.booking-form {
-  label {
-    font-weight: normal;
-  }
-}
-
-
 #booking-form {
   height: 100px;
+  div.icon.floaty-icon {
+    @include stylize-floaty-icon($yellow-background, $yellow-shadow);
+  }
+  form.booking-form {
+    label {
+      font-weight: normal;
+    }
+  }
 }
-

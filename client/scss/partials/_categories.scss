@@ -3,11 +3,11 @@
 }
 
 article.tile.is-child.box.has-text-centered {
-  background-color: #ffda4b;
+  background: $red-background;
+  box-shadow:$red-shadow;
+  // background-color: #ffda4b;
   color: white;
   span {
-  color: white;
-  
+    color: white;
   }
 }
-

@@ -1,16 +1,14 @@
 @media screen and (max-width: 770px) {
-  #reservation-container {
-    margin-top: 20px;
-  }
-
-  
-}
-    table.reservation-dashboard {
-      th,
-      td {
-        text-align: center;
-        vertical-align: middle;
-      }
-      
-      
+#reservation-container {
+  table.reservation-dashboard {
+    th,
+    td {
+      text-align: center;
+      vertical-align: middle;
     }
+  }
+  div.icon.floaty-icon {
+    @include stylize-floaty-icon($green-background, $green-shadow);
+  }
+}
+}

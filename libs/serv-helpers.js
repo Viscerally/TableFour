@@ -47,9 +47,10 @@ const saveReservation = (db, reservationData) => {
 
 // SUBMIT NEW RESERVATION - DO NOT CHANGE
 const submitNewReservation = async (db, formData) => {
-  const { name, phone, group_size, email, path } = formData;
+  const { name, phone, group_size, email } = formData;
   const customer = await saveCustomer(db, { name, phone, email });
 
+  // ADD RESERVATION
   const reservationData = {
     placement_time: new Date(),
     status: 'waiting',
@@ -57,9 +58,9 @@ const submitNewReservation = async (db, formData) => {
     res_code: rs.alphaNumUpper(6),
     group_size
   };
-
   const reservation = await saveReservation(db, reservationData);
 
+  // ADD ORDER (EMPTY ROW BECAUSE CUSTOMER DIDN'T PLACE ANY ORDER YET)
   orderData = {
     order_code: 'nonce',
     reservation_id: reservation.id
@@ -67,9 +68,15 @@ const submitNewReservation = async (db, formData) => {
   const order = await db.orders.insert(orderData);
   reservation.order = order;
 
-  // text the reservation data
-  smsMsg.resoTextMsg(phone, reservation);
-  return { customer, reservation, path };
+  // TEXT RESERVATION DATA
+  return smsMsg.resoTextMsg(phone, reservation)
+    .then(() => {
+      return { customer, reservation, err: { code: '', message: '' } };
+    })
+    .catch(err => {
+      console.log(err);
+      return { customer, reservation, err: { code: err.code, message: err.message } };
+    });
 }
 // SUBMIT NEW RESERVATION - END
 
@@ -77,6 +84,24 @@ const getReservationByResCode = (db, res_code) => {
   return db.reservations.findOne({ res_code })
     .then(result => result)
     .catch(err => { console.log(err) })
+}
+
+const getReservationByResCodeWithOrder = (db, res_code) => {
+  let reso;
+  return db.reservations.findOne({ res_code })
+    .then(res => {
+
+      reso = res;
+      return db.orders.findOne({
+        reservation_id:  res.id
+      })
+    })
+    .then(ord => {
+      reso.order = ord;
+      return reso;
+    })
+    .catch(err => { console.log(err) })
+
 }
 
 const getCustomerByReservation = (db, reso) => {
@@ -169,6 +194,85 @@ const getItemOrdersWMenuItemInfo = (db, orderId) => {
     })
 }
 
+//Given a res code, get the reservation, the order, the items associated
+//with that order, and the menu item information associated with those items
+//Return an array of objects that contain both OrderItem and MenuItem information
+const getItemOrdersWMenuItemByResCode = (db, res_code) => {
+  let reservation;
+  let order;
+  let ordItems;
+  let menuItemsObj;
+
+  return db.reservations.findOne({ res_code })
+    .then(reso => {
+      reservation = reso;
+      return db.orders.findOne({
+        reservation_id: reso.id
+      })
+    })
+    .then(ord => {
+      order = ord;
+      return db.menu_items_orders.find({
+        order_id: ord.id
+      })
+    })
+    .then(orderItems => {
+      ordItems = orderItems;
+      if (orderItems.length > 0){
+        const menuItems = getMenuItemsByOrderItems(db, orderItems);
+        return menuItems;
+      }else{
+        return orderItems;
+      }
+    })
+    .then(menuItems => {
+      const itemOrdersWMenuItemInfo = [];
+      if (menuItems.length > 0){
+        menuItemsObj = arrToIdObj(menuItems);
+        for (item of ordItems){
+          const itemOrderWMenuItemInfo = {
+            id: item.id,
+            order_id: order.id,
+            img_url: menuItemsObj[item.menu_item_id].img_url,
+            menu_item_id: menuItemsObj[item.menu_item_id].id,
+            name: menuItemsObj[item.menu_item_id].name,
+            description: menuItemsObj[item.menu_item_id].description,
+            price: menuItemsObj[item.menu_item_id].price,
+            category_id: menuItemsObj[item.menu_item_id].category_id,
+          }
+          itemOrdersWMenuItemInfo.push(itemOrderWMenuItemInfo);
+        }
+      }
+      return itemOrdersWMenuItemInfo;
+    })
+    .catch(err => {console.log(err)})
+}
+
+const getMenuItemsByOrderItems = (db, orderItems) => {
+  const menuItemIds = [];
+
+
+  for (item of orderItems){
+    menuItemIds.push(item.menu_item_id);
+
+  }
+  return db.menu_items.find({
+    id: menuItemIds
+  })
+
+}
+
+//Turn an array into an object with keys of the array items' id
+const arrToIdObj = arr => {
+  let obj = {};
+  for (item of arr){
+    if (!obj[item.id]){
+      obj[item.id] = item;
+    }
+  }
+  return obj;
+}
+
 const getMenuItemByItemOrder = (db, menuItemOrder) => {
   return db.menu_items.findOne({
     id: menuItemOrder.menu_item_id
@@ -211,30 +315,34 @@ const addItemToOrder = (db, menuItemOrder) => {
 }
 
 const updateOrderStatus = (db, order) => {
+  let newOrder;
   return db.orders.update(
     { reservation_id: order.reservation_id },
     { order_code: rs.alphaNumUpper(6) },
     result => result)
-    .then(newOrder => {
+    .then(updOrder => {
+      newOrder = updOrder;
       const customerQ = `SELECT * FROM (SELECT customer_id FROM reservations WHERE id = ${newOrder[0].reservation_id}) AS tb1 LEFT JOIN customers ON customer_id = id;`;
-      return db.query(customerQ)
-        .then(customer => {
-          return { newOrder, customer };
-        });
-    });
+      return db.query(customerQ);
+    })
+    .then(customer => {
+      return { newOrder, customer };
+    })
 }
 
 const cancelOrder = (db, order) => {
+  let newOrder;
   return db.orders.update(
     { reservation_id: order.reservation_id },
     { order_code: 'nonce' },
     result => result)
-    .then(newOrder => {
-      const customerQ = `SELECT * FROM (SELECT customer_id FROM reservations WHERE id = ${newOrder[0].reservation_id}) AS tb1 LEFT JOIN customers ON customer_id = id;`;
+    .then(updOrder => {
+      newOrder = updOrder;
+      const customerQ = `SELECT * FROM (SELECT customer_id FROM reservations WHERE id = ${updOrder[0].reservation_id}) AS tb1 LEFT JOIN customers ON customer_id = id;`;
       return db.query(customerQ)
-        .then(customer => {
-          return { newOrder, customer };
-        });
+    })
+    .then(customer => {
+      return { newOrder, customer };
     });
 }
 
@@ -296,5 +404,7 @@ module.exports = {
   getMenu,
   removeOrderItem,
   updateOrderStatus,
-  cancelOrder
+  cancelOrder,
+  getReservationByResCodeWithOrder,
+  getItemOrdersWMenuItemByResCode
 }

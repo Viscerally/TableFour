@@ -17,9 +17,15 @@ const createDefaultHeader = () => {
   );
 };
 
-const showOrderStatus = orderCode => {
+const showOrderStatus = order => {
+  // ERROR HANDLING
+  // IN CASE 'order' KEY DOESN'T EXIST IN RESERVATION, SKIP THIS FUNCTION RATHER THAN
+  // MAKING THE WHOLE APP TO CRASH
+  if (!order) {
+    return true;
+  }
   return (
-    (orderCode === 'nonce') ? (
+    (order.order_code === 'nonce') ? (
       <span className="icon has-text-danger">N</span>
     ) : (
         <span className="icon has-text-success">Y</span>
@@ -28,6 +34,11 @@ const showOrderStatus = orderCode => {
 }
 
 export default class AdminReservationDashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { tableLoading: true };
+  }
+
   selectBtn = (event, status) => {
     // get value of 'data-key' which is === primary key of reservation
     const id = event.target.getAttribute('data-key');
@@ -41,16 +52,13 @@ export default class AdminReservationDashboard extends Component {
     reservations = reservations.filter(reso => reso.status === 'waiting');
     // LOOP THROUGH ROWS
     const cells = reservations.map((reservation, index) => {
-      const { id, group_size, name, order: { order_code }, status } = reservation;
+      const { id, group_size, name, order, status } = reservation;
       return (
         <tr key={id}>
-        
-            <td>{index + 1}</td>
-            <td>{group_size}</td>
-            <td>{name}</td>
-        
-    
-          <td>{showOrderStatus(order_code)}</td>
+          <td>{index + 1}</td>
+          <td>{group_size}</td>
+          <td>{name}</td>
+          <td>{showOrderStatus(order)}</td>
           <td>
             <StatusButton id={id} status={status} selectBtn={this.selectBtn} />
           </td>
@@ -75,12 +83,38 @@ export default class AdminReservationDashboard extends Component {
     );
   };
 
+  // ANNOUNCEMENT WHEN THERE IS NO ONE WAITING
+  makeAnnouncement = () => <thead><tr><th>Book now and be our first customer!</th></tr></thead>
+
+  addSpinner = () => {
+    return (
+      (this.state.tableLoading) && (
+        <div className='has-text-centered'>
+          <span>
+            <i className="spinner fas fa-utensils fa-spin fa-2x"></i>  Loading table...
+          </span>
+        </div>
+      )
+    );
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // CHANGE THE TABLE LOADING STATUS
+    if (this.props.tableLoading !== prevProps.tableLoading) {
+      this.setState({ tableLoading: this.props.tableLoading });
+    }
+  }
+
   render() {
     const { reservations } = this.props;
     return (
-      <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-        {(reservations.length > 0) && this.makeTable(reservations)}
-      </table>
+      <Fragment>
+        {this.addSpinner()}
+        <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
+          {(reservations.length > 0) ? this.makeTable(reservations) :
+            this.makeAnnouncement()}
+        </table>
+      </Fragment>
     );
   }
 }

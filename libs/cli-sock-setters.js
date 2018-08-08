@@ -13,12 +13,23 @@ function setSocket(socket, react) {
         currentReservation = reservations.filter(reservation => res_code === reservation.res_code);
       }
       formData = (currentReservation.length === 0) ? react.state.formData : currentReservation[0];
-      react.setState({ formData, reservations });
+      react.setState({
+        formData,
+        reservations,
+        tableLoading: false
+      });
     });
 
     // LOAD NEW RESERVATION - DO NOT CHANGE
     socket.on('loadNewReservation', data => {
-      const { customer, reservation } = data;
+      const { customer, reservation, err } = data;
+      if (err.code) {
+        // TWILLIO MESSAGE IS NOT CLEAR ENOUGH. ADD YOUR OWN WARNING MESSAGE
+        err.message = 'Your phone number is invalid!';
+        react.setState({ err });
+        return true;
+      }
+
       //Make sure that this gets called from MainComponent
       react.setState(oldState => {
         // we need customer data in reservations. please DON'T remove customer
@@ -28,9 +39,11 @@ function setSocket(socket, react) {
           currentCustomer: customer,
           currentReservation: reservation,
           reservations,
-          res_code: reservation.res_code
+          res_code: reservation.res_code,
+          err
         }
-      })
+      });
+
     });
 
     // UPDATE RESERVATION DATA - DO NOT CHANGE
@@ -75,6 +88,14 @@ function setSocket(socket, react) {
 
     socket.on('loadReservation', data => {
       react.setState({ currentReservation: data });
+    })
+
+    socket.on('loadReservationWOrder', data => {      
+      react.setState({ currentReservation: data });
+    })
+
+    socket.on('itemOrdersWMenuItemByResCode', data => {
+      react.setState({ menuItemOrders: data});
     })
 
     socket.on('loadCustomer', data => {

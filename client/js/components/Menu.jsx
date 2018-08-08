@@ -8,8 +8,9 @@ export default class Menu extends Component {
         onClick={event => this.props.addToOrder(menuItem)}
         className="button is-link"
         disabled={!this.props.reservation.id}
-      >Add to your order
-    </button>
+      >
+        Add to order
+      </button>
     );
   }
 
@@ -37,7 +38,7 @@ export default class Menu extends Component {
   render() {
     return (
       <Fragment>
-          {this.generateMenu()}
+        {this.generateMenu()}
       </Fragment>
     );
   }

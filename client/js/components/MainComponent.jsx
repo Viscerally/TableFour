@@ -19,9 +19,11 @@ export default class MainComponent extends Component {
       currentCustomer: blankCustomer(),
       currentReservation: blankReservation(),
       reservations: [],
+      currentMenu: {},
       menuItemOrders: [],
       res_code: props.res_code,
-      currentMenu: {}
+      tableLoading: true,
+      err: {}
     };
   }
 
@@ -51,7 +53,7 @@ export default class MainComponent extends Component {
       <div className='tile is-4 is-parent'>
         <article id='booking-form' className='tile is-child box'>
           <div className='content'>
-            <span className='icon floaty-icon'>
+            <div className='icon floaty-icon'>
               <i className="far fa-file-alt"></i>
             </span>
             <span className='title is-5'>BOOK A TABLE</span>
@@ -59,6 +61,7 @@ export default class MainComponent extends Component {
               res_code={state.res_code}
               urls={props.urls}
               socket={props.socket}
+              err={state.err}
             />
           </div>
         </article>
@@ -67,11 +70,12 @@ export default class MainComponent extends Component {
   }
 
   createDashboard = state => {
-    const { res_code, reservations, currentReservation, currentCustomer } = state;
+    const { res_code, reservations, currentReservation, currentCustomer, tableLoading } = state;
     const dashBoard = (this.props.isAdmin) ? (
       <AdminReservationDashboard
         socket={this.props.socket}
         reservations={reservations}
+        tableLoading={tableLoading}
       />
     ) : (
         <ReservationDashboard
@@ -79,6 +83,7 @@ export default class MainComponent extends Component {
           reservations={reservations}
           currentReservation={currentReservation}
           currentCustomer={currentCustomer}
+          tableLoading={tableLoading}
         />
       );
 
@@ -97,87 +102,101 @@ export default class MainComponent extends Component {
     );
   }
 
-  createCategories = () => {
-    return Object.values(this.state.menu).map(category => (
-      <Category key={category.id} menu={category} setMenu={this.setMenu} />
-    ));
+  createCategories = state => {
+    if (state.menu) {
+      return Object.values(state.menu).map(category => (
+        <Category key={category.id} menu={category} setMenu={this.setMenu} />
+      ));
+    }
   }
 
   createMenu = state => {
-    return (
-      <article className='tile is-parent'>
-        <div className='tile is-child box columns'>
-          <Menu
-            addToOrder={this.addToOrder}
-            currentMenu={state.currentMenu}
-            reservation={state.currentReservation}
-          />
+    if (Object.keys(state.currentMenu).length > 0) {
+      return (
+        <article className='tile is-parent'>
+          <div className='tile is-child box columns'>
+            <Menu
+              addToOrder={this.addToOrder}
+              currentMenu={state.currentMenu}
+              reservation={state.currentReservation}
+            />
+          </div>
+        </article>
+      );
+    }
+  }
+
+  createOrderPage = state => {
+    const { currentReservation, menuItemOrders, res_code } = this.state;
+    if (currentReservation && res_code) {
+      return (
+        <div className='columns'>
+          <div className='column'></div>
+          <div className='column is-6'>
+            <Order
+              order={currentReservation.order}
+              orderItems={menuItemOrders}
+              removeFromOrder={this.removeFromOrder}
+              placeOrder={this.placeOrder}
+              cancelOrder={this.cancelOrder}
+            />
+          </div>
+          <div className='column'></div>
         </div>
-      </article>
-    );
+      );
+    }
   }
 
   componentDidMount = () => {
+
     let { socket } = this.props;
     const { res_code } = this.state;
     socket = setSocket(socket, this);
-    if (res_code) {
-      // res_code received as a url param
-      socket.emit('getReservationByResCode', res_code);
-      socket.emit('getCustomerByResCode', res_code);
+    if (this.props.res_code) {
+      socket.emit('getReservationByResCodeWithOrder', this.props.res_code);
+      socket.emit('getItemOrdersWMenuItemByResCode', this.props.res_code);
+      socket.emit('getCustomerByResCode', this.props.res_code);
+    } else {
+      if (this.state.res_code) {
+        socket.emit('getReservationByResCode', res_code);
+        socket.emit('getCustomerByResCode', res_code);
+      }
     }
 
     socket.emit('getReservations');
-    socket.emit('getItemOrdersWMenuItemInfo');
     socket.emit('getMenu');
   }
 
   render() {
     return (
-      <div  className='container-page'>
-      <div className='container is-desktop'>
-        <header>
-          <Navbar />
-        </header>
-        <br />
-        <main>
-          <div className='tile is-ancestor top-tile'>
-            {this.createBookingForm(this.props, this.state)}
-            {this.createDashboard(this.state)}
-          </div>
-
-          <div className='categories-row'>
-            <div className='tile is-ancestor'>
-              {(this.state.menu) && (this.createCategories())}
+      <div className='container-page'>
+        <div className='container is-desktop'>
+          <header>
+            <Navbar />
+          </header>
+          <br />
+          <main>
+            <div className='tile is-ancestor top-tile'>
+              {this.createBookingForm(this.props, this.state)}
+              {this.createDashboard(this.state)}
             </div>
-          </div>
 
-          <div className='tile is-ancestor'>
-            {(Object.keys(this.state.currentMenu).length > 0) &&
-              this.createMenu(this.state)}
-          </div>
-
-          {this.state.currentReservation && !this.props.isAdmin ?
-            (
-              <div className='columns'>
-                <div className='column'></div>
-                <div className='column is-6'>
-                  <Order
-                    order={this.state.currentReservation.order}
-                    orderItems={this.state.menuItemOrders}
-                    removeFromOrder={this.removeFromOrder}
-                    placeOrder={this.placeOrder}
-                    cancelOrder={this.cancelOrder}
-                  />
-                </div>
-                <div className='column'></div>
+            <div className='categories-row'>
+              <div className='tile is-ancestor'>
+                {this.createCategories(this.state)}
               </div>
-            ) : (null)}
-        </main>
-        <footer>
-          <div className='footer-styling'></div>
-        </footer>
-      </div >
+            </div>
+
+            <div className='tile is-ancestor'>
+              {this.createMenu(this.state)}
+            </div>
+
+            {this.createOrderPage(this.state)}
+          </main>
+          <footer>
+            <div className='footer-styling'></div>
+          </footer>
+        </div >
       </div>
     );
   }

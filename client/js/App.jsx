@@ -10,8 +10,8 @@ export default class App extends Component {
       <Router>
         <div>
           <Route path="/admin" component={ComponentHandler} />
-          <Route exact path="/" component={ComponentHandler} />
           <Route path="/reservations/:res_code" component={ComponentHandler} />
+          <Route exact path="/" component={ComponentHandler} />
         </div>
       </Router>
     )

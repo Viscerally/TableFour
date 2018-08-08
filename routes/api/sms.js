@@ -3,20 +3,26 @@ require('dotenv').config()
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require("twilio")(accountSid, authToken);
+const host = 'www.tablefour.me';
 
 module.exports = {
-
   resoTextMsg: function (phone, reservation) {
-    const { res_code, host } = reservation;
-    const url = `${host}/reservations/${res_code}`;
-    console.log(url);
-    return client.messages.create({
-      to: phone,
-      from: process.env.FROM_NUMBER,
-      body: `Thank you! Your reservation code is ${res_code}. Please visit http://${url} to view your place in line. You can even order ahead to ensure your food is prepared quicker - we will notify you when your table is ready!`
-    })
-      .then((message) => console.log("sending sms to " + phone, message.sid))
-      .catch(err => { console.log(err) });
+    return new Promise((resolve, reject) => {
+      const url = `${host}/reservations/${reservation.res_code}`;
+      const textBody = `Thank you for your reservation! \nYour reference code: ${reservation.res_code}. \nPlease visit ${url} to view your place in line.`
+      return client.messages.create({
+        to: phone,
+        from: process.env.FROM_NUMBER,
+        body: textBody
+      })
+        .then(message => {
+          console.log("sending sms to " + phone, message.body);
+          resolve();
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
   },
 
 
@@ -30,7 +36,7 @@ module.exports = {
   //      .then((message) => console.log("sending sms to " + phone, message.sid))
   //      .catch(err => { console.log(err) });
   //  },
- //}
+  //}
 
   tableReadyMsg: function () {
     return client.messages.create({
