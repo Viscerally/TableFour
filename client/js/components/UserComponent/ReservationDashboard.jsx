@@ -19,7 +19,7 @@ export default class ReservationDashboard extends Component {
   constructor(props) {
     super(props);
     let res_code = '';
-    if (this.props.res_code){
+    if (this.props.res_code) {
       res_code = this.props.res_code;
     }
     this.state = {
@@ -124,9 +124,9 @@ export default class ReservationDashboard extends Component {
       <Fragment>
         {this.addSpinner()}
         <table className="table is-striped is-hoverable is-fullwidth reservation-dashboard">
-          {reservations.length === 0 ?
-            this.makeAnnouncement() :
-            this.makeTable(reservations, this.state.res_code)}
+          {(reservations.length > 0) ?
+            this.makeTable(reservations, this.state.res_code) :
+            this.makeAnnouncement()}
         </table>
       </Fragment>
     );

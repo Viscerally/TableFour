@@ -7,9 +7,8 @@ export default class StatusButton extends Component {
 
   createBtns = () => {
     const btnConfig = [
-      { status: 'WAITING', colorClass: 'is-warning is-selected' },
       { status: 'CHECK-IN', colorClass: 'is-success is-selected' },
-      { status: '   CANCEL   ', colorClass: 'is-danger is-selected' },//those spaces are on purpose to have exact width 
+      { status: 'CANCEL', colorClass: 'is-danger is-selected' },//those spaces are on purpose to have exact width
     ];
 
     const btnGroup = btnConfig.map((config, index) => {

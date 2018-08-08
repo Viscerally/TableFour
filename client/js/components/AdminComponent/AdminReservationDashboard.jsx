@@ -22,7 +22,7 @@ const showOrderStatus = order => {
     return true;
   }
   return (
-    (order.orderCode === 'nonce') ? (
+    (order.order_code === 'nonce') ? (
       <span className="icon has-text-danger">N</span>
     ) : (
         <span className="icon has-text-success">Y</span>
@@ -80,6 +80,9 @@ export default class AdminReservationDashboard extends Component {
     );
   };
 
+  // ANNOUNCEMENT WHEN THERE IS NO ONE WAITING
+  makeAnnouncement = () => <thead><tr><th>Book now and be our first customer!</th></tr></thead>
+
   addSpinner = () => {
     return (
       (this.state.tableLoading) && (
@@ -105,7 +108,8 @@ export default class AdminReservationDashboard extends Component {
       <Fragment>
         {this.addSpinner()}
         <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
-          {(reservations.length > 0) && this.makeTable(reservations)}
+          {(reservations.length > 0) ? this.makeTable(reservations) :
+            this.makeAnnouncement()}
         </table>
       </Fragment>
     );
