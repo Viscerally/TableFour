@@ -1,11 +1,10 @@
 .categories-row {
-  margin: 30px 0 40px;
+  margin: 30px 0 20px;
 }
 
 article.tile.is-child.box.has-text-centered {
   background: $red-background;
-  box-shadow:$red-shadow;
-  // background-color: #ffda4b;
+  box-shadow: $red-shadow; // background-color: #ffda4b;
   color: white;
   span {
     color: white;

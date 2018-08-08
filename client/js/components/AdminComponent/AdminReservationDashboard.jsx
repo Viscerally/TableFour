@@ -5,12 +5,15 @@ import StatusButton from './StatusButton.jsx';
 const createDefaultHeader = () => {
   return (
     <tr>
-      <th>#</th>
-      <th>SIZE</th>
-      <th>NAME</th>
-      <th>ORDERED?</th>
-      <th>STATUS</th>
+    
+        <th>#</th>
+        <th>SIZE</th>
+        <th>NAME</th>
+        <th>ORDERED?</th>
+        <th>STATUS</th>
     </tr>
+
+    
   );
 };
 

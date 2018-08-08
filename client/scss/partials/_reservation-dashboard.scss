@@ -1,3 +1,9 @@
+@media screen and (max-width: 770px) {
+  #reservation-container {
+    margin-top: 20px;
+  }
+}
+
 #reservation-container {
   table.reservation-dashboard {
     th,
@@ -8,11 +14,5 @@
   }
   div.icon.floaty-icon {
     @include stylize-floaty-icon($green-background, $green-shadow);
-  }
-}
-
-@media screen and (max-width: 425px) {
-  #reservation-container {
-    margin-top: 20px;
   }
 }
