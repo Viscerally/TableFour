@@ -18,32 +18,23 @@ html {
  * Global layout stuff
  */
 
-
-
- div#react-root {
-   background-color: #eee;
- }
-
+div#react-root {
+  background-color: #eee;
+}
 
 .container-page {
   padding: 5px 20px 20px;
-
-
-body {
-  margin: 0;
-  color: #3c4858;
-  font-family: $theme-font;
   height: 100vh;
+  body {
+    margin: 0;
+    color: #3c4858;
+    font-family: $theme-font;
+  }
+  .title.is-4 {
+    padding-left: 12px;
+  }
+  .button {
+    font-size: 15px;
+    text-transform: uppercase;
+  }
 }
-
-.title.is-4 {
-  padding-left: 12px;
-}
-
-.button {
-  font-size: 15px;
-  text-transform: uppercase;
-}
-
-}
-
