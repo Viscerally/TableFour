@@ -90,8 +90,7 @@ function setSocket(socket, react) {
       react.setState({ currentReservation: data });
     })
 
-    socket.on('loadReservationWOrder', data => {
-      console.log('GETTING:', data);
+    socket.on('loadReservationWOrder', data => {      
       react.setState({ currentReservation: data });
     })
 
