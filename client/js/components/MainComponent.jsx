@@ -103,7 +103,7 @@ export default class MainComponent extends Component {
   }
 
   createCategories = state => {
-    if (state.menu && state.res_code) {
+    if (state.menu) {
       return Object.values(state.menu).map(category => (
         <Category key={category.id} menu={category} setMenu={this.setMenu} />
       ));
