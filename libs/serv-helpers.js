@@ -74,6 +74,7 @@ const submitNewReservation = async (db, formData) => {
       return { customer, reservation, err: { code: '', message: '' } };
     })
     .catch(err => {
+      console.log(err);
       return { customer, reservation, err: { code: err.code, message: err.message } };
     });
 }
