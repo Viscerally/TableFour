@@ -5,12 +5,15 @@ import StatusButton from './StatusButton.jsx';
 const createDefaultHeader = () => {
   return (
     <tr>
-      <th>#</th>
-      <th>SIZE</th>
-      <th>NAME</th>
-      <th>ORDERED?</th>
-      <th>STATUS</th>
+    
+        <th>#</th>
+        <th>SIZE</th>
+        <th>NAME</th>
+        <th>ORDERED?</th>
+        <th>STATUS</th>
     </tr>
+
+    
   );
 };
 
@@ -41,9 +44,12 @@ export default class AdminReservationDashboard extends Component {
       const { id, group_size, name, order: { order_code }, status } = reservation;
       return (
         <tr key={id}>
-          <td>{index + 1}</td>
-          <td>{group_size}</td>
-          <td>{name}</td>
+        
+            <td>{index + 1}</td>
+            <td>{group_size}</td>
+            <td>{name}</td>
+        
+    
           <td>{showOrderStatus(order_code)}</td>
           <td>
             <StatusButton id={id} status={status} selectBtn={this.selectBtn} />

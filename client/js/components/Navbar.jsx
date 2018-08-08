@@ -3,14 +3,9 @@ import React, { Fragment } from 'react';
 const NavbarBrand = () => {
   return (
     <div className='navbar-brand'>
-      <a id="admin-button" className='button is-info' href='/admin'>
-          <span className='icon'>
-            <i className="fas fa-user" aria-hidden="true"></i>
-          </span>
-          <span>Admin</span>
-        </a>
+    
       <a className='navbar-item' href='/'>
-        <img className='navbar-logo' id="nav-logo-size" src="/images/logo_1.png" alt="Table For Me"/>
+        <img className='navbar-logo' id="nav-logo-size" src="/images/logo_1.png" alt="Logo created with LogoMkr http://logomakr.com"/>
       </a>
     
     </div>
@@ -19,6 +14,12 @@ const NavbarBrand = () => {
 const NavbarMenu = () => {
   return (
     <div className='navbar-menu'>
+      <a id="admin-button" className='button is-info' href='/admin'>
+          <span className='icon'>
+            <i className="fas fa-user" aria-hidden="true"></i>
+          </span>
+          <span>Admin</span>
+        </a>
     </div>
   );
 };

@@ -40,10 +40,10 @@ export default class ReservationDashboard extends Component {
     // CURRENT RESERVATION - END
 
     // ALL OTHER RESERVATIONS
-    // GET TOP 3 OF ALL OTHER RESERVATIONS (EXCEPT FOR THE CURRENT RESERVATION)
-    const allOtherTop3 = reservations.filter(reso => reso.res_code !== res_code).slice(0, 3);
+    // GET TOP 5 OF ALL OTHER RESERVATIONS (EXCEPT FOR THE CURRENT RESERVATION)
+    const allOtherTop5 = reservations.filter(reso => reso.res_code !== res_code).slice(0, 5);
     // CREATE DOM FOR ALL THE OTHER RESERVATIONS
-    const allOtherTop3Cells = allOtherTop3.map((reso, index) => {
+    const allOtherTop5Cells = allOtherTop5.map((reso, index) => {
       const position = (myResoIndex === -1 || myResoIndex > index) ? index + 1 : index + 2;
 
       return (
@@ -55,18 +55,18 @@ export default class ReservationDashboard extends Component {
       );
     });
 
-    // SINCE WE'RE SHOWING THE TOP 3 AND THE CURRENT RESERVATION, ADD A ROW SHOWING "..."
+    // SINCE WE'RE SHOWING THE TOP 5 AND THE CURRENT RESERVATION, ADD A ROW SHOWING "..."
     // TO LET CUSTOMERS SHOW THERE ARE OMITTED ROWS
-    if (myResoIndex !== 3 && reservations.length > 3) {
-      allOtherTop3Cells.push(
+    if (myResoIndex !== 5 && reservations.length > 5) {
+      allOtherTop5Cells.push(
         <tr key='filler' className=''>
-          <td colSpan='3'>. . . . . . . . . . .</td>
+          <td colSpan='5'>- - - - - - - - - - - - - - - - - - - -</td>
         </tr>
       );
     }
 
     // PUT THE CURRENT RESERVATION BACK TO THE OTHER RESERVATION DOM ARRAY
-    allOtherTop3Cells.splice(myResoIndex, 0, myResoCell);
+    allOtherTop5Cells.splice(myResoIndex, 0, myResoCell);
 
     // CREATE STATISTICS
     const sizeSum = reservations.reduce((prev, curr) => prev + curr.group_size, 0);
@@ -78,7 +78,7 @@ export default class ReservationDashboard extends Component {
           {createTHead(stats)}
         </thead>
         <tbody>
-          {allOtherTop3Cells}
+          {allOtherTop5Cells}
         </tbody>
       </Fragment>
     );
