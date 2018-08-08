@@ -71,11 +71,12 @@ const submitNewReservation = async (db, formData) => {
   // TEXT RESERVATION DATA
   return smsMsg.resoTextMsg(phone, reservation)
     .then(() => {
-      return { customer, reservation, err: { code: '', message: '' } };
+      return { customer, reservation };
     })
     .catch(err => {
       console.log(err);
-      return { customer, reservation, err: { code: err.code, message: err.message } };
+
+      return { customer, reservation, err };
     });
 }
 // SUBMIT NEW RESERVATION - END
@@ -93,7 +94,7 @@ const getReservationByResCodeWithOrder = (db, res_code) => {
 
       reso = res;
       return db.orders.findOne({
-        reservation_id:  res.id
+        reservation_id: res.id
       })
     })
     .then(ord => {
@@ -218,18 +219,18 @@ const getItemOrdersWMenuItemByResCode = (db, res_code) => {
     })
     .then(orderItems => {
       ordItems = orderItems;
-      if (orderItems.length > 0){
+      if (orderItems.length > 0) {
         const menuItems = getMenuItemsByOrderItems(db, orderItems);
         return menuItems;
-      }else{
+      } else {
         return orderItems;
       }
     })
     .then(menuItems => {
       const itemOrdersWMenuItemInfo = [];
-      if (menuItems.length > 0){
+      if (menuItems.length > 0) {
         menuItemsObj = arrToIdObj(menuItems);
-        for (item of ordItems){
+        for (item of ordItems) {
           const itemOrderWMenuItemInfo = {
             id: item.id,
             order_id: order.id,
@@ -245,14 +246,14 @@ const getItemOrdersWMenuItemByResCode = (db, res_code) => {
       }
       return itemOrdersWMenuItemInfo;
     })
-    .catch(err => {console.log(err)})
+    .catch(err => { console.log(err) })
 }
 
 const getMenuItemsByOrderItems = (db, orderItems) => {
   const menuItemIds = [];
 
 
-  for (item of orderItems){
+  for (item of orderItems) {
     menuItemIds.push(item.menu_item_id);
 
   }
@@ -265,8 +266,8 @@ const getMenuItemsByOrderItems = (db, orderItems) => {
 //Turn an array into an object with keys of the array items' id
 const arrToIdObj = arr => {
   let obj = {};
-  for (item of arr){
-    if (!obj[item.id]){
+  for (item of arr) {
+    if (!obj[item.id]) {
       obj[item.id] = item;
     }
   }
