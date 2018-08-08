@@ -23,15 +23,19 @@ function setSocket(socket, react) {
 
     // LOAD NEW RESERVATION - DO NOT CHANGE
     socket.on('loadNewReservation', data => {
-      const { customer, reservation, err } = data;
-      if (err.code) {
-        // TWILLIO MESSAGE IS NOT CLEAR ENOUGH. ADD YOUR OWN WARNING MESSAGE
+      const { customer, reservation, err, flashMessage } = data;
+      // TWILLIO MESSAGE FOR INVALID PHONE NUMBER IS NOT CLEAR ENOUGH.
+      // ADD YOUR OWN WARNING MESSAGE
+      if (err && err.code === 21211) {
         err.message = 'Your phone number is invalid!';
         react.setState({ err });
         return true;
       }
-      console.log(data);
-      swal("Reservation Created!", "You will recieve a text message shortly with more info!", "success");
+      
+      if (flashMessage) {
+        swal("Reservation Created!", "You will recieve a text message shortly with more info!", "success");
+      }
+
       //Make sure that this gets called from MainComponent
       react.setState(oldState => {
         // we need customer data in reservations. please DON'T remove customer
@@ -41,8 +45,7 @@ function setSocket(socket, react) {
           currentCustomer: customer,
           currentReservation: reservation,
           reservations,
-          res_code: reservation.res_code,
-          err
+          res_code: reservation.res_code
         }
       });
 
@@ -50,7 +53,12 @@ function setSocket(socket, react) {
 
     // UPDATE RESERVATION DATA - DO NOT CHANGE
     socket.on('loadChangedReservation', data => {
-      const { customer, reservation } = data;
+      const { customer, reservation, flashMessage } = data;
+
+      if (flashMessage) {
+        swal("Updated!", "Your reservation has been changed!", "info");
+      }
+
       const newResList = react.state.reservations.map(currentReso => {
         if (currentReso.id === reservation.id) {
           // please do NOT remove customer. reservations need customer detail.
@@ -58,7 +66,8 @@ function setSocket(socket, react) {
         }
         return currentReso;
       });
-      swal("Updated!", "Your reservation has been changed!", "info");
+
+
       react.setState({
         currentCustomer: customer,
         currentReservation: reservation,
@@ -74,7 +83,7 @@ function setSocket(socket, react) {
         }
         return reservation;
       });
-      swal("Thank you!", "Your reservation has been updated", "info");
+
       react.setState({ reservations: newResList });
     });
 
@@ -89,7 +98,6 @@ function setSocket(socket, react) {
       });
     });
 
-
     socket.on('loadReservation', data => {
       react.setState({ currentReservation: data });
     })
@@ -99,7 +107,7 @@ function setSocket(socket, react) {
     })
 
     socket.on('itemOrdersWMenuItemByResCode', data => {
-      react.setState({ menuItemOrders: data});
+      react.setState({ menuItemOrders: data });
     })
 
     socket.on('loadCustomer', data => {
@@ -132,8 +140,12 @@ function setSocket(socket, react) {
     })
 
     socket.on('orderPlaced', data => {
-      swal("Success!", "Your order has been placed!", "success");
-      const { newOrder, customer } = data;
+      const { newOrder, customer, flashMessage } = data;
+
+      if (flashMessage) {
+        swal("Success!", "Your order has been placed!", "success");
+      }
+
       react.setState((prevState, props) => {
         const reservation = prevState.currentReservation;
         reservation.order = newOrder[0];
@@ -153,10 +165,12 @@ function setSocket(socket, react) {
     })
 
     socket.on("orderCancelled", data => {
-      const { newOrder, customer } = data;
-      swal("Are you sure you want to remove your order?", {
-        buttons: ["No", "Yes"],
-      });
+      const { newOrder, customer, flashMessage } = data;
+
+      if (flashMessage) {
+        swal("Success!", "Your order has been cancelled!", "success");
+      }
+
       react.setState((prevState, props) => {
         const reservation = prevState.currentReservation;
         reservation.order = newOrder[0];

@@ -14,7 +14,7 @@ import { setSocket } from '../../../libs/cli-sock-setters.js';
 export default class MainComponent extends Component {
   constructor(props) {
     super(props);
-    const { blankCustomer, blankReservation } = formHelp;
+    const { blankCustomer, blankReservation, blankError } = formHelp;
     this.state = {
       currentCustomer: blankCustomer(),
       currentReservation: blankReservation(),
@@ -23,7 +23,7 @@ export default class MainComponent extends Component {
       menuItemOrders: [],
       res_code: props.res_code,
       tableLoading: true,
-      err: {}
+      err: blankError()
     };
   }
 

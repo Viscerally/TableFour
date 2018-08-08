@@ -49,9 +49,7 @@ module.exports = function setSocketServer(io, db) {
 
     socket.on('getCustomerByResCode', data => {
       serv.getReservationByResCode(db, data)
-        .then(reso => {
-          return serv.getCustomerByReservation(db, reso)
-        })
+        .then(reso => serv.getCustomerByReservation(db, reso))
         .then(custo => { io.emit('loadCustomer', custo); })
         .catch(err => { console.log(err) });
     })
@@ -65,15 +63,6 @@ module.exports = function setSocketServer(io, db) {
         })
         .catch(err => { console.log(err) });
     })
-
-
-    //GET MENU ITEMS BY CATEGORY
-    // socket.on('submitReservation', formData => {
-    //   console.log('Server socket handling submit');
-    //   serv.submitNewReservation(db, formData)
-    //     .then(data => { io.emit('loadNewReservation', data); })
-    //     .catch(err => {console.log(err)});
-    // })
 
     // SUBMIT NEW RESERVATION
     socket.on('submitReservation', formData => {
@@ -147,7 +136,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('placeOrder', order => {
       serv.updateOrderStatus(db, order)
         .then(data => {
-          broadcastResos(io, socket, 'orderPlaced', data, admins, true);
+          broadcastResos(io, socket, 'orderPlaced', data, admins, false);
         })
         .catch(err => { console.log(err) })
     })
@@ -156,7 +145,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on("cancelOrder", order => {
       serv.cancelOrder(db, order)
         .then(data => {
-          broadcastResos(io, socket, 'orderCancelled', data, admins, true);
+          broadcastResos(io, socket, 'orderCancelled', data, admins, false);
         })
         .catch(err => { console.log(err) })
     })

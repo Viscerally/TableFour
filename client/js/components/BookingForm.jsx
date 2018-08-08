@@ -214,7 +214,7 @@ export default class BookingForm extends Component {
     }
   }
 
-  render() {    
+  render() {
     const { customer: { name, phone, email } } = this.state;
     let group_size = this.state.reservation.group_size;
     return (
