@@ -40,11 +40,11 @@ export default class Order extends Component {
     );
   }
 
-  makeTBody = orderItems => {    
+  makeTBody = orderItems => {
     return orderItems.map((item, index) => {
       const integerToCurrency = numeral(item.price / 100).format('$0.00');
       return (
-        <tr key={item.id}>
+        <tr className="order-list-row" key={item.id}>
           <td>{index + 1}</td>
           <td>{item.name}</td>
           <td>{integerToCurrency}</td>
@@ -59,7 +59,7 @@ export default class Order extends Component {
   makeTFoot = orderItems => {
     const totalPrice = orderItems.reduce((prev, curr) => prev + curr.price, 0);
     return (
-      <tr>
+      <tr className="order-list-row">
         <th><abbr title="Position"></abbr></th>
         <th className='totalDescription'>Total to pay</th>
         <th>{numeral(totalPrice / 100).format('$0.00')}</th>
@@ -70,7 +70,7 @@ export default class Order extends Component {
 
   makeOrderTable = selectedOrderItems => {
     const tHead = (
-      <tr>
+      <tr className="order-list-row" >
         <th>#</th>
         <th>NAME</th>
         <th>PRICE</th>
@@ -95,13 +95,13 @@ export default class Order extends Component {
 
   render() {
     return (
-      <article id='order-list' className='tile is-12 box'>
-        <div className='content'>
-          <div className='icon floaty-icon'>
+      <article id='order-list' className='box'>
+        <div >
+          <div className='icon order-list-icon floaty-icon'>
             <i className="fas fa-utensils"></i>
           </div>
           <span className='order-list title is-4'>ORDER LIST</span>
-          <div id="order-list-inner" className='content'>
+          <div id="order-list-inner" >
             <div className="order-list-text">
               {this.makeOrderTable(this.props.orderItems)}
             </div>
