@@ -95,11 +95,11 @@ export default class Order extends Component {
 
   render() {
     return (
-      <article className='tile is-12 box'>
+      <article id='order-list' className='tile is-12 box'>
         <div className='content'>
-          <span className='icon floaty-icon'>
+          <div className='icon floaty-icon'>
             <i className="fas fa-utensils"></i>
-          </span>
+          </div>
           <span className='order-list title is-4'>ORDER LIST</span>
           <div id="order-list-inner" className='content'>
             <div className="order-list-text">
