@@ -18,8 +18,12 @@ const createTHead = statistics => {
 export default class ReservationDashboard extends Component {
   constructor(props) {
     super(props);
+    let res_code = '';
+    if (this.props.res_code){
+      res_code = this.props.res_code;
+    }
     this.state = {
-      res_code: '',
+      res_code,
       tableLoading: true
     };
   }
@@ -45,7 +49,7 @@ export default class ReservationDashboard extends Component {
 
     // ALL OTHER RESERVATIONS
     // GET TOP 3 OF ALL OTHER RESERVATIONS (EXCEPT FOR THE CURRENT RESERVATION)
-    const allOtherTop3 = reservations.filter(reso => reso.res_code !== res_code).slice(0, 3);
+    const allOtherTop3 = reservations.filter(reso => reso.res_code !== res_code).slice(0, 10);
     // CREATE DOM FOR ALL THE OTHER RESERVATIONS
     const allOtherTop3Cells = allOtherTop3.map((reso, index) => {
       const position = (myResoIndex === -1 || myResoIndex > index) ? index + 1 : index + 2;

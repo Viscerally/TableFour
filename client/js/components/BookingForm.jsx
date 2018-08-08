@@ -7,7 +7,7 @@ export default class BookingForm extends Component {
     super(props);
     this.state = {
       customer: blankCustomer(),
-      reservation: blankReservation()
+      reservation: blankReservation(),
     }
   }
 
@@ -200,7 +200,7 @@ export default class BookingForm extends Component {
     const { socket, urls } = this.props;
 
     // check the url path
-    if (urls.path === '/:res_code') {
+    if (urls.path === '/reservations/:res_code') {
       // if res_code is given as a url param, request customer and reservation
       // associated with the res_code and save them in state
       socket.emit('getCustomerByResCode', urls.params.res_code);
@@ -214,8 +214,9 @@ export default class BookingForm extends Component {
     }
   }
 
-  render() {
-    const { customer: { name, phone, email }, reservation: { group_size } } = this.state;
+  render() {    
+    const { customer: { name, phone, email } } = this.state;
+    let group_size = this.state.reservation.group_size;
     return (
       <form className='booking-form' onSubmit={this.handleSubmit}>
         <div className='field'>

@@ -138,11 +138,10 @@ export default class MainComponent extends Component {
     }
 
     socket.emit('getReservations');
-
     socket.emit('getMenu');
   }
 
-  render() {
+  render() {    
     return (
       <div className='container-page'>
         <div className='container is-desktop'>

@@ -11,7 +11,7 @@ export default class App extends Component {
         <div>
           <Route path="/admin" component={ComponentHandler} />
           <Route exact path="/" component={ComponentHandler} />
-          <Route path="/:res_code" component={ComponentHandler} />
+          <Route path="reservations/:res_code" component={ComponentHandler} />
         </div>
       </Router>
     )
