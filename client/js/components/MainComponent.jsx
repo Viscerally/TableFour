@@ -132,16 +132,17 @@ export default class MainComponent extends Component {
       socket.emit('getItemOrdersWMenuItemByResCode', this.props.res_code);
       socket.emit('getCustomerByResCode', this.props.res_code);
     }else{
-      // res_code received as a url param
-      socket.emit('getReservationByResCode', res_code);
-      socket.emit('getCustomerByResCode', res_code);
+      if (this.state.res_code){
+        socket.emit('getReservationByResCode', res_code);
+        socket.emit('getCustomerByResCode', res_code);
+      }            
     }
 
     socket.emit('getReservations');
     socket.emit('getMenu');
   }
 
-  render() {    
+  render() {
     return (
       <div className='container-page'>
         <div className='container is-desktop'>
