@@ -24,11 +24,11 @@ div#react-root {
 
 .container-page {
   padding: 5px 20px 20px;
-  height: 100vh;
   body {
     margin: 0;
     color: #3c4858;
     font-family: $theme-font;
+    height: 100vh;
   }
   .title.is-4 {
     padding-left: 12px;

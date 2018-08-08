@@ -55,7 +55,7 @@ export default class MainComponent extends Component {
           <div className='content'>
             <div className='icon floaty-icon'>
               <i className="far fa-file-alt"></i>
-            </span>
+            </div>
             <span className='title is-5'>BOOK A TABLE</span>
             <BookingForm
               res_code={state.res_code}

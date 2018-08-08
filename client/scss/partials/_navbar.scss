@@ -1,31 +1,17 @@
-
-
 nav.navbar {
   background-color: #eee;
-  
   .navbar-brand {
-  display: inline;
-
+    display: inline;
     .navbar-item {
-
       #nav-logo-size {
         max-height: none;
         margin-bottom: 20px;
       }
     }
   }
-
-  
-    #admin-button {
-      position: absolute;
-      right: 0;
-      margin: 20px 25px
-    
+  #admin-button {
+    position: absolute;
+    right: 0;
+    margin: 20px 25px
   }
-
-
-  
 }
-
-
-
