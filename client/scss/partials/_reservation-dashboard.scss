@@ -16,3 +16,15 @@
     @include stylize-floaty-icon($green-background, $green-shadow);
   }
 }
+
+@media screen and (max-width: 700px) {
+  #responsive-scroll {
+    overflow: scroll;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  #responsive-rezo-size {
+    font-size: 16px;
+  }
+}

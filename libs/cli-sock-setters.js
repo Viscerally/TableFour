@@ -93,7 +93,7 @@ function setSocket(socket, react) {
       react.setState({ currentReservation: data });
     })
 
-    socket.on('loadReservationWOrder', data => {      
+    socket.on('loadReservationWOrder', data => {
       react.setState({ currentReservation: data });
     })
 
