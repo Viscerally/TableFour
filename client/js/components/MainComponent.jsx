@@ -53,9 +53,9 @@ export default class MainComponent extends Component {
       <div className='tile is-4 is-parent'>
         <article id='booking-form' className='tile is-child box'>
           <div className='content'>
-            <span className='icon floaty-icon'>
+            <div className='icon floaty-icon'>
               <i className="far fa-file-alt"></i>
-            </span>
+            </div>
             <span className='title is-5'>BOOK YOUR TABLE</span>
             <BookingForm
               res_code={state.res_code}
@@ -101,13 +101,21 @@ export default class MainComponent extends Component {
     );
   }
 
-  createCategories = () => {
-    return Object.values(this.state.menu).map(category => (
+  createCategories = state => {
+    if (!state.menu || !state.res_code) {
+      return true;
+    }
+
+    return Object.values(state.menu).map(category => (
       <Category key={category.id} menu={category} setMenu={this.setMenu} />
     ));
   }
 
   createMenu = state => {
+    if (Object.keys(state.currentMenu).length === 0) {
+      return true;
+    }
+
     return (
       <article className='tile is-parent'>
         <div className='tile is-child box columns'>
@@ -152,16 +160,15 @@ export default class MainComponent extends Component {
 
             <div className='categories-row'>
               <div className='tile is-ancestor'>
-                {(this.state.menu) && (this.createCategories())}
+                {this.createCategories(this.state)}
               </div>
             </div>
 
             <div className='tile is-ancestor'>
-              {(Object.keys(this.state.currentMenu).length > 0) &&
-                this.createMenu(this.state)}
+              {this.createMenu(this.state)}
             </div>
 
-            {this.state.currentReservation && !this.props.isAdmin ?
+            {this.state.currentReservation && this.state.res_code ?
               (
                 <div className='columns'>
                   <div className='column'></div>
