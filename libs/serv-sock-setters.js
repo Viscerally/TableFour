@@ -91,7 +91,7 @@ module.exports = function setSocketServer(io, db) {
     socket.on('cancelReservation', formData => {
       serv.cancelReservation(db, formData)
         .then(data => {
-          broadcastResos(io, socket, 'removeCancelledReservation', data, admins, true);
+          broadcastResos(io, socket, 'removeCancelledReservation', data, admins, false);
         });
     })
 
