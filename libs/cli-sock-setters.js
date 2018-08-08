@@ -1,4 +1,5 @@
 import * as formHelp from '../client/libs/form-helper-func.js';
+import swal from 'sweetalert';
 
 function setSocket(socket, react) {
   socket.on('connect', () => {
@@ -128,6 +129,7 @@ function setSocket(socket, react) {
     })
 
     socket.on('orderPlaced', data => {
+      swal("Success!", "Your order has been placed!", "success");
       const { newOrder, customer } = data;
       react.setState((prevState, props) => {
         const reservation = prevState.currentReservation;
@@ -149,6 +151,9 @@ function setSocket(socket, react) {
 
     socket.on("orderCancelled", data => {
       const { newOrder, customer } = data;
+      swal("Are you sure you want to remove your order?", {
+        buttons: ["No", "Yes"],
+      });
       react.setState((prevState, props) => {
         const reservation = prevState.currentReservation;
         reservation.order = newOrder[0];
