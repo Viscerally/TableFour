@@ -124,7 +124,9 @@ export default class ReservationDashboard extends Component {
       <Fragment>
         {this.addSpinner()}
         <table className="table is-striped is-hoverable is-fullwidth reservation-dashboard">
-          {reservations.length === 0 ? this.makeAnnouncement() : this.makeTable(reservations, this.state.res_code)}
+          {reservations.length === 0 ?
+            this.makeAnnouncement() :
+            this.makeTable(reservations, this.state.res_code)}
         </table>
       </Fragment>
     );

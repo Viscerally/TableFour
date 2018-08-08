@@ -53,9 +53,9 @@ export default class MainComponent extends Component {
       <div className='tile is-4 is-parent'>
         <article id='booking-form' className='tile is-child box'>
           <div className='content'>
-            <span className='icon floaty-icon'>
+            <div className='icon floaty-icon'>
               <i className="far fa-file-alt"></i>
-            </span>
+            </div>
             <span className='title is-5'>BOOK YOUR TABLE</span>
             <BookingForm
               res_code={state.res_code}
@@ -102,24 +102,49 @@ export default class MainComponent extends Component {
     );
   }
 
-  createCategories = () => {
-    return Object.values(this.state.menu).map(category => (
-      <Category key={category.id} menu={category} setMenu={this.setMenu} />
-    ));
+  createCategories = state => {
+    if (state.menu && state.res_code) {
+      return Object.values(state.menu).map(category => (
+        <Category key={category.id} menu={category} setMenu={this.setMenu} />
+      ));
+    }
   }
 
   createMenu = state => {
-    return (
-      <article className='tile is-parent'>
-        <div className='tile is-child box columns'>
-          <Menu
-            addToOrder={this.addToOrder}
-            currentMenu={state.currentMenu}
-            reservation={state.currentReservation}
-          />
+    if (Object.keys(state.currentMenu).length > 0) {
+      return (
+        <article className='tile is-parent'>
+          <div className='tile is-child box columns'>
+            <Menu
+              addToOrder={this.addToOrder}
+              currentMenu={state.currentMenu}
+              reservation={state.currentReservation}
+            />
+          </div>
+        </article>
+      );
+    }
+  }
+
+  createOrderPage = state => {
+    const { currentReservation, menuItemOrders, res_code } = this.state;
+    if (currentReservation && res_code) {
+      return (
+        <div className='columns'>
+          <div className='column'></div>
+          <div className='column is-6'>
+            <Order
+              order={currentReservation.order}
+              orderItems={menuItemOrders}
+              removeFromOrder={this.removeFromOrder}
+              placeOrder={this.placeOrder}
+              cancelOrder={this.cancelOrder}
+            />
+          </div>
+          <div className='column'></div>
         </div>
-      </article>
-    );
+      );
+    }
   }
 
   componentDidMount = () => {
@@ -158,31 +183,15 @@ export default class MainComponent extends Component {
 
             <div className='categories-row'>
               <div className='tile is-ancestor'>
-                {(this.state.menu) && (this.createCategories())}
+                {this.createCategories(this.state)}
               </div>
             </div>
 
             <div className='tile is-ancestor'>
-              {(Object.keys(this.state.currentMenu).length > 0) &&
-                this.createMenu(this.state)}
+              {this.createMenu(this.state)}
             </div>
 
-            {this.state.currentReservation && !this.props.isAdmin ?
-              (
-                <div className='columns'>
-                  <div className='column'></div>
-                  <div className='column is-6'>
-                    <Order
-                      order={this.state.currentReservation.order}
-                      orderItems={this.state.menuItemOrders}
-                      removeFromOrder={this.removeFromOrder}
-                      placeOrder={this.placeOrder}
-                      cancelOrder={this.cancelOrder}
-                    />
-                  </div>
-                  <div className='column'></div>
-                </div>
-              ) : (null)}
+            {this.createOrderPage(this.state)}
           </main>
           <footer>
             <div className='footer-styling'></div>
