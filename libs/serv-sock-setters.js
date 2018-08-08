@@ -17,10 +17,10 @@ module.exports = function setSocketServer(io, db) {
 
     // KEEP TRACK OF WEBSOCKET CLIENT ID AND FROM WHICH WHERE THEY CAME FROM
     // deconstruct socket object and save id and (referer without origin)
-    const { id, request: { headers: { origin, referer } } } = socket;
-    const path = referer.replace(origin, '');
+    const { id, request: { headers: { referer } } } = socket;
+
     // if client is admin, save id and to "admin"
-    if (path === '/admin') {
+    if (referer.search('admin') !== -1) {
       admins[id] = { id };
     } else {
       // otherwise save it to "clients"
