@@ -5,15 +5,12 @@ import StatusButton from './StatusButton.jsx';
 const createDefaultHeader = () => {
   return (
     <tr>
-    
-        <th>#</th>
-        <th>SIZE</th>
-        <th>NAME</th>
-        <th>ORDERED?</th>
-        <th>STATUS</th>
+      <th>#</th>
+      <th>SIZE</th>
+      <th>NAME</th>
+      <th>ORDERED?</th>
+      <th>STATUS</th>
     </tr>
-
-    
   );
 };
 
@@ -109,11 +106,13 @@ export default class AdminReservationDashboard extends Component {
     const { reservations } = this.props;
     return (
       <Fragment>
+        <div id="responsive-scroll">
         {this.addSpinner()}
         <table className='table is-striped is-hoverable is-fullwidth reservation-dashboard'>
           {(reservations.length > 0) ? this.makeTable(reservations) :
             this.makeAnnouncement()}
         </table>
+        </div>
       </Fragment>
     );
   }
