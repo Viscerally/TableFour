@@ -30,6 +30,7 @@ function setSocket(socket, react) {
         react.setState({ err });
         return true;
       }
+      console.log(data);
       swal("Reservation Created!", "You will recieve a text message shortly with more info!", "success");
       //Make sure that this gets called from MainComponent
       react.setState(oldState => {
@@ -93,7 +94,7 @@ function setSocket(socket, react) {
       react.setState({ currentReservation: data });
     })
 
-    socket.on('loadReservationWOrder', data => {      
+    socket.on('loadReservationWOrder', data => {
       react.setState({ currentReservation: data });
     })
 
