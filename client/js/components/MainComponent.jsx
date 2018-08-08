@@ -103,31 +103,48 @@ export default class MainComponent extends Component {
   }
 
   createCategories = state => {
-    if (!state.menu || !state.res_code) {
-      return true;
+    if (state.menu && state.res_code) {
+      return Object.values(state.menu).map(category => (
+        <Category key={category.id} menu={category} setMenu={this.setMenu} />
+      ));
     }
-
-    return Object.values(state.menu).map(category => (
-      <Category key={category.id} menu={category} setMenu={this.setMenu} />
-    ));
   }
 
   createMenu = state => {
-    if (Object.keys(state.currentMenu).length === 0) {
-      return true;
+    if (Object.keys(state.currentMenu).length > 0) {
+      return (
+        <article className='tile is-parent'>
+          <div className='tile is-child box columns'>
+            <Menu
+              addToOrder={this.addToOrder}
+              currentMenu={state.currentMenu}
+              reservation={state.currentReservation}
+            />
+          </div>
+        </article>
+      );
     }
+  }
 
-    return (
-      <article className='tile is-parent'>
-        <div className='tile is-child box columns'>
-          <Menu
-            addToOrder={this.addToOrder}
-            currentMenu={state.currentMenu}
-            reservation={state.currentReservation}
-          />
+  createOrderPage = state => {
+    const { currentReservation, menuItemOrders, res_code } = this.state;
+    if (currentReservation && res_code) {
+      return (
+        <div className='columns'>
+          <div className='column'></div>
+          <div className='column is-6'>
+            <Order
+              order={currentReservation.order}
+              orderItems={menuItemOrders}
+              removeFromOrder={this.removeFromOrder}
+              placeOrder={this.placeOrder}
+              cancelOrder={this.cancelOrder}
+            />
+          </div>
+          <div className='column'></div>
         </div>
-      </article>
-    );
+      );
+    }
   }
 
   componentDidMount = () => {
@@ -169,22 +186,7 @@ export default class MainComponent extends Component {
               {this.createMenu(this.state)}
             </div>
 
-            {this.state.currentReservation && this.state.res_code ?
-              (
-                <div className='columns'>
-                  <div className='column'></div>
-                  <div className='column is-6'>
-                    <Order
-                      order={this.state.currentReservation.order}
-                      orderItems={this.state.menuItemOrders}
-                      removeFromOrder={this.removeFromOrder}
-                      placeOrder={this.placeOrder}
-                      cancelOrder={this.cancelOrder}
-                    />
-                  </div>
-                  <div className='column'></div>
-                </div>
-              ) : (null)}
+            {this.createOrderPage(this.state)}
           </main>
           <footer>
             <div className='footer-styling'></div>
