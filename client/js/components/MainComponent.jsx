@@ -94,7 +94,7 @@ export default class MainComponent extends Component {
             <div className='icon floaty-icon'>
               <i className="far fa-clock"></i>
             </div>
-            <span className='title is-5'>RESERVATION STATUS</span>
+            <span id="responsive-rezo-size" className='title is-5'>RESERVATION STATUS</span>
             {dashBoard}
           </div>
         </article>

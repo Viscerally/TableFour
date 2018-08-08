@@ -31,7 +31,7 @@ function setSocket(socket, react) {
         react.setState({ err });
         return true;
       }
-
+      
       if (flashMessage) {
         swal("Reservation Created!", "You will recieve a text message shortly with more info!", "success");
       }

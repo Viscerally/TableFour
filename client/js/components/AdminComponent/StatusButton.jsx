@@ -17,6 +17,7 @@ export default class StatusButton extends Component {
         <span
           key={index}
           data-key={this.props.id}
+          id='rezo-button-width'
           onClick={event => this.props.selectBtn(event, config.status)}
           className={btnClass}
         >{config.status.toUpperCase()}</span>
