@@ -1,14 +1,36 @@
-#order-list {
+div.column.is-6 {
+  
+  article.tile.is-12.box {
+   
   div.icon.floaty-icon {
     @include stylize-floaty-icon($blue-background, $blue-shadow);
   }
-  p.title.is-4 {
-    text-align: left;
-  }
-  th.totalDescription {
-    text-align: right;
-  }
-  #order-list-inner {
-    padding: 8% 0% 5% 8%;
-  }
+    .content {
+
+      p.title.is-4 {
+        text-align: left;
+      }
+
+      th.totalDescription {
+        text-align: right;
+      }
+
+      
+      #align-for-button {
+        display: flex;
+        justify-content: center;
+        margin: 10px;
+      }
+    }
+    
+      #order-list-inner {
+        padding: 10% 20%;
+      }
+    }
+    
+    @media screen and (max-width: 320px) {
+      #order-list-inner {
+        font-size: 12px;
+      }
+    }
 }

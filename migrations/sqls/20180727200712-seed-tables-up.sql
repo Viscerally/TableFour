@@ -96,7 +96,7 @@ VALUES
 INSERT INTO menu_items
   (name, description, price , img_url, category_id)
 VALUES
-  ('Braised Australian Hind Shank of Lamb',
+  ('Braised Hind Shank of Lamb',
     'Moroccan spiced lamb, served with lamb au jus.',
     3050,
     'https://cleaversorganic.com.au/wp-content/uploads/sites/28/2016/07/pete-evans-SPICED-LAMB-BACK-STRAP.jpg',
