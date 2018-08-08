@@ -98,7 +98,7 @@ INSERT INTO menu_items
 VALUES
   ('Braised Hind Shank of Lamb',
     'Moroccan spiced lamb, served with lamb au jus.',
-    3050,
+    2050,
     'https://cleaversorganic.com.au/wp-content/uploads/sites/28/2016/07/pete-evans-SPICED-LAMB-BACK-STRAP.jpg',
     2
 );
@@ -140,7 +140,7 @@ INSERT INTO menu_items
 VALUES
   ('House Wine',
     'Choice of red and white BC wines.Tasting notes include a medium body, raspberries, plums, black cherries, licorice, orange, coffee, toffee, chocolate, fruit cake. ',
-    9000,
+    900,
     'https://images.thestar.com/ec4k2HSAMNNNEoRc9fs7V9tfoaw=/1086x725/smart/filters:cb(1506168295992)/https://www.thestar.com/content/dam/thestar/life/2017/09/22/to-tip-or-not-to-tip-should-we-calculate-gratuity-on-wine-at-a-restaurant/wine2.jpg',
     4
 );
@@ -150,7 +150,7 @@ INSERT INTO menu_items
 VALUES
   ('Locally Draft Beer On Tap',
     'Discover a large selection of beer, including stout, lager, premium lager or bitter & ale from the local crafters',
-    8000,
+    600,
     'https://www.straight.com/files/v3/styles/gs_large/public/images/16/05/istock_000060329700_medium.jpg?itok=UnjIhTz2',
     4
 );
@@ -160,7 +160,7 @@ INSERT INTO menu_items
 VALUES
   ('Spanish Style Sangria',
     'House-made red wine and brandy “punch”, with it’s traditional heritage well-rooted in Spain.',
-    1000,
+    800,
     'https://www.onceuponachef.com/images/2016/11/Pomegranate-Sangria-575x439.jpg',
     4
 );
