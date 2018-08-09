@@ -1,4 +1,4 @@
-# [TableFourMe](https://www.tablefour.me) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/byeong0430/Final-project-Quickchen/LICENSE)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)]()
+# [TableFourMe](http://www.tablefour.me) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/byeong0430/Final-project-Quickchen/LICENSE)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)]()
 
 TableFourMe is a robust, full stack web application that makes reservation-management a breeze!
 
