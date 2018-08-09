@@ -16,7 +16,7 @@ Back-end tech: `WebPack`,  `Node`, `Express`, and `PostgreSQL`
 
 
 ## **Quick and Easy to Use!** 
-#### Customers recieve a text message when their table is ready
+#### Customers receive a text message when their table is ready
 
 
 ![SMS Support](https://i.imgur.com/haTwVfs.jpg)
