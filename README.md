@@ -2,7 +2,7 @@
 
 TableFourMe is a robust, full stack web application that makes reservation-management a breeze!
 
-Front-end stuff: ``HTML``, ``Bulma(CSS)``, ``JS``, ``ReactJS``, and ``AJAX`` 
+Front-end tech: ``HTML``, ``Bulma(CSS)``, ``JS``, ``ReactJS``, and ``AJAX`` 
 
 Back-end tech: `WebPack`,  `Node`, `Express`, and `PostgreSQL` 
 
