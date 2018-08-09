@@ -22,7 +22,9 @@ Back-end tech: `WebPack`,  `Node`, `Express`, and `PostgreSQL`
 ![SMS Support](https://i.imgur.com/haTwVfs.jpg)
 
 ## **Responsive** 
-TableFourMe looks great on any screen! This ensures a consistently pleasant customer experience regardless of which devices access the application
+#### TableFourMe looks great on any screen! This ensures a consistently pleasant customer experience regardless of which devices access the application
+
+
 ![Responsive Design](https://imgur.com/4M1cWlV.gif)
 
 ## **Browse the Menu While You Wait!** 
