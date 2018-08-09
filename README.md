@@ -14,10 +14,10 @@ Back-end tech: `WebPack`,  `Node`, `Express`, and `PostgreSQL`
 
 
 ## **Quick and Easy to Use!** Customer recieve a text message when their table is ready
-![SMS Support]()
+![SMS Support](https://i.imgur.com/haTwVfs.jpg)
 
 ## **Responsive** TableFourMe looks great on any screen! This ensures a consistently pleasant customer experience regardless of which devices access the application
-![Responsive Design](https://imgur.com/a/uiS1k7Q.jpg)
+![Responsive Design](https://i.imgur.com/haTwVfs.gif)
 
 ## **Browse the Menu While You Wait!** Customers can peruse the menu and have the option to place their order while on the waitlist. Take the "WAIT" out of "WAITER!"
 ![Browse the Menu](https://imgur.com/N5cbx9U.gif)
