@@ -9,13 +9,16 @@ Back-end tech: `WebPack`,  `Node`, `Express`, and `PostgreSQL`
 
 
 ## **Intuitive:** 
-TableFourMe makes it painless to create and monitor reservations to your restaurant! Customers are able to list themselves for a table and can monitor their progress in the queue in real-time using web sockets. 
+#### TableFourMe makes it painless to create and monitor reservations to your restaurant! Customers are able to list themselves for a table and can monitor their progress in the queue in real-time using web sockets. 
+
 
 ![Create a Reservation](https://imgur.com/beewurY.gif)
 
 
 ## **Quick and Easy to Use!** 
-Customers recieve a text message when their table is ready
+#### Customers recieve a text message when their table is ready
+
+
 ![SMS Support](https://i.imgur.com/haTwVfs.jpg)
 
 ## **Responsive** 
@@ -23,7 +26,10 @@ TableFourMe looks great on any screen! This ensures a consistently pleasant cust
 ![Responsive Design](https://imgur.com/4M1cWlV.gif)
 
 ## **Browse the Menu While You Wait!** 
-Customers can peruse the menu and have the option to place their order while on the waitlist. Take the "WAIT" out of "WAITER!"
+#### Customers can peruse the menu and have the option to place their order while on the waitlist. Take the "WAIT" out of "WAITER!"
+
+
+
 ![Browse the Menu](https://imgur.com/N5cbx9U.gif)
 
 
