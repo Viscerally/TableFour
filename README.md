@@ -44,6 +44,6 @@ Back-end tech: `WebPack`,  `Node`, `Express`, and `PostgreSQL`
 3. Run webpack dev server and express server on 2 separate terminals:
 `npm run dev:api` & `npm run dev:client`
 
-4. View your app @ `localhost:3000`
+4. View your app @ `localhost:3002`
 
 
